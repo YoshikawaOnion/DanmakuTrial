@@ -11,12 +11,16 @@ public class Player : MonoBehaviour {
     private Rigidbody2D rigidBody;
     private Vector3 shotPosition;
     private int shotTime = 0;
+    private Script_SpriteStudio_Root sprite;
 
 	// Use this for initialization
 	void Start () {
         rigidBody = GetComponent<Rigidbody2D>();
 		shotPosition = ShotObject.transform.localPosition;
-		Debug.Log(shotPosition);
+
+        var spriteControl = GetComponent<Script_SpriteStudio_ControlPrefab>();
+        var prefab = spriteControl.PrefabUnderControl as GameObject;
+        sprite = prefab.GetComponent<Script_SpriteStudio_Root>();
     }
 	
 	// Update is called once per frame
@@ -45,7 +49,7 @@ public class Player : MonoBehaviour {
         Vector3 velocity = new Vector3(0, 0, 0);
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            velocity.x -= 1;
+			velocity.x -= 1;
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {

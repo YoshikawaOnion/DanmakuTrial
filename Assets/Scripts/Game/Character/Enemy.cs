@@ -1,16 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using System;
 
 public class Enemy : MonoBehaviour {
     public int Hp = 10;
+    public GameObject ShotObject;
 
     private float time = 0;
     private Vector3 initialPos;
 
 	// Use this for initialization
 	void Start () {
-        initialPos = transform.position;
+		initialPos = transform.position;
+		Observable.Interval(TimeSpan.FromMilliseconds(500))
+                  .Where(t => Hp > 0)
+				  .Subscribe(t =>
+		{
+			var shot = Instantiate(ShotObject);
+			shot.transform.position = transform.position;
+			shot.GetComponent<Rigidbody2D>().velocity = new Vector2(0, -100);
+		});
 	}
 	
 	// Update is called once per frame
