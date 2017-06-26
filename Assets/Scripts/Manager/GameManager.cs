@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -9,6 +11,7 @@ public class GameManager : Singleton<GameManager>
 
     public GameObject CameraObject;
     public GameObject WallPrefab;
+    public Text FpsText;
 
     protected override void Init()
     {
@@ -32,5 +35,8 @@ public class GameManager : Singleton<GameManager>
         var bottomWall = Instantiate(WallPrefab);
         bottomWall.gameObject.transform.localScale = new Vector3(size.x, WallThickness, 1);
         bottomWall.gameObject.transform.position = bottomLeft + new Vector3(size.x, -WallThickness, 0) / 2;
+
+        Observable.IntervalFrame(10)
+                  .Subscribe(t => FpsText.text = (1.0f / Time.deltaTime).ToString());
     }
 }
