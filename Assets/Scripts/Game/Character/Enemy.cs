@@ -9,31 +9,29 @@ using Ist;
 public class Enemy : MonoBehaviour {
     public int Hp = 10;
     public BulletRenderer BulletRenderer;
+    public GameObject LeftHand;
+    public GameObject RightHand;
 
     private float time = 0;
     private Vector3 initialPos;
     private float angle = 0;
+    private Coroutine coroutine;
 
 	// Use this for initialization
 	void Start ()
     {
         initialPos = transform.position;
-        SetSpiralShotUp();
-        SetRadiationShotUp();
+        StartCoroutine(Act());
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		time += Time.deltaTime;
-		var y = Mathf.Sin(time * Mathf.PI * 2 / 2);
-		y = Mathf.Clamp(y, -0.8f, 0.8f);
-		y *= 0.5f;
-		transform.SetPositionY(initialPos.y + y);
-
-		if (Hp == 0)
+		if (Hp <= 0 && coroutine != null)
 		{
-			Destroy(gameObject);
+            StopCoroutine(coroutine);
+            coroutine = null;
+            Debug.Log("Stop!");
 		}
 	}
 
@@ -72,9 +70,43 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    private void Shot(float angle, float speed)
+    public void Shot(float angle, float speed)
 	{
         var position = transform.position.ZReplacedBy(transform.position.z + 10);
         BulletRenderer.Shoot(position, angle, speed);
+    }
+
+	public void Shot(Vector3 offset, float angle, float speed)
+	{
+        var pos = transform.position + offset;
+		BulletRenderer.Shoot(pos, angle, speed);
+	}
+
+    public void Move(Vector3 goal, int durationFrame)
+    {
+        var prevPos = transform.position;
+		Observable.EveryUpdate()
+		          .Take(durationFrame)
+		          .Subscribe(t =>
+		{
+			var pos = (prevPos * (durationFrame - t) + goal * t) / durationFrame;
+			transform.position = pos;
+		});
+    }
+
+    private IEnumerator Act()
+    {
+        var strategy = new EnemyStrategy1(this);
+		coroutine = StartCoroutine(strategy.Act());
+        while (true)
+        {
+            yield return new WaitForSeconds(Time.deltaTime);
+            if (coroutine == null)
+            {
+                break;
+            }
+        }
+        Debug.Log("Destroy?");
+		Destroy(gameObject);
     }
 }
