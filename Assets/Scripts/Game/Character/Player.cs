@@ -10,7 +10,6 @@ public class Player : MonoBehaviour {
     public GameObject ShotObject;
     public GameObject ShotSource;
 	public int shotSpan = 20;
-	public Script_SpriteStudio_ManagerDraw View;
 
     private Rigidbody2D rigidBody;
     private Vector3 shotPosition;
@@ -65,7 +64,7 @@ public class Player : MonoBehaviour {
 		{
 			var obj = Instantiate(ShotObject);
             obj.transform.position = ShotSource.transform.position;
-            obj.transform.parent = View.transform;
+            obj.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
             shotTime = 0;
 		}
 		++shotTime;

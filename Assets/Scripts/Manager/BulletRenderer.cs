@@ -7,7 +7,6 @@ using UniRx;
 
 public class BulletRenderer : MonoBehaviour {
     public GameObject ShotObject;
-    public Script_SpriteStudio_ManagerDraw View;
 
     private List<Rigidbody2D> bullets;
     private BatchRenderer batchRenderer;
@@ -27,7 +26,7 @@ public class BulletRenderer : MonoBehaviour {
 		var shot = Instantiate(ShotObject);
 		var rigidBody = shot.GetComponent<Rigidbody2D>();
 		shot.transform.position = source;
-        shot.transform.parent = View.transform;
+        shot.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
 		rigidBody.velocity = direction * speed;
 		
         bullets.Add(rigidBody);

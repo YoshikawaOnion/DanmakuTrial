@@ -7,22 +7,33 @@ using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
 {
+    public static readonly string InitStateName = "GameState_Init";
+    public static readonly string PlayStateName = "GameState_Play";
     private static readonly float WallThickness = 10;
 
-    public GameObject CameraObject;
 	public GameObject WallPrefab;
     public GameObject PlayerPrefub;
     public GameObject EnemyPrefub;
     public GameObject ShootingRoomPrefub;
-    public Script_SpriteStudio_ManagerDraw SpriteStudioView;
     public GameObject BulletRendererPrefub;
     public Text FpsText;
 
     private BulletRenderer bulletRenderer;
+    private StateMachine stateMachine;
 
     protected override void Init()
     {
-        var camera = CameraObject.GetComponent<Camera>();
+        stateMachine = GetComponent<StateMachine>();
+    }
+
+    public void ChangeState(string stateName)
+    {
+        stateMachine.ChangeSubState(stateName);
+    }
+
+    public void InitializeGame()
+    {
+        var camera = SpriteStudioManager.I.MainCamera;
         var bottomLeft = camera.ViewportToWorldPoint(Vector3.zero);
         var topRight = camera.ViewportToWorldPoint(Vector3.one);
         var size = topRight - bottomLeft;
@@ -30,7 +41,7 @@ public class GameManager : Singleton<GameManager>
         SetBulletRendererUp();
         SetWallsUp(topRight, bottomLeft, size);
         SetShootingRoomUp(size);
-        SetFpsUp();
+        //SetFpsUp();
         SetPlayerUp(bottomLeft, size);
         SetEnemyUp(topRight, size);
     }
@@ -39,14 +50,13 @@ public class GameManager : Singleton<GameManager>
     {
         var renderer = Instantiate(BulletRendererPrefub);
         bulletRenderer = renderer.GetComponent<BulletRenderer>();
-        bulletRenderer.View = SpriteStudioView;
     }
 
     private void SetEnemyUp(Vector3 topRight, Vector3 size)
     {
         var enemy = Instantiate(EnemyPrefub);
         enemy.transform.position = new Vector3(0, topRight.y - size.y / 3, 0);
-        enemy.transform.parent = SpriteStudioView.transform;
+        enemy.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
 
         var component = enemy.GetComponent<Enemy>();
         component.BulletRenderer = bulletRenderer;
@@ -56,8 +66,7 @@ public class GameManager : Singleton<GameManager>
     {
         var player = Instantiate(PlayerPrefub);
         player.transform.position = new Vector3(0, bottomLeft.y + size.y / 4, 0);
-        player.transform.parent = SpriteStudioView.transform;
-        player.GetComponent<Player>().View = SpriteStudioView;
+        player.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
     }
 
     private void SetFpsUp()

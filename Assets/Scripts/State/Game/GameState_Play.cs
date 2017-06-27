@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AppState_Init : StateMachine
-{
+public class GameState_Play : StateMachine {
     protected override void EvStateEnter()
     {
-        AppManager.I.ChangeState(AppManager.GameStateName);
     }
 }
