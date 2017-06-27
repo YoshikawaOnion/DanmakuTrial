@@ -106,7 +106,7 @@ public class Enemy : MonoBehaviour {
 		var strategy = new EnemyStrategy1(this);
 		coroutine = strategy.Act();
 		StartCoroutine(coroutine);
-        while (true)
+        while (true)    // ここで死亡確認をすると良さそう
         {
             yield return new WaitForSeconds(Time.deltaTime);
             if (coroutine == null)
