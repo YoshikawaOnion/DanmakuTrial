@@ -12,10 +12,9 @@ public class Enemy : MonoBehaviour {
     public GameObject LeftHand;
     public GameObject RightHand;
 
-    private float time = 0;
     private Vector3 initialPos;
-    private float angle = 0;
     private Coroutine coroutine;
+    private IDisposable moveSubscription;
 
 	// Use this for initialization
 	void Start ()
@@ -31,34 +30,16 @@ public class Enemy : MonoBehaviour {
 		{
             StopCoroutine(coroutine);
             coroutine = null;
-            Debug.Log("Stop!");
 		}
 	}
 
-    private void SetRadiationShotUp()
+    private void OnDestroy()
     {
-        Observable.Interval(TimeSpan.FromMilliseconds(50))
-                  .Select(t => Enumerable.Range(-6, 13).Select(x => x * 24))
-                  .Subscribe(angles =>
-                  {
-                      foreach (var a in angles)
-                      {
-                          var a2 = a + Mathf.Sin(angle * Mathf.PI * 2 / 50) * 3;
-                          Shot(a2, 150);
-                      }
-                  });
-    }
-
-    private void SetSpiralShotUp()
-    {
-        Observable.Interval(TimeSpan.FromMilliseconds(80))
-                  .Where(t => Hp > 0)
-                  .Subscribe(t =>
-                  {
-                      Shot(angle, 100);
-                      Shot(angle, -100);
-                      angle += 13;
-                  });
+        if (moveSubscription != null)
+        {
+            moveSubscription.Dispose();
+            moveSubscription = null;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -84,14 +65,19 @@ public class Enemy : MonoBehaviour {
 
     public void Move(Vector3 goal, int durationFrame)
     {
+        if (moveSubscription != null)
+        {
+            moveSubscription.Dispose();
+        }
+
         var prevPos = transform.position;
-		Observable.EveryUpdate()
+		moveSubscription = Observable.EveryUpdate()
 		          .Take(durationFrame)
 		          .Subscribe(t =>
 		{
 			var pos = (prevPos * (durationFrame - t) + goal * t) / durationFrame;
 			transform.position = pos;
-		});
+		}, () => moveSubscription = null);
     }
 
     private IEnumerator Act()
@@ -106,7 +92,6 @@ public class Enemy : MonoBehaviour {
                 break;
             }
         }
-        Debug.Log("Destroy?");
 		Destroy(gameObject);
     }
 }
