@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SpriteStudioCellMap version="1.00.01">
+
+	<name>Font</name>
+	<generator>TexturePacker</generator>
+	<packed>1</packed>
+	<exportPath></exportPath>
+	<imagePath>/Users/kurashimakazuyuki/DanmakuTrial/Assets/Resources/SpriteStudioFiles/Font/Font.png</imagePath>
+	<pixelSize>256 2048</pixelSize>
+	<imagePathAtImport>/Users/kurashimakazuyuki/DanmakuTrial/Assets/Resources/SpriteStudioFiles/Font/Font.png</imagePathAtImport>
+	<packInfoFilePath></packInfoFilePath>
+	<texPackSettings>
+		<maxSize>4096 4096</maxSize>
+		<forcePo2>1</forcePo2>
+		<forceSquare>0</forceSquare>
+		<margin>0</margin>
+		<padding>1</padding>
+	</texPackSettings>
+	<cells>
+		<cell>
+			<name>end</name>
+			<pos>2 888</pos>
+			<pivot>-0.03125 0.002557544757033181</pivot>
+			<size>96 391</size>
+			<rotated>0</rotated>
+			<orgImageName>/Users/kurashimakazuyuki/DanmakuTrial/Assets/Resources/SpriteStudioFiles/Font/end.png</orgImageName>
+		</cell>
+		<cell>
+			<name>lose</name>
+			<pos>101 1180</pos>
+			<pivot>0 -0.1465968586387434</pivot>
+			<size>90 191</size>
+			<rotated>0</rotated>
+			<orgImageName>/Users/kurashimakazuyuki/DanmakuTrial/Assets/Resources/SpriteStudioFiles/Font/lose.png</orgImageName>
+		</cell>
+		<cell>
+			<name>ready</name>
+			<pos>2 1282</pos>
+			<pivot>-0.022727272727272707 -0.008264462809917328</pivot>
+			<size>88 484</size>
+			<rotated>0</rotated>
+			<orgImageName>/Users/kurashimakazuyuki/DanmakuTrial/Assets/Resources/SpriteStudioFiles/Font/ready.png</orgImageName>
+		</cell>
+		<cell>
+			<name>saichousen</name>
+			<pos>120 645</pos>
+			<pivot>-0.008695652173913049 0.016666666666666607</pivot>
+			<size>115 240</size>
+			<rotated>0</rotated>
+			<orgImageName>/Users/kurashimakazuyuki/DanmakuTrial/Assets/Resources/SpriteStudioFiles/Font/saichousen.png</orgImageName>
+		</cell>
+		<cell>
+			<name>start</name>
+			<pos>93 1374</pos>
+			<pivot>0.011363636363636354 -0.026385224274406482</pivot>
+			<size>88 379</size>
+			<rotated>0</rotated>
+			<orgImageName>/Users/kurashimakazuyuki/DanmakuTrial/Assets/Resources/SpriteStudioFiles/Font/start.png</orgImageName>
+		</cell>
+		<cell>
+			<name>tanzak</name>
+			<pos>2 2</pos>
+			<pivot>-0.008196721311475419 0</pivot>
+			<size>244 640</size>
+			<rotated>0</rotated>
+			<orgImageName>/Users/kurashimakazuyuki/DanmakuTrial/Assets/Resources/SpriteStudioFiles/Font/tanzak.png</orgImageName>
+		</cell>
+		<cell>
+			<name>title</name>
+			<pos>2 645</pos>
+			<pivot>0 0.016666666666666607</pivot>
+			<size>115 240</size>
+			<rotated>0</rotated>
+			<orgImageName>/Users/kurashimakazuyuki/DanmakuTrial/Assets/Resources/SpriteStudioFiles/Font/title.png</orgImageName>
+		</cell>
+		<cell>
+			<name>win</name>
+			<pos>101 888</pos>
+			<pivot>0 -0.02076124567474036</pivot>
+			<size>96 289</size>
+			<rotated>0</rotated>
+			<orgImageName>/Users/kurashimakazuyuki/DanmakuTrial/Assets/Resources/SpriteStudioFiles/Font/win.png</orgImageName>
+		</cell>
+    </cells>
+</SpriteStudioCellMap>
