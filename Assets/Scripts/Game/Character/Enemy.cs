@@ -11,16 +11,37 @@ public class Enemy : MonoBehaviour {
     public BulletRenderer BulletRenderer;
     public GameObject LeftHand;
     public GameObject RightHand;
+    public bool IsEnabled
+    {
+        get { return isEnabled_; }
+        set
+        {
+            if (isEnabled_ != value)
+            {
+                if (value)
+                {
+                    StartCoroutine(coroutine);
+                }
+                else
+                {
+                    StopCoroutine(coroutine);
+                }
+            }
+            isEnabled_ = value;
+        }
+    }
 
+    private bool isEnabled_;
     private Vector3 initialPos;
-    private Coroutine coroutine;
+    private IEnumerator coroutine;
     private IDisposable moveSubscription;
 
 	// Use this for initialization
 	void Start ()
     {
         initialPos = transform.position;
-        StartCoroutine(Act());
+
+		StartCoroutine(Act());
 	}
 
 	// Update is called once per frame
@@ -81,9 +102,10 @@ public class Enemy : MonoBehaviour {
     }
 
     private IEnumerator Act()
-    {
-        var strategy = new EnemyStrategy1(this);
-		coroutine = StartCoroutine(strategy.Act());
+	{
+		var strategy = new EnemyStrategy1(this);
+		coroutine = strategy.Act();
+		StartCoroutine(coroutine);
         while (true)
         {
             yield return new WaitForSeconds(Time.deltaTime);

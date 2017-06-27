@@ -6,6 +6,6 @@ public class GameState_Init : StateMachine {
     protected override void EvStateEnter()
     {
         GameManager.I.InitializeGame();
-        GameManager.I.ChangeState(GameManager.PlayStateName);
+        GameManager.I.ChangeState(GameManager.OpeningStateName);
     }
 }

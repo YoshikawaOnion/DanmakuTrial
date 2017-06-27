@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class GameManager : Singleton<GameManager>
 {
     public static readonly string InitStateName = "GameState_Init";
+    public static readonly string OpeningStateName = "GameState_Opening";
     public static readonly string PlayStateName = "GameState_Play";
     private static readonly float WallThickness = 10;
 
@@ -20,6 +21,8 @@ public class GameManager : Singleton<GameManager>
 
     private BulletRenderer bulletRenderer;
     private StateMachine stateMachine;
+    private GameObject Enemy;
+    private GameObject Player;
 
     protected override void Init()
     {
