@@ -39,7 +39,7 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update()
 	{
-        if (isEnabled)
+        if (isEnabled && !isDefeated)
 		{
 			Move();
 			Shot();

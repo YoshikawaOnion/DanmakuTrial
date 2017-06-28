@@ -23,7 +23,7 @@ public class PlayerDamageArea : MonoBehaviour {
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (Owner.IsEnabled && collision.tag == "EnemyShot")
+		if (Owner.IsEnabled && !Owner.isDefeated && collision.tag == "EnemyShot")
 		{
 			Destroy(collision.gameObject);
             Owner.isDefeated = true;
