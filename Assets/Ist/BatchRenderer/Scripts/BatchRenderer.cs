@@ -399,11 +399,12 @@ public class BatchRenderer : BatchRendererBase
             m.SetTexture("g_instance_texture_uv", m_instance_texture.uv_offset);
         }
 
+
         // fix rendering order for transparent objects
         if (m.renderQueue >= 3000)
         {
             m.renderQueue = m.renderQueue + (nth + 1);
-        }
+		}
         return m;
     }
 

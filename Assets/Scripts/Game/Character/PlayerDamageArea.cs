@@ -6,12 +6,13 @@ using UnityEngine;
 
 public class PlayerDamageArea : MonoBehaviour {
     public GameObject PlayerSprite;
+    public Player Owner;
 
 	private Script_SpriteStudio_Root sprite;
     private IDisposable damageSubscription;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         sprite = PlayerSprite.GetComponent<Script_SpriteStudio_Root>();
 	}
 	
@@ -22,10 +23,12 @@ public class PlayerDamageArea : MonoBehaviour {
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (collision.tag == "EnemyShot")
+		if (Owner.IsEnabled && collision.tag == "EnemyShot")
 		{
 			Destroy(collision.gameObject);
+            Owner.isDefeated = true;
 
+            /*/
             if (damageSubscription != null)
             {
                 damageSubscription.Dispose();
@@ -37,6 +40,7 @@ public class PlayerDamageArea : MonoBehaviour {
                 damageSubscription = null;
             });
             SetAnimation("Damage");
+            //*/
 		}
 	}
 

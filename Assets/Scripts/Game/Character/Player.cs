@@ -9,12 +9,20 @@ public class Player : MonoBehaviour {
     public float MouseSpeed = 0.1f;
     public GameObject ShotObject;
     public GameObject ShotSource;
+    public PlayerDamageArea DamageArea;
 	public int shotSpan = 20;
+    public bool isDefeated;
+
+    public bool IsEnabled
+    {
+        get { return isEnabled; }
+    }
 
     private Rigidbody2D rigidBody;
     private Vector3 shotPosition;
     private int shotTime = 0;
     private Script_SpriteStudio_Root sprite;
+    private bool isEnabled;
 
 	// Use this for initialization
 	void Start ()
@@ -23,14 +31,24 @@ public class Player : MonoBehaviour {
         shotPosition = ShotObject.transform.localPosition;
         SetSpriteUp();
         SetMouseControlUp();
+        isEnabled = false;
+        DamageArea.Owner = this;
+        isDefeated = false;
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		Move();
-		Shot();
-	}
+        if (isEnabled)
+		{
+			Move();
+			Shot();
+        }
+        else
+        {
+            rigidBody.velocity = Vector3.zero;
+        }
+    }
 
     private void SetSpriteUp()
     {
@@ -42,9 +60,10 @@ public class Player : MonoBehaviour {
     private void SetMouseControlUp()
     {
         var drag = Observable.EveryUpdate()
-                  .SkipWhile(t => !Input.GetMouseButtonDown(0))
-                  .Select(t => Input.mousePosition)
-                  .TakeWhile(t => !Input.GetMouseButtonUp(0));
+                             .Where(t => isEnabled)
+			                 .SkipWhile(t => !Input.GetMouseButtonDown(0))
+			                 .Select(t => Input.mousePosition)
+			                 .TakeWhile(t => !Input.GetMouseButtonUp(0));
         drag.Zip(drag.Skip(1), (arg1, arg2) => arg2 - arg1)
             .Repeat()
             .Subscribe(delta =>
@@ -97,5 +116,15 @@ public class Player : MonoBehaviour {
             velocity /= length;
         }
         rigidBody.velocity = velocity * Speed;
+    }
+
+    public void StartAction()
+    {
+        isEnabled = true;
+    }
+
+    public void StopAction()
+    {
+        isEnabled = false;
     }
 }

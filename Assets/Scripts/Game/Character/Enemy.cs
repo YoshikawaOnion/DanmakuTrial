@@ -6,32 +6,15 @@ using System;
 using System.Linq;
 using Ist;
 
-public class Enemy : MonoBehaviour {
+public class Enemy : MonoBehaviour
+{
     public int Hp = 10;
     public BulletRenderer BulletRenderer;
     public GameObject LeftHand;
     public GameObject RightHand;
-    public bool IsEnabled
-    {
-        get { return isEnabled_; }
-        set
-        {
-            if (isEnabled_ != value)
-            {
-                if (value)
-                {
-                    StartCoroutine(coroutine);
-                }
-                else
-                {
-                    StopCoroutine(coroutine);
-                }
-            }
-            isEnabled_ = value;
-        }
-    }
+    public bool IsDefeated { get; private set; }
 
-    private bool isEnabled_;
+    private bool isEnabled;
     private Vector3 initialPos;
     private IEnumerator coroutine;
     private IDisposable moveSubscription;
@@ -40,31 +23,26 @@ public class Enemy : MonoBehaviour {
 	void Start ()
     {
         initialPos = transform.position;
-
 		StartCoroutine(Act());
+        isEnabled = false;
+        IsDefeated = false;
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		if (Hp <= 0 && coroutine != null)
-		{
-            StopCoroutine(coroutine);
-            coroutine = null;
-		}
 	}
 
     private void OnDestroy()
     {
-        if (moveSubscription != null)
-        {
-            moveSubscription.Dispose();
-            moveSubscription = null;
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!isEnabled)
+        {
+            return;
+        }
         if (collision.gameObject.tag == "PlayerShot")
         {
             Destroy(collision.gameObject);
@@ -105,15 +83,38 @@ public class Enemy : MonoBehaviour {
 	{
 		var strategy = new EnemyStrategy1(this);
 		coroutine = strategy.Act();
-		StartCoroutine(coroutine);
-        while (true)    // ここで死亡確認をすると良さそう
+
+        while (Hp > 0)
         {
             yield return new WaitForSeconds(Time.deltaTime);
-            if (coroutine == null)
-            {
-                break;
-            }
+        }
+
+        StopCoroutine(coroutine);
+        if (moveSubscription != null)
+		{
+			moveSubscription.Dispose();
         }
 		Destroy(gameObject);
+        IsDefeated = true;
+    }
+
+    public void StartAction()
+    {
+        if (isEnabled || IsDefeated)
+        {
+            return;
+        }
+        StartCoroutine(coroutine);
+        isEnabled = true;
+    }
+
+    public void StopAction()
+    {
+        if (!isEnabled || IsDefeated)
+        {
+            return;
+        }
+        StopCoroutine(coroutine);
+        isEnabled = false;
     }
 }

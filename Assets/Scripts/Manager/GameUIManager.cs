@@ -13,18 +13,15 @@ public class GameUIManager : Singleton<GameUIManager>
 
 	public Image ImageはっけよいPrefub;
 	public Image ImageのこったPrefub;
+    public Image Image勝負ありPrefub;
+    public Image Image勝ちPrefub;
+    public Image Image負けPrefub;
     public Image ScrollPaper;
 
     private Vector3 ScrollPaperSize;
 
     protected override void Init()
     {
-        OpenScrollPaper();
-    }
-
-    public void OpenScrollPaper()
-    {
-        StartCoroutine(AnimationGameStart());
     }
 
     private ObservableYieldInstruction<float> StartScrollPaperAnimation(float start, float goal)
@@ -62,8 +59,8 @@ public class GameUIManager : Singleton<GameUIManager>
 							   .ToYieldInstruction();
 
 		yield return new WaitForSeconds(0.8f);
-		Destroy(str);
-		Destroy(aura);
+		Destroy(str.gameObject);
+		Destroy(aura.gameObject);
     }
 
     public IEnumerator AnimationGameStart()
@@ -73,4 +70,20 @@ public class GameUIManager : Singleton<GameUIManager>
         yield return StartMessageAnimation(ImageのこったPrefub);
 		yield return StartScrollPaperAnimation(1, 0);
     }
+
+    public IEnumerator AnimationWin()
+	{
+		yield return StartScrollPaperAnimation(0, 1);
+		yield return StartMessageAnimation(Image勝負ありPrefub);
+		yield return StartMessageAnimation(Image勝ちPrefub);
+		yield return StartScrollPaperAnimation(1, 0);
+    }
+
+	public IEnumerator AnimationGameOver()
+	{
+		yield return StartScrollPaperAnimation(0, 1);
+		yield return StartMessageAnimation(Image勝負ありPrefub);
+        yield return StartMessageAnimation(Image負けPrefub);
+		yield return StartScrollPaperAnimation(1, 0);
+	}
 }
