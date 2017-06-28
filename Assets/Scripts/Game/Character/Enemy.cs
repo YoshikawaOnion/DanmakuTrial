@@ -86,24 +86,42 @@ public class Enemy : MonoBehaviour
 		}, () => moveSubscription = null);
     }
 
-    private IEnumerator Act()
+    private IEnumerator RunStrategy(EnemyStrategy strategy)
 	{
-		var strategy = new EnemyStrategy1(this);
 		coroutine = strategy.Act();
+		Hp = 110;
 
-        while (Hp > 0)
-        {
-            yield return new WaitForSeconds(Time.deltaTime);
+        if (isEnabled)
+		{
+			StartCoroutine(coroutine);
         }
 
+		while (Hp > 0)
+		{
+			yield return new WaitForSeconds(Time.deltaTime);
+		}
 
-        StopCoroutine(coroutine);
+        foreach (var bullet in BulletRenderer.Bullets)
+        {
+            Destroy(bullet.gameObject);
+        }
+        strategy.OnDestroy();
+
+        AudioSource.PlayOneShot(DefeatedSound);
+		StopCoroutine(coroutine);        
+    }
+
+    private IEnumerator Act()
+	{
+		yield return RunStrategy(new EnemyStrategy2(this));
+        yield return RunStrategy(new EnemyStrategy1(this));
+
+		// 死亡処理
         if (moveSubscription != null)
 		{
 			moveSubscription.Dispose();
 		}
 
-		AudioSource.PlayOneShot(DefeatedSound);
         spriteStudioRoot.enabled = false;
 		IsDefeated = true;
 

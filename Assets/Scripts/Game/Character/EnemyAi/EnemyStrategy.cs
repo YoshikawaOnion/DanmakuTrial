@@ -16,5 +16,9 @@ public abstract class EnemyStrategy
     {
     }
 
+    public virtual void OnDestroy()
+    {
+    }
+
     public abstract IEnumerator Act();
 }

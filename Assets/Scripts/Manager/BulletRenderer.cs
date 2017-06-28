@@ -8,12 +8,12 @@ using UniRx;
 public class BulletRenderer : MonoBehaviour {
     public GameObject ShotObject;
 
-    private List<Rigidbody2D> bullets;
+    internal List<Rigidbody2D> Bullets;
     private BatchRenderer batchRenderer;
 
     void Start()
 	{
-		bullets = new List<Rigidbody2D>();
+		Bullets = new List<Rigidbody2D>();
 		batchRenderer = GetComponent<BatchRenderer>();
     }
 
@@ -29,14 +29,14 @@ public class BulletRenderer : MonoBehaviour {
         shot.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
 		rigidBody.velocity = direction * speed;
 		
-        bullets.Add(rigidBody);
+        Bullets.Add(rigidBody);
         var script = shot.GetComponent<EnemyShot>();
-        script.DestroyEvent.Subscribe(u => bullets.Remove(rigidBody));
+        script.DestroyEvent.Subscribe(u => Bullets.Remove(rigidBody));
     }
 
     private void Update()
     {
-        foreach (var b in bullets)
+        foreach (var b in Bullets)
         {
             batchRenderer.AddInstanceTS(b.transform.position, b.transform.localScale);
         }
