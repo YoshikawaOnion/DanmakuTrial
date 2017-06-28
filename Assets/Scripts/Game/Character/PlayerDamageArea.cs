@@ -29,7 +29,7 @@ public class PlayerDamageArea : MonoBehaviour {
             Owner.isDefeated = true;
             Owner.AudioSource.PlayOneShot(Owner.DamageSound);
 
-            /*/
+            //*/
             if (damageSubscription != null)
             {
                 damageSubscription.Dispose();

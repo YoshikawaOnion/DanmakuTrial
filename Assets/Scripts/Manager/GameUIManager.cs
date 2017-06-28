@@ -58,8 +58,8 @@ public class GameUIManager : Singleton<GameUIManager>
 
     private IEnumerator StartMessageAnimateIn(Image str, Image aura)
 	{
-		str.transform.parent = transform;
-		aura.transform.parent = transform;
+        str.transform.SetParent(transform, false);
+        aura.transform.SetParent(transform, false);
 
 		str.transform.localPosition = Vector3.zero;
 		aura.transform.localPosition = Vector3.zero;
