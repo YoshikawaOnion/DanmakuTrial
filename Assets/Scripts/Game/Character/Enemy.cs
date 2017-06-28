@@ -12,16 +12,22 @@ public class Enemy : MonoBehaviour
     public BulletRenderer BulletRenderer;
     public GameObject LeftHand;
     public GameObject RightHand;
+    public AudioClip ShootSound;
+    public AudioClip DefeatedSound;
+    public AudioClip DamageSound;
+    public Script_SpriteStudio_Root spriteStudioRoot;
     public bool IsDefeated { get; private set; }
 
     private bool isEnabled;
     private Vector3 initialPos;
     private IEnumerator coroutine;
     private IDisposable moveSubscription;
+    internal AudioSource AudioSource;
 
 	// Use this for initialization
 	void Start ()
     {
+        AudioSource = GetComponent<AudioSource>();
         initialPos = transform.position;
 		StartCoroutine(Act());
         isEnabled = false;
@@ -46,6 +52,7 @@ public class Enemy : MonoBehaviour
         if (collision.gameObject.tag == "PlayerShot")
         {
             Destroy(collision.gameObject);
+            AudioSource.PlayOneShot(DamageSound, 0.2f);
             Hp -= 1;
         }
     }
@@ -89,13 +96,19 @@ public class Enemy : MonoBehaviour
             yield return new WaitForSeconds(Time.deltaTime);
         }
 
+
         StopCoroutine(coroutine);
         if (moveSubscription != null)
 		{
 			moveSubscription.Dispose();
-        }
+		}
+
+		AudioSource.PlayOneShot(DefeatedSound);
+        spriteStudioRoot.enabled = false;
+		IsDefeated = true;
+
+        yield return new WaitForSeconds(0.5f);
 		Destroy(gameObject);
-        IsDefeated = true;
     }
 
     public void StartAction()

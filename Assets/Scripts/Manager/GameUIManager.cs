@@ -19,12 +19,17 @@ public class GameUIManager : Singleton<GameUIManager>
     public Image Image負けPrefub;
     public Image ScrollPaper;
     public Button RetryButton;
-    public Button TitleButton;
+	public Button TitleButton;
+
+	public AudioClip StartSound;
+	public AudioClip WinSound;
+	internal AudioSource AudioSource;
 
     private Vector3 ScrollPaperSize;
 
     protected override void Init()
     {
+        AudioSource = GetComponent<AudioSource>();
     }
 
     private ObservableYieldInstruction<float> StartScrollPaperAnimation(float start, float goal)
@@ -76,6 +81,7 @@ public class GameUIManager : Singleton<GameUIManager>
     public IEnumerator AnimateGameStart()
     {
         yield return StartScrollPaperAnimation(0, 1);
+        AudioSource.PlayOneShot(StartSound);
         yield return StartMessageAnimation(ImageはっけよいPrefub);
         yield return StartMessageAnimation(ImageのこったPrefub);
         yield return StartScrollPaperAnimation(1, 0);
@@ -85,6 +91,7 @@ public class GameUIManager : Singleton<GameUIManager>
     {
         yield return StartScrollPaperAnimation(0, 1);
         yield return StartMessageAnimation(Image勝負ありPrefub);
+        AudioSource.PlayOneShot(WinSound);
         yield return StartMessageAnimation(Image勝ちPrefub);
         yield return StartScrollPaperAnimation(1, 0);
     }

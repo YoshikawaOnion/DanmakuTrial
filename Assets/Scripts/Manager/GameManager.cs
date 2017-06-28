@@ -21,16 +21,20 @@ public class GameManager : Singleton<GameManager>
     public GameObject ShootingRoomPrefub;
     public GameObject BulletRendererPrefub;
 	public Text FpsText;
-	public Enemy Enemy;
-	public Player Player;
+	internal Enemy Enemy;
+	internal Player Player;
+
+    public AudioClip Bgm;
 
     private BulletRenderer bulletRenderer;
     private StateMachine stateMachine;
-    private List<GameObject> objectsToDestroy;
+	private List<GameObject> objectsToDestroy;
+    private AudioSource audioSource;
 
     protected override void Init()
     {
         stateMachine = GetComponent<StateMachine>();
+        audioSource = GetComponent<AudioSource>();
         objectsToDestroy = new List<GameObject>();
     }
 
@@ -52,6 +56,9 @@ public class GameManager : Singleton<GameManager>
         //SetFpsUp();
         SetPlayerUp(bottomLeft, size);
         SetEnemyUp(topRight, size);
+
+        audioSource.clip = Bgm;
+        audioSource.Play();
 	}
 
     public void ClearGameObjects()
@@ -60,6 +67,7 @@ public class GameManager : Singleton<GameManager>
         {
             Destroy(item);
         }
+        audioSource.Stop();
     }
 
     public void StartGameAction()
@@ -85,7 +93,7 @@ public class GameManager : Singleton<GameManager>
     private void SetEnemyUp(Vector3 topRight, Vector3 size)
     {
         var e = Instantiate(EnemyPrefub);
-        e.transform.position = new Vector3(0, topRight.y - size.y / 3, 0);
+        e.transform.position = new Vector3(0, topRight.y - size.y / 2.6f, 0);
         e.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
 
         Enemy = e.GetComponent<Enemy>();
@@ -96,7 +104,7 @@ public class GameManager : Singleton<GameManager>
     private void SetPlayerUp(Vector3 bottomLeft, Vector3 size)
     {
         var p = Instantiate(PlayerPrefub);
-        p.transform.position = new Vector3(0, bottomLeft.y + size.y / 4, 0);
+        p.transform.position = new Vector3(0, bottomLeft.y + size.y / 2.6f, 0);
         p.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
         Player = p.GetComponent<Player>();
         objectsToDestroy.Add(Player.gameObject);

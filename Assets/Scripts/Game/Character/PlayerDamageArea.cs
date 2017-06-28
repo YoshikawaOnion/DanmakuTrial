@@ -27,6 +27,7 @@ public class PlayerDamageArea : MonoBehaviour {
 		{
 			Destroy(collision.gameObject);
             Owner.isDefeated = true;
+            Owner.AudioSource.PlayOneShot(Owner.DamageSound);
 
             /*/
             if (damageSubscription != null)

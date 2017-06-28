@@ -7,11 +7,14 @@ using UnityEngine;
 public class Player : MonoBehaviour {
     public float Speed = 0.1f;
     public float MouseSpeed = 0.1f;
+	public int shotSpan = 20;
+    public bool isDefeated;
+
     public GameObject ShotObject;
     public GameObject ShotSource;
     public PlayerDamageArea DamageArea;
-	public int shotSpan = 20;
-    public bool isDefeated;
+    public AudioClip ShootSound;
+    public AudioClip DamageSound;
 
     public bool IsEnabled
     {
@@ -22,12 +25,14 @@ public class Player : MonoBehaviour {
     private Vector3 shotPosition;
     private int shotTime = 0;
     private Script_SpriteStudio_Root sprite;
-    private bool isEnabled;
+	private bool isEnabled;
+    internal AudioSource AudioSource;
 
 	// Use this for initialization
 	void Start ()
     {
         rigidBody = GetComponent<Rigidbody2D>();
+        AudioSource = GetComponent<AudioSource>();
         shotPosition = ShotObject.transform.localPosition;
         SetSpriteUp();
         SetMouseControlUp();
@@ -60,7 +65,7 @@ public class Player : MonoBehaviour {
     private void SetMouseControlUp()
     {
         var drag = Observable.EveryUpdate()
-                             .Where(t => isEnabled)
+                             .Where(t => isEnabled && !isDefeated)
 			                 .SkipWhile(t => !Input.GetMouseButtonDown(0))
 			                 .Select(t => Input.mousePosition)
 			                 .TakeWhile(t => !Input.GetMouseButtonUp(0));
@@ -84,6 +89,7 @@ public class Player : MonoBehaviour {
 			var obj = Instantiate(ShotObject);
             obj.transform.position = ShotSource.transform.position;
             obj.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
+            AudioSource.PlayOneShot(ShootSound, 0.1f);
             shotTime = 0;
 		}
 		++shotTime;

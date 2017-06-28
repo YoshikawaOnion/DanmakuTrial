@@ -61,5 +61,6 @@ public class EnemyStrategy1 : EnemyStrategy
 				Owner.Shot(position, 180, 100);
             }
         }
+        Owner.AudioSource.PlayOneShot(Owner.ShootSound);
     }
 }
