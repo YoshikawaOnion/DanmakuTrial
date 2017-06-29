@@ -23,7 +23,7 @@ public class Player : MonoBehaviour {
         get { return isEnabled; }
     }
 
-    private Rigidbody2D rigidBody;
+    internal Rigidbody2D rigidBody;
     private Vector3 shotPosition;
     private int shotTime = 0;
     private Script_SpriteStudio_Root sprite;
@@ -81,7 +81,7 @@ public class Player : MonoBehaviour {
             {
                 v = v / len * Speed;
             }
-            rigidBody.velocity = v * Def.UnitPerPixel;
+            rigidBody.AddForce(v * Def.UnitPerPixel);
         });
     }
 
@@ -124,7 +124,7 @@ public class Player : MonoBehaviour {
         {
             velocity /= length;
         }
-        rigidBody.velocity = velocity * Speed * Def.UnitPerPixel;
+        rigidBody.AddForce(velocity * Speed * Def.UnitPerPixel);
     }
 
     public void StartAction()

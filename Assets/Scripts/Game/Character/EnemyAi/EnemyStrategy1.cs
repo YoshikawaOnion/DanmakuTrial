@@ -17,26 +17,26 @@ public class EnemyStrategy1 : EnemyStrategy
 
     public override IEnumerator Act()
 	{
-		Owner.Move(initialPosition, 60);
+		//Owner.Move(initialPosition, 60);
 		yield return new WaitForSeconds(0.6f);
 
         while (!isDefeated)
         {
             yield return WaitRandomly(ActionDelay);
-            MoveByOffset(new Vector3(0, -15, 0), 10);
+            //MoveByOffset(new Vector3(0, -15, 0), 10);
 			yield return new WaitForSeconds(0.2f);
             Shot(Owner.LeftHand.transform.localPosition);
 
 			yield return WaitRandomly(ActionDelay);
-			MoveByOffset(new Vector3(0, 15, 0), 11);
+			//MoveByOffset(new Vector3(0, 15, 0), 11);
 
 			yield return WaitRandomly(ActionDelay);
-			MoveByOffset(new Vector3(0, -15, 0), 10);
+			//MoveByOffset(new Vector3(0, -15, 0), 10);
 			yield return new WaitForSeconds(0.2f);
             Shot(Owner.RightHand.transform.localPosition);
 
 			yield return WaitRandomly(ActionDelay);
-			MoveByOffset(new Vector3(0, 15, 0), 10);
+			//MoveByOffset(new Vector3(0, 15, 0), 10);
 		}
     }
 
@@ -56,7 +56,7 @@ public class EnemyStrategy1 : EnemyStrategy
         var sourcePos = localPosition.Mul(Owner.transform.lossyScale);
         for (int i = 0; i < BulletLength; i++)
         {
-            for (int j = 0; j < BulletLength; j++)
+            for (int j = 0; j < BulletLength + 2; j++)
 			{
                 var offset = new Vector3(i - BulletLength / 2, j - BulletLength / 2, 0);
                 var offsetRandom = UnityEngine.Random.insideUnitCircle.ToVector3();

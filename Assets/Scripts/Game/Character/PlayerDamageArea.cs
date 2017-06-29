@@ -7,6 +7,8 @@ using UnityEngine;
 public class PlayerDamageArea : MonoBehaviour {
     public GameObject PlayerSprite;
     public Player Owner;
+    [Tooltip("被弾時の押し出し[px*kg/sec^2]")]
+    public Vector2 PushOnShoot;
 
 	private Script_SpriteStudio_Root sprite;
     private IDisposable damageSubscription;
@@ -26,8 +28,7 @@ public class PlayerDamageArea : MonoBehaviour {
 		if (Owner.IsEnabled && !Owner.isDefeated && collision.tag == "EnemyShot")
 		{
 			Destroy(collision.gameObject);
-            Owner.isDefeated = true;
-            Owner.AudioSource.PlayOneShot(Owner.DamageSound);
+            Owner.rigidBody.AddForce(PushOnShoot * Def.UnitPerPixel);
 
             //*/
             if (damageSubscription != null)

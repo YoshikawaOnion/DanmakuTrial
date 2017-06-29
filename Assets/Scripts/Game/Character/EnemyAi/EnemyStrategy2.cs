@@ -23,7 +23,9 @@ public class EnemyStrategy2 : EnemyStrategy
                                    - Owner.transform.position;
             var angle = Mathf.Atan2(direction.y, direction.x)
                              * Mathf.Rad2Deg;
-            Owner.Shot(90 - angle, 240 * Def.UnitPerPixel);
+			Owner.Shot(90 - angle, 240 * Def.UnitPerPixel);
+			Owner.Shot(90 - angle - 2, 240 * Def.UnitPerPixel);
+			Owner.Shot(90 - angle + 2, 240 * Def.UnitPerPixel);
             yield return new WaitForSeconds(0.8f);
         }
     }
@@ -36,12 +38,15 @@ public class EnemyStrategy2 : EnemyStrategy
             {
 				for (int i = 0; i < Way * 2 + 1; i++)
 				{
-                    int span = 36 - n * 20;
+                    int span = 36 - n * 80;
 					if (Mathf.Abs(i - Way) > 0)
 					{
 						var angle = 180 - (i - Way) * span;
+						Owner.Shot(angle, 200 * Def.UnitPerPixel);
 						Owner.Shot(angle, 240 * Def.UnitPerPixel);
+						Owner.Shot(angle, 280 * Def.UnitPerPixel);
 						Owner.Shot(angle, 320 * Def.UnitPerPixel);
+						Owner.Shot(angle, 360 * Def.UnitPerPixel);
 						Owner.Shot(angle, 400 * Def.UnitPerPixel);
 						Owner.Shot(angle, 480 * Def.UnitPerPixel);
 					}

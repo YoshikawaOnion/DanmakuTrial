@@ -8,6 +8,9 @@ using Ist;
 
 public class Enemy : MonoBehaviour
 {
+    public Vector2 PushOnShoot = new Vector2(0, 100);
+    public Vector2 RecoverOnGuts = new Vector2(0, -12);
+
     public int Hp = 10;
     public BulletRenderer BulletRenderer;
     public GameObject LeftHand;
@@ -19,25 +22,35 @@ public class Enemy : MonoBehaviour
     public bool IsDefeated { get; private set; }
 
     private bool isEnabled;
+    public bool isGutsMode;
+    private bool isTimeToNextRound;
     private Vector3 initialPos;
     private IEnumerator coroutine;
     private IDisposable moveSubscription;
+    private Rigidbody2D rigidbody;
     internal AudioSource AudioSource;
 
 	// Use this for initialization
 	void Start ()
     {
         AudioSource = GetComponent<AudioSource>();
+        rigidbody = GetComponent<Rigidbody2D>();
         initialPos = transform.position;
 		StartCoroutine(Act());
         isEnabled = false;
         IsDefeated = false;
+        isGutsMode = false;
+        isTimeToNextRound = false;
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-	}
+        if (isGutsMode)
+        {
+            rigidbody.AddForce(RecoverOnGuts * Def.UnitPerPixel);
+        }
+    }
 
     private void OnDestroy()
     {
@@ -45,7 +58,7 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!isEnabled)
+        if (!isEnabled || isTimeToNextRound)
         {
             return;
         }
@@ -53,7 +66,7 @@ public class Enemy : MonoBehaviour
         {
             Destroy(collision.gameObject);
             AudioSource.PlayOneShot(DamageSound, 0.2f);
-            Hp -= 1;
+            rigidbody.AddForce(PushOnShoot * Def.UnitPerPixel);
         }
     }
 
@@ -88,15 +101,20 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator RunStrategy(EnemyStrategy strategy)
 	{
+		Move(initialPos, 20);
+        yield return new WaitForSeconds(2);
+
 		coroutine = strategy.Act();
 		Hp = 110;
+        isGutsMode = false;
+        isTimeToNextRound = false;
 
         if (isEnabled)
 		{
 			StartCoroutine(coroutine);
         }
 
-		while (Hp > 0)
+		while (!isTimeToNextRound)
 		{
 			yield return new WaitForSeconds(Time.deltaTime);
 		}
@@ -108,7 +126,7 @@ public class Enemy : MonoBehaviour
         strategy.OnDestroy();
 
         AudioSource.PlayOneShot(DefeatedSound);
-		StopCoroutine(coroutine);        
+		StopCoroutine(coroutine);
     }
 
     private IEnumerator Act()
@@ -147,5 +165,15 @@ public class Enemy : MonoBehaviour
         }
         StopCoroutine(coroutine);
         isEnabled = false;
+    }
+
+    public void ChangeGutsMode(bool isGuts)
+    {
+        isGutsMode = isGuts;
+    }
+
+    public void StartNextRound()
+    {
+        isTimeToNextRound = true;
     }
 }
