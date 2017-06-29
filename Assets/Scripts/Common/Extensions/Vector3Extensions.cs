@@ -83,6 +83,16 @@ public static class Vector3Extensions {
 		return new Vector2 (v.x, v.y);
 	}
 
+    public static Vector3 Mul(this Vector3 v1, Vector3 v2)
+    {
+        return new Vector3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
+    }
+
+    public static Vector3 Div(this Vector3 v1, Vector3 v2)
+    {
+        return new Vector3(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
+    }
+
 	public static bool IsNaN (this Vector3 v) {
 		if (float.IsNaN (v.x) || float.IsNaN (v.y) || float.IsNaN (v.z)) {
 			return true;

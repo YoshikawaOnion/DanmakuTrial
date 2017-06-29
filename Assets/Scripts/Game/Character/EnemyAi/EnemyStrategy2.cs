@@ -23,7 +23,7 @@ public class EnemyStrategy2 : EnemyStrategy
                                    - Owner.transform.position;
             var angle = Mathf.Atan2(direction.y, direction.x)
                              * Mathf.Rad2Deg;
-            Owner.Shot(90 - angle, 60);
+            Owner.Shot(90 - angle, 240 * Def.UnitPerPixel);
             yield return new WaitForSeconds(0.8f);
         }
     }
@@ -40,10 +40,10 @@ public class EnemyStrategy2 : EnemyStrategy
 					if (Mathf.Abs(i - Way) > 0)
 					{
 						var angle = 180 - (i - Way) * span;
-						Owner.Shot(angle, 50);
-						Owner.Shot(angle, 80);
-						Owner.Shot(angle, 110);
-						Owner.Shot(angle, 140);
+						Owner.Shot(angle, 240 * Def.UnitPerPixel);
+						Owner.Shot(angle, 320 * Def.UnitPerPixel);
+						Owner.Shot(angle, 400 * Def.UnitPerPixel);
+						Owner.Shot(angle, 480 * Def.UnitPerPixel);
 					}
 				}
                 Owner.AudioSource.PlayOneShot(Owner.ShootSound);

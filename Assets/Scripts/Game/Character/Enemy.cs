@@ -65,7 +65,7 @@ public class Enemy : MonoBehaviour
 
 	public void Shot(Vector3 offset, float angle, float speed)
 	{
-        var pos = transform.position + offset;
+        var pos = transform.position + offset.ZReplacedBy(10);
 		BulletRenderer.Shoot(pos, angle, speed);
 	}
 
@@ -113,8 +113,8 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator Act()
 	{
+		yield return RunStrategy(new EnemyStrategy1(this));
 		yield return RunStrategy(new EnemyStrategy2(this));
-        yield return RunStrategy(new EnemyStrategy1(this));
 
 		// 死亡処理
         if (moveSubscription != null)
