@@ -11,12 +11,6 @@ public class AppManager : Singleton<AppManager> {
     public GameManager GameManagerPrefub;
     private StateMachine stateMachine;
 
-    protected override void Awake()
-	{
-        base.Awake();
-        Debug.Log(SpriteStudioManager.I.MainCamera.ViewportToScreenPoint(new Vector3(1, 1, 0)));
-	}
-
     protected override void Init()
     {
         stateMachine = GetComponent<StateMachine>();

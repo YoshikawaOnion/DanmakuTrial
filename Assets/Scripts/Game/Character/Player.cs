@@ -5,9 +5,9 @@ using UniRx;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
-    [Tooltip("最高速度[px/sec]")]
+    [Tooltip("最高速度[px/frame]")]
 	public float Speed = 0.1f;
-	[Tooltip("マウス移動速度[px/sec]")]
+	[Tooltip("マウス移動速度[px/frame]")]
     public float MouseSpeed = 0.1f;
 	public int shotSpan = 20;
     public bool isDefeated;
@@ -81,7 +81,7 @@ public class Player : MonoBehaviour {
             {
                 v = v / len * Speed;
             }
-            rigidBody.AddForce(v * Def.UnitPerPixel);
+            transform.position += v * Def.UnitPerPixel;
         });
     }
 
@@ -124,7 +124,7 @@ public class Player : MonoBehaviour {
         {
             velocity /= length;
         }
-        rigidBody.AddForce(velocity * Speed * Def.UnitPerPixel);
+        transform.position += velocity * Speed * Def.UnitPerPixel;
     }
 
     public void StartAction()

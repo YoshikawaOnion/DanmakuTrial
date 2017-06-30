@@ -11,7 +11,6 @@ public class Enemy : MonoBehaviour
     public Vector2 PushOnShoot = new Vector2(0, 100);
     public Vector2 RecoverOnGuts = new Vector2(0, -12);
 
-    public int Hp = 10;
     public BulletRenderer BulletRenderer;
     public GameObject LeftHand;
     public GameObject RightHand;
@@ -22,10 +21,11 @@ public class Enemy : MonoBehaviour
     public bool IsDefeated { get; private set; }
 
     private bool isEnabled;
-    public bool isGutsMode;
+    private bool isGutsMode;
     private bool isTimeToNextRound;
+    private EnemyStrategy executingStrategy;
+
     private Vector3 initialPos;
-    private IEnumerator coroutine;
     private IDisposable moveSubscription;
     private Rigidbody2D rigidbody;
     internal AudioSource AudioSource;
@@ -104,14 +104,14 @@ public class Enemy : MonoBehaviour
 		Move(initialPos, 20);
         yield return new WaitForSeconds(2);
 
-		coroutine = strategy.Act();
-		Hp = 110;
+        rigidbody.velocity = Vector3.zero;
+        executingStrategy = strategy;
         isGutsMode = false;
         isTimeToNextRound = false;
 
         if (isEnabled)
 		{
-			StartCoroutine(coroutine);
+			executingStrategy.Start();
         }
 
 		while (!isTimeToNextRound)
@@ -123,16 +123,22 @@ public class Enemy : MonoBehaviour
         {
             Destroy(bullet.gameObject);
         }
-        strategy.OnDestroy();
-
+        executingStrategy.Stop();
         AudioSource.PlayOneShot(DefeatedSound);
-		StopCoroutine(coroutine);
     }
 
     private IEnumerator Act()
 	{
+        while (!isEnabled)
+        {
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+
+		isTimeToNextRound = true;
 		yield return RunStrategy(new EnemyStrategy1(this));
+		yield return RunStrategy(new EnemyStrategy4(this));
 		yield return RunStrategy(new EnemyStrategy2(this));
+		yield return RunStrategy(new EnemyStrategy3(this));
 
 		// 死亡処理
         if (moveSubscription != null)
@@ -153,7 +159,11 @@ public class Enemy : MonoBehaviour
         {
             return;
         }
-        StartCoroutine(coroutine);
+        if (executingStrategy != null)
+		{
+            // TODO: ポーズを採用したら続きから再開の処理が要りそう
+			executingStrategy.Start();
+        }
         isEnabled = true;
     }
 
@@ -163,7 +173,10 @@ public class Enemy : MonoBehaviour
         {
             return;
         }
-        StopCoroutine(coroutine);
+        if (executingStrategy != null)
+        {
+            executingStrategy.Stop();
+        }
         isEnabled = false;
     }
 

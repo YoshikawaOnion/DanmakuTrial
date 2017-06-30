@@ -10,6 +10,7 @@ public class EnemyStrategy2 : EnemyStrategy
 
     private Coroutine coroutine1;
     private Coroutine coroutine2;
+    private IDisposable actionSubscription;
 
     public EnemyStrategy2(Enemy owner) : base(owner)
     {
@@ -23,9 +24,17 @@ public class EnemyStrategy2 : EnemyStrategy
                                    - Owner.transform.position;
             var angle = Mathf.Atan2(direction.y, direction.x)
                              * Mathf.Rad2Deg;
-			Owner.Shot(90 - angle, 240 * Def.UnitPerPixel);
-			Owner.Shot(90 - angle - 2, 240 * Def.UnitPerPixel);
-			Owner.Shot(90 - angle + 2, 240 * Def.UnitPerPixel);
+
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    var angleOffset = (j - 1) * 2;
+                    var speed = 240 + i * 15;
+                    Owner.Shot(90 - angle - angleOffset, speed * Def.UnitPerPixel);
+                }
+            }
+
             yield return new WaitForSeconds(0.8f);
         }
     }
@@ -35,38 +44,26 @@ public class EnemyStrategy2 : EnemyStrategy
         while (true)
         {
             for (int n = 0; n < 2; n++)
-            {
+			{
 				for (int i = 0; i < Way * 2 + 1; i++)
 				{
-                    int span = 36 - n * 80;
-					if (Mathf.Abs(i - Way) > 0)
+					int span = 33 * (n == 0 ? -1 : 1);
+					var angle = (i - Way) * span;
+					for (int j = 0; j < 8; j++)
 					{
-						var angle = 180 - (i - Way) * span;
-						Owner.Shot(angle, 200 * Def.UnitPerPixel);
-						Owner.Shot(angle, 240 * Def.UnitPerPixel);
-						Owner.Shot(angle, 280 * Def.UnitPerPixel);
-						Owner.Shot(angle, 320 * Def.UnitPerPixel);
-						Owner.Shot(angle, 360 * Def.UnitPerPixel);
-						Owner.Shot(angle, 400 * Def.UnitPerPixel);
-						Owner.Shot(angle, 480 * Def.UnitPerPixel);
+						Owner.Shot(angle, (200 + j * 40) * Def.UnitPerPixel);
 					}
 				}
-                Owner.AudioSource.PlayOneShot(Owner.ShootSound);
-				yield return new WaitForSeconds(2);
+				Owner.AudioSource.PlayOneShot(Owner.ShootSound);
+				yield return new WaitForSeconds(1.2f);
             }
         }
     }
 
-    public override IEnumerator Act()
-    {
-        coroutine1 = Owner.StartCoroutine(Act1());
-        coroutine2 = Owner.StartCoroutine(Act2());
-        yield return null;
-    }
-
-    public override void OnDestroy()
-    {
-        Owner.StopCoroutine(coroutine1);
-        Owner.StopCoroutine(coroutine2);
+    protected override IObservable<Unit> GetAction()
+	{
+		var c1 = Act1().ToObservable();
+		var c2 = Act2().ToObservable();
+		return c1.Merge(c2);
     }
 }

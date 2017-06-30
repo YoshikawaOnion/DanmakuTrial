@@ -9,6 +9,8 @@ public class PlayerDamageArea : MonoBehaviour {
     public Player Owner;
     [Tooltip("被弾時の押し出し[px*kg/sec^2]")]
     public Vector2 PushOnShoot;
+    [Tooltip("敵と接触時の押し出し[px*kg/sec^2]")]
+    public Vector2 PushOnCollide;
 
 	private Script_SpriteStudio_Root sprite;
     private IDisposable damageSubscription;
@@ -25,26 +27,37 @@ public class PlayerDamageArea : MonoBehaviour {
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (Owner.IsEnabled && !Owner.isDefeated && collision.tag == "EnemyShot")
+        if (!Owner.IsEnabled || Owner.isDefeated)
+        {
+            return;
+        }
+        if (collision.tag == "EnemyShot")
 		{
 			Destroy(collision.gameObject);
-            Owner.rigidBody.AddForce(PushOnShoot * Def.UnitPerPixel);
-
-            //*/
-            if (damageSubscription != null)
-            {
-                damageSubscription.Dispose();
-            }
-            damageSubscription = Observable.TimerFrame(60)
-                .Subscribe(t =>
-            {
-                SetAnimation("Player");
-                damageSubscription = null;
-            });
-            SetAnimation("Damage");
-            //*/
+			Owner.rigidBody.AddForce(PushOnShoot * Def.UnitPerPixel);
+			AnimateDamage();
 		}
-	}
+        if (collision.tag == "Enemy")
+		{
+			Owner.rigidBody.AddForce(PushOnCollide * Def.UnitPerPixel);
+            AnimateDamage();
+        }
+    }
+
+    private void AnimateDamage()
+	{
+		if (damageSubscription != null)
+		{
+			damageSubscription.Dispose();
+		}
+		damageSubscription = Observable.TimerFrame(60)
+			.Subscribe(t =>
+		{
+			SetAnimation("Player");
+			damageSubscription = null;
+		});
+		SetAnimation("Damage");        
+    }
 
     private void SetAnimation(string name)
 	{

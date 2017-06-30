@@ -36,10 +36,6 @@ public class BulletRenderer : MonoBehaviour {
 
     private void Update()
     {
-        if (Bullets.Count > 0)
-        {
-            Debug.Log(Bullets[0].transform.lossyScale);
-        }
         foreach (var b in Bullets)
         {
             batchRenderer.AddInstanceTS(b.transform.position, b.transform.lossyScale);

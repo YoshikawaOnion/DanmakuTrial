@@ -1,0 +1,61 @@
+using UnityEngine;
+using System.Collections;
+using System;
+using UniRx;
+using System.Linq;
+
+public class EnemyStrategy4 : EnemyStrategy
+{
+    public EnemyStrategy4(Enemy owner) : base(owner)
+    {
+    }
+
+    protected override IObservable<Unit> GetAction()
+    {
+        var c1 = Coroutine().ToObservable();
+        var c2 = SubShotCoroutine().ToObservable();
+        return c1.Merge(c2);
+    }
+
+    private IEnumerator SubShotCoroutine()
+    {
+        var span = 137.507764f;
+        var angle = 0.0f;
+        while (true)
+        {
+            angle += span;
+            Owner.Shot(angle, 180 * Def.UnitPerPixel);
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    private IEnumerator Coroutine()
+	{
+        var angle = 180;
+        var speed = 420 * Def.UnitPerPixel;
+        var offsets = Enumerable.Range(-2, 4).Select(x => x * 2 + 1);
+        while (true)
+		{
+            for (int i = 0; i < 30; i++)
+            {
+                var ownerPos = Owner.transform.position;
+                var playerPos = Player.gameObject.transform.position;
+                Owner.transform.position = ownerPos.XReplacedBy((ownerPos.x * 6 + playerPos.x) / 7);
+                yield return new WaitForSeconds(Time.deltaTime);
+			}
+			Owner.transform.position = Owner.transform.position
+                .XReplacedBy(Player.gameObject.transform.position.x);
+			for (int j = 0; j < 15; j++)
+			{
+				var offsetSize = 5 * Def.UnitPerPixel;
+                foreach (var i in offsets)
+                {
+                    var offset = new Vector3(i * offsetSize, 0);
+                    Owner.Shot(offset, angle, speed);
+                }
+				yield return new WaitForSeconds(0.02f);
+			}			
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+}

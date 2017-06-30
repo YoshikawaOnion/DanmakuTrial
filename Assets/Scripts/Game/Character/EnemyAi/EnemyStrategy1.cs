@@ -5,7 +5,7 @@ using UniRx;
 
 public class EnemyStrategy1 : EnemyStrategy
 {
-    private static readonly float ActionDelay = 0.8f;
+    private static readonly float ActionDelay = 0.9f;
     private static readonly int BulletLength = 3;
 
     private Vector3 initialPosition = new Vector3(0, 200 * Def.UnitPerPixel, 0);
@@ -15,30 +15,23 @@ public class EnemyStrategy1 : EnemyStrategy
     {
     }
 
-    public override IEnumerator Act()
+    public IEnumerator Act()
 	{
-		//Owner.Move(initialPosition, 60);
-		yield return new WaitForSeconds(0.6f);
-
-        while (!isDefeated)
+        while (true)
         {
-            yield return WaitRandomly(ActionDelay);
-            //MoveByOffset(new Vector3(0, -15, 0), 10);
-			yield return new WaitForSeconds(0.2f);
-            Shot(Owner.LeftHand.transform.localPosition);
-
+            ShotChunk(Owner.LeftHand.transform.localPosition);
 			yield return WaitRandomly(ActionDelay);
-			//MoveByOffset(new Vector3(0, 15, 0), 11);
 
+			ShotChunk(Owner.RightHand.transform.localPosition);
 			yield return WaitRandomly(ActionDelay);
-			//MoveByOffset(new Vector3(0, -15, 0), 10);
-			yield return new WaitForSeconds(0.2f);
-            Shot(Owner.RightHand.transform.localPosition);
-
-			yield return WaitRandomly(ActionDelay);
-			//MoveByOffset(new Vector3(0, 15, 0), 10);
 		}
     }
+
+    protected override IObservable<Unit> GetAction()
+    {
+        return Act().ToObservable();
+    }
+
 
     private void MoveByOffset(Vector3 pixelOffset, int durationFrame)
     {
@@ -51,7 +44,7 @@ public class EnemyStrategy1 : EnemyStrategy
         return new WaitForSeconds(pivotWait + delta);
     }
 
-    private void Shot(Vector3 localPosition)
+    private void ShotChunk(Vector3 localPosition)
     {
         var sourcePos = localPosition.Mul(Owner.transform.lossyScale);
         for (int i = 0; i < BulletLength; i++)

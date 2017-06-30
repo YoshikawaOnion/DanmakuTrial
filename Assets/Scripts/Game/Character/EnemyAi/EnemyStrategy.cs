@@ -1,24 +1,35 @@
 using UnityEngine;
 using System.Collections;
+using System;
+using UniRx;
 
 public abstract class EnemyStrategy
 {
-    public bool isDefeated;
     protected Enemy Owner;
+    protected Player Player
+    {
+        get { return GameManager.I.Player; }
+    }
+
+	private IDisposable actionSubscription;
 
     public EnemyStrategy(Enemy owner)
     {
         Owner = owner;
-        isDefeated = false;
     }
 
-    public virtual void Initialize()
+    protected abstract IObservable<Unit> GetAction();
+
+    public void Start()
     {
+        actionSubscription = GetAction().Subscribe();
     }
 
-    public virtual void OnDestroy()
+    public void Stop()
     {
+        if (actionSubscription != null)
+		{
+			actionSubscription.Dispose();
+        }
     }
-
-    public abstract IEnumerator Act();
 }
