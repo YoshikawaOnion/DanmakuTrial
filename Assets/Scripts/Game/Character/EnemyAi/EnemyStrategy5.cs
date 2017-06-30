@@ -5,7 +5,7 @@ using UniRx;
 
 public class EnemyStrategy5 : EnemyStrategy
 {
-    public EnemyStrategy5(Enemy owner) : base(owner)
+    public EnemyStrategy5(EnemyApi api) : base(api)
     {
     }
 
@@ -23,7 +23,7 @@ public class EnemyStrategy5 : EnemyStrategy
         {
             ShotFlower(90, subAngle);
             ShotFlower(-90, subAngle);
-            Owner.PlayShotSound();
+            Api.PlayShootSound();
             subAngle += 13;
             yield return new WaitForSeconds(2.5f);
         }
@@ -31,11 +31,11 @@ public class EnemyStrategy5 : EnemyStrategy
 
     private void ShotFlower(float angle, float subAngle)
     {
-        var shot = Owner.Shot(angle, 150 * Def.UnitPerPixel);
+        var shot = Api.Shot(angle, 150 * Def.UnitPerPixel);
 		var behavior = new FlowerEnemyShotBehavior(shot);
-        behavior.Way = 12;
+        behavior.Way = 6;
         behavior.Speed = 240;
-        behavior.TimeSpan = 0.4f;
+        behavior.TimeSpan = 0.6f;
         behavior.Angle = subAngle;
         shot.behavior = behavior;
     }
@@ -46,7 +46,7 @@ public class EnemyStrategy5 : EnemyStrategy
                          .TakeUntil(Observable.Timer(TimeSpan.FromSeconds(3)))
                          .Do(t =>
         {
-            Owner.rigidbody.AddForce(new Vector2(0, -9 * Def.UnitPerPixel));
+            Api.Enemy.rigidbody.AddForce(new Vector2(0, -6 * Def.UnitPerPixel));
         })
                          .Select(t => Unit.Default);
     }

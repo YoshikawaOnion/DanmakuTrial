@@ -6,7 +6,7 @@ using System.Linq;
 
 public class EnemyStrategy4 : EnemyStrategy
 {
-    public EnemyStrategy4(Enemy owner) : base(owner)
+    public EnemyStrategy4(EnemyApi api) : base(api)
     {
     }
 
@@ -24,7 +24,7 @@ public class EnemyStrategy4 : EnemyStrategy
         while (true)
         {
             angle += span;
-            Owner.Shot(angle, 180 * Def.UnitPerPixel);
+            Api.Shot(angle, 180 * Def.UnitPerPixel);
             yield return new WaitForSeconds(0.2f);
         }
     }
@@ -39,22 +39,21 @@ public class EnemyStrategy4 : EnemyStrategy
             // プレイヤーを狙って移動
             for (int i = 0; i < 30; i++)
             {
-                var ownerPos = Owner.transform.position;
+                var ownerPos = Api.Enemy.transform.position;
                 var playerPos = Player.gameObject.transform.position;
-                Owner.transform.position = ownerPos.XReplacedBy((ownerPos.x * 4 + playerPos.x) / 5);
+                Api.Enemy.transform.position = ownerPos.XReplacedBy((ownerPos.x * 4 + playerPos.x) / 5);
                 yield return new WaitForSeconds(Time.deltaTime);
 			}
 
 			// レーザービーム
-
-			Owner.PlayShotSound();
+			Api.PlayShootSound();
 			for (int j = 0; j < 15; j++)
 			{
 				var offsetSize = 5 * Def.UnitPerPixel;
                 foreach (var i in offsets)
                 {
                     var offset = new Vector3(i * offsetSize, 0);
-                    Owner.Shot(offset, angle, speed);
+                    Api.ShotByOffset(offset, angle, speed);
                 }
 				yield return new WaitForSeconds(0.02f);
 			}

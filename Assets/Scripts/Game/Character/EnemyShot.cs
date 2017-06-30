@@ -7,7 +7,7 @@ public class EnemyShot : MonoBehaviour {
     public IObservable<Unit> DestroyEvent;
 	public EnemyShotBehavior behavior;
 
-    internal Enemy Owner;
+    internal EnemyApi Api;
 
 	private Subject<Unit> destroySubject;
 

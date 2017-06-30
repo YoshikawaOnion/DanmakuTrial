@@ -11,7 +11,7 @@ public class EnemyStrategy1 : EnemyStrategy
     private Vector3 initialPosition = new Vector3(0, 200 * Def.UnitPerPixel, 0);
     private float scale;
 
-    public EnemyStrategy1(Enemy owner) : base(owner)
+    public EnemyStrategy1(EnemyApi api) : base(api)
     {
     }
 
@@ -19,10 +19,10 @@ public class EnemyStrategy1 : EnemyStrategy
 	{
         while (true)
         {
-            ShotChunk(Owner.LeftHand.transform.localPosition);
+            ShotChunk(Api.Enemy.LeftHand.transform.localPosition);
 			yield return WaitRandomly(ActionDelay);
 
-			ShotChunk(Owner.RightHand.transform.localPosition);
+			ShotChunk(Api.Enemy.RightHand.transform.localPosition);
 			yield return WaitRandomly(ActionDelay);
 		}
     }
@@ -35,7 +35,7 @@ public class EnemyStrategy1 : EnemyStrategy
 
     private void MoveByOffset(Vector3 pixelOffset, int durationFrame)
     {
-		Owner.Move(initialPosition + pixelOffset * Def.UnitPerPixel, 10);
+		Api.Move(initialPosition + pixelOffset * Def.UnitPerPixel, 10);
     }
 
     private WaitForSeconds WaitRandomly(float pivotWait)
@@ -46,7 +46,7 @@ public class EnemyStrategy1 : EnemyStrategy
 
     private void ShotChunk(Vector3 localPosition)
     {
-        var sourcePos = localPosition.Mul(Owner.transform.lossyScale);
+        var sourcePos = localPosition.Mul(Api.Enemy.transform.lossyScale);
         for (int i = 0; i < BulletLength; i++)
         {
             for (int j = 0; j < BulletLength + 2; j++)
@@ -54,9 +54,9 @@ public class EnemyStrategy1 : EnemyStrategy
                 var offset = new Vector3(i - BulletLength / 2, j - BulletLength / 2, 0);
                 var offsetRandom = UnityEngine.Random.insideUnitCircle.ToVector3();
                 var position = sourcePos + (offset * 16 + offsetRandom) * Def.UnitPerPixel;
-				Owner.Shot(position, 180, 240 * Def.UnitPerPixel);
+				Api.ShotByOffset(position, 180, 240 * Def.UnitPerPixel);
             }
         }
-        Owner.AudioSource.PlayOneShot(Owner.ShootSound);
+        Api.PlayShootSound();
     }
 }

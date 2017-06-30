@@ -12,7 +12,7 @@ public class EnemyStrategy2 : EnemyStrategy
     private Coroutine coroutine2;
     private IDisposable actionSubscription;
 
-    public EnemyStrategy2(Enemy owner) : base(owner)
+    public EnemyStrategy2(EnemyApi api) : base(api)
     {
     }
 
@@ -21,7 +21,7 @@ public class EnemyStrategy2 : EnemyStrategy
         while (true)
         {
             var direction = GameManager.I.Player.transform.position
-                                   - Owner.transform.position;
+                                   - Api.Enemy.transform.position;
             var angle = Mathf.Atan2(direction.y, direction.x)
                              * Mathf.Rad2Deg;
 
@@ -31,7 +31,7 @@ public class EnemyStrategy2 : EnemyStrategy
                 {
                     var angleOffset = 0;
                     var speed = 240 + i * 15;
-                    Owner.Shot(90 - angle - angleOffset, speed * Def.UnitPerPixel);
+                    Api.Shot(90 - angle - angleOffset, speed * Def.UnitPerPixel);
                 }
             }
 
@@ -51,10 +51,10 @@ public class EnemyStrategy2 : EnemyStrategy
 					var angle = (i - Way) * span;
 					for (int j = 0; j < 8; j++)
 					{
-						Owner.Shot(angle, (200 + j * 40) * Def.UnitPerPixel);
+						Api.Shot(angle, (200 + j * 40) * Def.UnitPerPixel);
 					}
 				}
-				Owner.AudioSource.PlayOneShot(Owner.ShootSound);
+                Api.PlayShootSound();
 				yield return new WaitForSeconds(1.2f);
             }
         }

@@ -30,6 +30,7 @@ public class GameUIManager : Singleton<GameUIManager>
     protected override void Init()
     {
         AudioSource = GetComponent<AudioSource>();
+        ScrollPaper.fillAmount = 0;
     }
 
     private ObservableYieldInstruction<float> StartScrollPaperAnimation(float start, float goal)

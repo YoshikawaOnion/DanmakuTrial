@@ -10,7 +10,7 @@ public class EnemyStrategy3 : EnemyStrategy
     private static readonly float Frequency = 1.0f / 8;
     private static readonly float Amplitude = 20;
 
-    public EnemyStrategy3(Enemy owner) : base(owner)
+    public EnemyStrategy3(EnemyApi api) : base(api)
     {
     }
 
@@ -32,7 +32,7 @@ public class EnemyStrategy3 : EnemyStrategy
 				if (Mathf.Abs(i - Way / 2) > HoleSize)
 				{
 					var angle = 180 + angleCenter - (i - Way / 2) * span;
-					Owner.Shot(angle, 120 * Def.UnitPerPixel);
+					Api.Shot(angle, 120 * Def.UnitPerPixel);
 				}
 			}
             yield return new WaitForSeconds(0.15f);

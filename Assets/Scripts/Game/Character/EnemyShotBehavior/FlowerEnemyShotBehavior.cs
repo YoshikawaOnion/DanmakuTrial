@@ -23,11 +23,11 @@ public class FlowerEnemyShotBehavior : EnemyShotBehavior
     {
         while (true)
         {
-            var source = Owner.gameObject.transform.localPosition;
+            var source = Owner.gameObject.transform.position;
             for (int i = 0; i < Way; i++)
             {
                 var angle = Angle + i * (360 / Way);
-                Owner.Owner.Shot(source, angle, Speed * Def.UnitPerPixel);
+                Owner.Api.Shot(source, angle, Speed * Def.UnitPerPixel);
             }
             yield return new WaitForSeconds(TimeSpan);
         }

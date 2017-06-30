@@ -5,7 +5,7 @@ using UniRx;
 
 public abstract class EnemyStrategy
 {
-    protected Enemy Owner;
+    protected EnemyApi Api;
     protected Player Player
     {
         get { return GameManager.I.Player; }
@@ -13,9 +13,9 @@ public abstract class EnemyStrategy
 
 	private IDisposable actionSubscription;
 
-    public EnemyStrategy(Enemy owner)
+    public EnemyStrategy(EnemyApi api)
     {
-        Owner = owner;
+        Api = api;
     }
 
     protected abstract IObservable<Unit> GetAction();

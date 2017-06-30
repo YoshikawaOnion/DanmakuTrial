@@ -76,15 +76,6 @@ public class Player : MonoBehaviour {
             .Repeat()
             .Subscribe(delta =>
 		{
-            /*
-            var v = delta * MouseSpeed;
-            var len = v.magnitude;
-            if (len > Speed)
-            {
-                v = v / len * Speed;
-            }
-            //*/
-            Debug.Log(delta);
             transform.position += delta;
         });
     }

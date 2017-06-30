@@ -9,7 +9,7 @@ using Ist;
 public class Enemy : MonoBehaviour
 {
     public Vector2 PushOnShoot = new Vector2(0, 100);
-    public Vector2 RecoverOnGuts = new Vector2(0, -12);
+    public Vector2 RecoverOnGuts = new Vector2(0, -7);
 
     public BulletRenderer BulletRenderer;
     public GameObject LeftHand;
@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour
 
     private Vector3 initialPos;
     private IDisposable moveSubscription;
+    private EnemyApi api;
     internal Rigidbody2D rigidbody;
     internal AudioSource AudioSource;
 
@@ -41,6 +42,10 @@ public class Enemy : MonoBehaviour
         IsDefeated = false;
         isGutsMode = false;
         isTimeToNextRound = false;
+        api = new EnemyApi(this)
+        {
+            BulletRenderer = BulletRenderer
+        };
 	}
 
 	// Update is called once per frame
@@ -70,47 +75,9 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public EnemyShot Shot(float angle, float speed)
-	{
-        var position = transform.position.ZReplacedBy(transform.position.z + 10);
-        var shot = BulletRenderer.Shoot(position, angle, speed);
-        shot.Owner = this;
-        return shot;
-    }
-
-	public EnemyShot Shot(Vector3 offset, float angle, float speed)
-	{
-        var pos = transform.position + offset.ZReplacedBy(10);
-		var shot = BulletRenderer.Shoot(pos, angle, speed);
-        shot.Owner = this;
-        return shot;
-	}
-
-    public void Move(Vector3 goal, int durationFrame)
-    {
-        if (moveSubscription != null)
-        {
-            moveSubscription.Dispose();
-        }
-
-        var prevPos = transform.position;
-		moveSubscription = Observable.EveryUpdate()
-		          .Take(durationFrame)
-		          .Subscribe(t =>
-		{
-			var pos = (prevPos * (durationFrame - t) + goal * t) / durationFrame;
-			transform.position = pos;
-		}, () => moveSubscription = null);
-    }
-
-    public void PlayShotSound()
-    {
-        AudioSource.PlayOneShot(ShootSound);
-    }
-
     private IEnumerator RunStrategy(EnemyStrategy strategy)
 	{
-		Move(initialPos, 20);
+		api.Move(initialPos, 20);
         yield return new WaitForSeconds(2);
 
         rigidbody.velocity = Vector3.zero;
@@ -144,11 +111,12 @@ public class Enemy : MonoBehaviour
         }
 
 		isTimeToNextRound = true;
-		yield return RunStrategy(new EnemyStrategy1(this));
-		yield return RunStrategy(new EnemyStrategy5(this));
-		yield return RunStrategy(new EnemyStrategy4(this));
-		yield return RunStrategy(new EnemyStrategy2(this));
-		yield return RunStrategy(new EnemyStrategy3(this));
+		yield return RunStrategy(new EnemyStrategy6(api));
+		yield return RunStrategy(new EnemyStrategy5(api));
+		yield return RunStrategy(new EnemyStrategy1(api));
+		yield return RunStrategy(new EnemyStrategy4(api));
+		yield return RunStrategy(new EnemyStrategy2(api));
+		yield return RunStrategy(new EnemyStrategy3(api));
 
 		// 死亡処理
         if (moveSubscription != null)
@@ -162,6 +130,7 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 		Destroy(gameObject);
     }
+
 
     public void StartAction()
     {
