@@ -27,9 +27,9 @@ public class EnemyStrategy2 : EnemyStrategy
 
             for (int i = 0; i < 2; i++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int j = 0; j < 2; j++)
                 {
-                    var angleOffset = (j - 1) * 2;
+                    var angleOffset = (j - 0.5f) * 2;
                     var speed = 240 + i * 15;
                     Owner.Shot(90 - angle - angleOffset, speed * Def.UnitPerPixel);
                 }

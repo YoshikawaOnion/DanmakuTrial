@@ -40,11 +40,9 @@ public class EnemyStrategy4 : EnemyStrategy
             {
                 var ownerPos = Owner.transform.position;
                 var playerPos = Player.gameObject.transform.position;
-                Owner.transform.position = ownerPos.XReplacedBy((ownerPos.x * 6 + playerPos.x) / 7);
+                Owner.transform.position = ownerPos.XReplacedBy((ownerPos.x * 4 + playerPos.x) / 5);
                 yield return new WaitForSeconds(Time.deltaTime);
 			}
-			Owner.transform.position = Owner.transform.position
-                .XReplacedBy(Player.gameObject.transform.position.x);
 			for (int j = 0; j < 15; j++)
 			{
 				var offsetSize = 5 * Def.UnitPerPixel;

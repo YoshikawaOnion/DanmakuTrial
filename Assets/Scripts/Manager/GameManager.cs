@@ -46,8 +46,8 @@ public class GameManager : Singleton<GameManager>
     public void InitializeGame()
     {
         var camera = SpriteStudioManager.I.MainCamera;
-        var bottomLeft = camera.ViewportToWorldPoint(Vector3.zero);
-        var topRight = camera.ViewportToWorldPoint(Vector3.one);
+        var bottomLeft = new Vector3(-45, -80);
+        var topRight = new Vector3(45, 80);
         var size = topRight - bottomLeft;
 
         SetBulletRendererUp();

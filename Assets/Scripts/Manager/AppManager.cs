@@ -11,6 +11,11 @@ public class AppManager : Singleton<AppManager> {
     public GameManager GameManagerPrefub;
     private StateMachine stateMachine;
 
+    private void Awake()
+    {
+        Debug.Log(new Vector2(Screen.width, Screen.height));
+    }
+
     protected override void Init()
     {
         stateMachine = GetComponent<StateMachine>();

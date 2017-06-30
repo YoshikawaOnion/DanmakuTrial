@@ -6,7 +6,7 @@ using UniRx;
 public class EnemyStrategy1 : EnemyStrategy
 {
     private static readonly float ActionDelay = 0.9f;
-    private static readonly int BulletLength = 3;
+    private static readonly int BulletLength = 4;
 
     private Vector3 initialPosition = new Vector3(0, 200 * Def.UnitPerPixel, 0);
     private float scale;
