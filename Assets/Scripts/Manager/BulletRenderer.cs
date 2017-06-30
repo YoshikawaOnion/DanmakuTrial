@@ -17,7 +17,7 @@ public class BulletRenderer : MonoBehaviour {
 		batchRenderer = GetComponent<BatchRenderer>();
     }
 
-    public void Shoot(Vector3 source, float angle, float speed)
+    public EnemyShot Shoot(Vector3 source, float angle, float speed)
 	{
 		var x = Mathf.Sin(angle * Mathf.Deg2Rad);
 		var y = Mathf.Cos(angle * Mathf.Deg2Rad);
@@ -32,6 +32,8 @@ public class BulletRenderer : MonoBehaviour {
         Bullets.Add(rigidBody);
         var script = shot.GetComponent<EnemyShot>();
         script.DestroyEvent.Subscribe(u => Bullets.Remove(rigidBody));
+
+        return script;
     }
 
     private void Update()

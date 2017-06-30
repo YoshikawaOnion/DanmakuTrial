@@ -21,13 +21,13 @@ public class Enemy : MonoBehaviour
     public bool IsDefeated { get; private set; }
 
     private bool isEnabled;
-    private bool isGutsMode;
+    internal bool isGutsMode;
     private bool isTimeToNextRound;
     private EnemyStrategy executingStrategy;
 
     private Vector3 initialPos;
     private IDisposable moveSubscription;
-    private Rigidbody2D rigidbody;
+    internal Rigidbody2D rigidbody;
     internal AudioSource AudioSource;
 
 	// Use this for initialization
@@ -70,16 +70,20 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void Shot(float angle, float speed)
+    public EnemyShot Shot(float angle, float speed)
 	{
         var position = transform.position.ZReplacedBy(transform.position.z + 10);
-        BulletRenderer.Shoot(position, angle, speed);
+        var shot = BulletRenderer.Shoot(position, angle, speed);
+        shot.Owner = this;
+        return shot;
     }
 
-	public void Shot(Vector3 offset, float angle, float speed)
+	public EnemyShot Shot(Vector3 offset, float angle, float speed)
 	{
         var pos = transform.position + offset.ZReplacedBy(10);
-		BulletRenderer.Shoot(pos, angle, speed);
+		var shot = BulletRenderer.Shoot(pos, angle, speed);
+        shot.Owner = this;
+        return shot;
 	}
 
     public void Move(Vector3 goal, int durationFrame)
@@ -97,6 +101,11 @@ public class Enemy : MonoBehaviour
 			var pos = (prevPos * (durationFrame - t) + goal * t) / durationFrame;
 			transform.position = pos;
 		}, () => moveSubscription = null);
+    }
+
+    public void PlayShotSound()
+    {
+        AudioSource.PlayOneShot(ShootSound);
     }
 
     private IEnumerator RunStrategy(EnemyStrategy strategy)
@@ -136,6 +145,7 @@ public class Enemy : MonoBehaviour
 
 		isTimeToNextRound = true;
 		yield return RunStrategy(new EnemyStrategy1(this));
+		yield return RunStrategy(new EnemyStrategy5(this));
 		yield return RunStrategy(new EnemyStrategy4(this));
 		yield return RunStrategy(new EnemyStrategy2(this));
 		yield return RunStrategy(new EnemyStrategy3(this));

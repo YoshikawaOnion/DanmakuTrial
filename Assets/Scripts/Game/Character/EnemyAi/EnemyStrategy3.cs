@@ -5,7 +5,7 @@ using UniRx;
 
 public class EnemyStrategy3 : EnemyStrategy
 {
-    private static readonly int Way = 90;
+    private static readonly int Way = 72;
     private static readonly int HoleSize = 4;
     private static readonly float Frequency = 1.0f / 8;
     private static readonly float Amplitude = 20;

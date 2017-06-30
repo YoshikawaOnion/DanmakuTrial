@@ -70,18 +70,22 @@ public class Player : MonoBehaviour {
                              .Where(t => isEnabled && !isDefeated)
 			                 .SkipWhile(t => !Input.GetMouseButtonDown(0))
 			                 .Select(t => Input.mousePosition)
+                             .Select(p => SpriteStudioManager.I.MainCamera.ScreenToWorldPoint(p))
 			                 .TakeWhile(t => !Input.GetMouseButtonUp(0));
         drag.Zip(drag.Skip(1), (arg1, arg2) => arg2 - arg1)
             .Repeat()
             .Subscribe(delta =>
 		{
+            /*
             var v = delta * MouseSpeed;
             var len = v.magnitude;
             if (len > Speed)
             {
                 v = v / len * Speed;
             }
-            transform.position += v * Def.UnitPerPixel;
+            //*/
+            Debug.Log(delta);
+            transform.position += delta;
         });
     }
 

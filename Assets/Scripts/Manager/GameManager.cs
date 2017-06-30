@@ -120,7 +120,7 @@ public class GameManager : Singleton<GameManager>
     {
         var shootingRoom = Instantiate(ShootingRoomPrefub);
         var collider = shootingRoom.GetComponent<BoxCollider2D>();
-        collider.transform.localScale = size;
+        collider.transform.localScale = size + new Vector3(10, 10);
         objectsToDestroy.Add(shootingRoom);
     }
 

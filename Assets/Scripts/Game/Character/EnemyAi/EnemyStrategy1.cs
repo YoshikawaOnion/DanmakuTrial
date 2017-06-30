@@ -5,8 +5,8 @@ using UniRx;
 
 public class EnemyStrategy1 : EnemyStrategy
 {
-    private static readonly float ActionDelay = 0.9f;
-    private static readonly int BulletLength = 4;
+    private static readonly float ActionDelay = 1.3f;
+    private static readonly int BulletLength = 3;
 
     private Vector3 initialPosition = new Vector3(0, 200 * Def.UnitPerPixel, 0);
     private float scale;
@@ -53,7 +53,7 @@ public class EnemyStrategy1 : EnemyStrategy
 			{
                 var offset = new Vector3(i - BulletLength / 2, j - BulletLength / 2, 0);
                 var offsetRandom = UnityEngine.Random.insideUnitCircle.ToVector3();
-                var position = sourcePos + (offset * 12 + offsetRandom) * Def.UnitPerPixel;
+                var position = sourcePos + (offset * 16 + offsetRandom) * Def.UnitPerPixel;
 				Owner.Shot(position, 180, 240 * Def.UnitPerPixel);
             }
         }

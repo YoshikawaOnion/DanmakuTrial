@@ -25,7 +25,7 @@ public class EnemyStrategy4 : EnemyStrategy
         {
             angle += span;
             Owner.Shot(angle, 180 * Def.UnitPerPixel);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
@@ -33,9 +33,10 @@ public class EnemyStrategy4 : EnemyStrategy
 	{
         var angle = 180;
         var speed = 420 * Def.UnitPerPixel;
-        var offsets = Enumerable.Range(-2, 4).Select(x => x * 2 + 1);
+        var offsets = Enumerable.Range(-1, 3).Select(x => x * 2);
         while (true)
 		{
+            // プレイヤーを狙って移動
             for (int i = 0; i < 30; i++)
             {
                 var ownerPos = Owner.transform.position;
@@ -43,6 +44,10 @@ public class EnemyStrategy4 : EnemyStrategy
                 Owner.transform.position = ownerPos.XReplacedBy((ownerPos.x * 4 + playerPos.x) / 5);
                 yield return new WaitForSeconds(Time.deltaTime);
 			}
+
+			// レーザービーム
+
+			Owner.PlayShotSound();
 			for (int j = 0; j < 15; j++)
 			{
 				var offsetSize = 5 * Def.UnitPerPixel;
@@ -52,7 +57,7 @@ public class EnemyStrategy4 : EnemyStrategy
                     Owner.Shot(offset, angle, speed);
                 }
 				yield return new WaitForSeconds(0.02f);
-			}			
+			}
             yield return new WaitForSeconds(0.5f);
         }
     }

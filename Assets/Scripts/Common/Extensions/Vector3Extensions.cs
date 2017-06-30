@@ -83,6 +83,12 @@ public static class Vector3Extensions {
 		return new Vector2 (v.x, v.y);
 	}
 
+    /// <summary>
+    /// ベクトルの各要素を掛け合わせます。
+    /// </summary>
+    /// <returns>The mul.</returns>
+    /// <param name="v1">V1.</param>
+    /// <param name="v2">V2.</param>
     public static Vector3 Mul(this Vector3 v1, Vector3 v2)
     {
         return new Vector3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
