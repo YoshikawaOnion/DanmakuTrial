@@ -11,15 +11,15 @@ public class GameState_GameOver : StateMachine
 
     private IEnumerator Animate()
     {
-        GameUIManager.GameOverOption option = GameUIManager.GameOverOption.Retry;
-        yield return GameUIManager.I.InputGameOverMenu((obj) => option = obj);
+        GameUiManager.GameOverOption option = GameUiManager.GameOverOption.Retry;
+        yield return GameUiManager.I.InputGameOverMenu((obj) => option = obj);
 
-        if (option == GameUIManager.GameOverOption.Retry)
+        if (option == GameUiManager.GameOverOption.Retry)
 		{
 			GameManager.I.ClearGameObjects();
             GameManager.I.ChangeState(GameManager.InitStateName);
         }
-        else if (option == GameUIManager.GameOverOption.Title)
+        else if (option == GameUiManager.GameOverOption.Title)
         {
             GameManager.I.ClearGameObjects();
 			AppManager.I.ChangeState(AppManager.TitleStateName);   

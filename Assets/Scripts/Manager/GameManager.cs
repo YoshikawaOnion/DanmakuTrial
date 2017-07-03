@@ -61,7 +61,6 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void InitializeGame()
     {
-        var camera = SpriteStudioManager.I.MainCamera;
         var bottomLeft = new Vector3(-45, -80);
         var topRight = new Vector3(45, 80);
         var size = topRight - bottomLeft;

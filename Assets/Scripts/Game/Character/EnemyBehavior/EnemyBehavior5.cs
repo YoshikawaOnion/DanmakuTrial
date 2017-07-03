@@ -42,6 +42,7 @@ public class EnemyBehavior5 : EnemyBehavior
 
     private IObservable<Unit> MoveObservable()
     {
+        // 3秒間踏ん張る
         return Observable.EveryUpdate()
                          .TakeUntil(Observable.Timer(TimeSpan.FromSeconds(3)))
                          .Do(t =>

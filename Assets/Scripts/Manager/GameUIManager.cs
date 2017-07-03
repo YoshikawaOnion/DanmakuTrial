@@ -5,43 +5,73 @@ using UnityEngine.UI;
 using UniRx;
 using System;
 
-public class GameUIManager : Singleton<GameUIManager>
+/// <summary>
+/// ゲームのUIを制御するクラス。
+/// </summary>
+public class GameUiManager : Singleton<GameUiManager>
 {
     public enum GameOverOption
     {
         Retry, Title
     }
 
-    public Image ImageはっけよいPrefub;
-    public Image ImageのこったPrefub;
-    public Image Image勝負ありPrefub;
-    public Image Image勝ちPrefub;
-    public Image Image負けPrefub;
-    public Image ScrollPaper;
-    public Button RetryButton;
-	public Button TitleButton;
+    [SerializeField]
+    private Image imageはっけよいPrefab;
+	[SerializeField]
+    private Image imageのこったPrefab;
+	[SerializeField]
+    private Image image勝負ありPrefab;
+	[SerializeField]
+    private Image image勝ちPrefab;
+	[SerializeField]
+    private Image image負けPrefab;
+	[SerializeField]
+    private Image scrollPaper;
+	[SerializeField]
+    private Button retryButton;
+	[SerializeField]
+    private Button titleButton;
 
-	public AudioClip StartSound;
-	public AudioClip WinSound;
+    [SerializeField]
+    private AudioClip startSound;
+	[SerializeField]
+    private AudioClip winSound;
 	internal AudioSource AudioSource;
+
+    public GameUiManager()
+    {
+        imageはっけよいPrefab = null;
+        imageのこったPrefab = null;
+        image勝負ありPrefab = null;
+        image勝ちPrefab = null;
+        image負けPrefab = null;
+        scrollPaper = null;
+        retryButton = null;
+        titleButton = null;
+        startSound = null;
+        winSound = null;
+    }
 
     protected override void Init()
     {
         AudioSource = GetComponent<AudioSource>();
-        ScrollPaper.fillAmount = 0;
+        scrollPaper.fillAmount = 0;
     }
 
     private ObservableYieldInstruction<float> StartScrollPaperAnimation(float start, float goal)
     {
         int duration = 30;
-        ScrollPaper.fillAmount = start;
+        scrollPaper.fillAmount = start;
+
+        // durationだけ時間をかけて、fillAmountをstartからgoalまで変化させる
+        // 二次曲線によるイージングを用いる
         return Observable.EveryUpdate()
                                .Take(duration)
                                .Select(t => (float)t / duration)
                                .Select(t => -(t - 1) * (t - 1) + 1)
                                .Select(v => start * (1 - v) + goal * v)
-                               .Do(v => ScrollPaper.fillAmount = v,
-                                   () => ScrollPaper.fillAmount = goal)
+                               .Do(v => scrollPaper.fillAmount = v,
+                                   () => scrollPaper.fillAmount = goal)
                                .ToYieldInstruction();
     }
 
@@ -65,6 +95,7 @@ public class GameUIManager : Singleton<GameUIManager>
 
 		var scale = aura.transform.localScale.x;
 
+        // 拡大しながら不透明度を薄くする。二次曲線によるイージングを用いる
 		yield return Observable.EveryUpdate()
 							   .Take(20)
 							   .Select(t => (float)t / 20)
@@ -80,28 +111,28 @@ public class GameUIManager : Singleton<GameUIManager>
     public IEnumerator AnimateGameStart()
     {
         yield return StartScrollPaperAnimation(0, 1);
-        AudioSource.PlayOneShot(StartSound);
-        yield return StartMessageAnimation(ImageはっけよいPrefub);
-        yield return StartMessageAnimation(ImageのこったPrefub);
+        AudioSource.PlayOneShot(startSound);
+        yield return StartMessageAnimation(imageはっけよいPrefab);
+        yield return StartMessageAnimation(imageのこったPrefab);
         yield return StartScrollPaperAnimation(1, 0);
     }
 
     public IEnumerator AnimateWin()
     {
         yield return StartScrollPaperAnimation(0, 1);
-        yield return StartMessageAnimation(Image勝負ありPrefub);
-        AudioSource.PlayOneShot(WinSound);
-        yield return StartMessageAnimation(Image勝ちPrefub);
+        yield return StartMessageAnimation(image勝負ありPrefab);
+        AudioSource.PlayOneShot(winSound);
+        yield return StartMessageAnimation(image勝ちPrefab);
         yield return StartScrollPaperAnimation(1, 0);
     }
 
     public IEnumerator InputGameOverMenu(Action<GameOverOption> returnCallback)
 	{
 		yield return StartScrollPaperAnimation(0, 1);
-		yield return StartMessageAnimation(Image勝負ありPrefub);
+		yield return StartMessageAnimation(image勝負ありPrefab);
 
-        var str = Instantiate(Image負けPrefub);
-        var aura = Instantiate(Image負けPrefub);
+        var str = Instantiate(image負けPrefab);
+        var aura = Instantiate(image負けPrefab);
 		yield return StartMessageAnimateIn(str, aura);
 
         yield return InputGameOverMenu().Do(x => returnCallback(x))
@@ -114,19 +145,19 @@ public class GameUIManager : Singleton<GameUIManager>
 
     public IObservable<GameOverOption> InputGameOverMenu()
     {
-        RetryButton.gameObject.SetActive(true);
-        TitleButton.gameObject.SetActive(true);
+        retryButton.gameObject.SetActive(true);
+        titleButton.gameObject.SetActive(true);
 
-        var retry = RetryButton.OnClickAsObservable()
+        var retry = retryButton.OnClickAsObservable()
                                .Select(t => GameOverOption.Retry);
-        var title = TitleButton.OnClickAsObservable()
+        var title = titleButton.OnClickAsObservable()
                                .Select(t => GameOverOption.Title);
 
         return retry.Merge(title).First()
                     .Do(t => { }, () =>
           {
-              RetryButton.gameObject.SetActive(false);
-              TitleButton.gameObject.SetActive(false);
+              retryButton.gameObject.SetActive(false);
+              titleButton.gameObject.SetActive(false);
           });
     }
 }

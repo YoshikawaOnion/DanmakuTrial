@@ -12,7 +12,7 @@ public class EnemyBehavior2 : EnemyBehavior
     {
     }
 
-    public IEnumerator Act2()
+    private IEnumerator PointShotCoroutine()
     {
         while (true)
         {
@@ -35,7 +35,7 @@ public class EnemyBehavior2 : EnemyBehavior
         }
     }
 
-    public IEnumerator Act1()
+    private IEnumerator FlowerShotCoroutine()
     {
         while (true)
         {
@@ -58,8 +58,8 @@ public class EnemyBehavior2 : EnemyBehavior
 
     protected override IObservable<Unit> GetAction()
 	{
-		var c1 = Act1().ToObservable();
-		var c2 = Act2().ToObservable();
+		var c1 = FlowerShotCoroutine().ToObservable();
+		var c2 = PointShotCoroutine().ToObservable();
 		return c1.Merge(c2);
     }
 }

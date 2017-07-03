@@ -3,6 +3,9 @@ using System.Collections;
 using UniRx;
 using System;
 
+/// <summary>
+/// 弾に特別な振る舞いをさせる制御クラスの基底クラスです。
+/// </summary>
 public abstract class EnemyShotBehavior
 {
     protected EnemyShot Owner;

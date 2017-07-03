@@ -8,13 +8,13 @@ public class PlayerDamageArea : MonoBehaviour {
     public Player Owner;
 
     [SerializeField]
-    private GameObject playerSprite;
+    private GameObject playerSprite = null;
     [Tooltip("被弾時の押し出し[px*kg/sec^2]")]
     [SerializeField]
-    private Vector2 pushOnShoot;
+    private Vector2 pushOnShoot = new Vector2(0, -7000);
     [Tooltip("敵と接触時の押し出し[px*kg/sec^2]")]
     [SerializeField]
-    private Vector2 pushOnCollide;
+    private Vector2 pushOnCollide = new Vector2(0, -10000);
 
 	private Script_SpriteStudio_Root sprite;
     private IDisposable damageSubscription;

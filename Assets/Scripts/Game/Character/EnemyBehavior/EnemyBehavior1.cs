@@ -9,7 +9,6 @@ public class EnemyBehavior1 : EnemyBehavior
     private static readonly int BulletLength = 3;
 
     private Vector3 initialPosition = new Vector3(0, 200 * Def.UnitPerPixel, 0);
-    private float scale;
 
     public EnemyBehavior1(EnemyApi api) : base(api)
     {

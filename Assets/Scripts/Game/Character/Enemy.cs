@@ -90,7 +90,7 @@ public class Enemy : MonoBehaviour
         api.Move(initialPos, 20);
         player.ForceToMove(-initialPos, 20);
         player.StopAction();
-        yield return GameUIManager.I.AnimateGameStart();
+        yield return GameUiManager.I.AnimateGameStart();
 		player.StartAction();
         yield return new WaitForSeconds(0.5f);
 

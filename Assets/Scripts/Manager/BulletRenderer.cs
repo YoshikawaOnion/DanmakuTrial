@@ -10,7 +10,7 @@ using UniRx;
 /// </summary>
 public class BulletRenderer : MonoBehaviour {
     [SerializeField]
-    private GameObject shotObject;
+    private GameObject shotObject = null;
 
     internal List<Rigidbody2D> Bullets;
     private BatchRenderer batchRenderer;
