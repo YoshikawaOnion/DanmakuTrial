@@ -38,6 +38,7 @@ public class BulletRenderer : MonoBehaviour {
 
     private void Update()
     {
+        Bullets.RemoveAll(x => x == null);
         foreach (var b in Bullets)
         {
             batchRenderer.AddInstanceTS(b.transform.position, b.transform.lossyScale);

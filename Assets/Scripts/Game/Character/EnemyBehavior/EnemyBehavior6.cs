@@ -4,12 +4,12 @@ using System;
 using UniRx;
 using System.Collections.Generic;
 
-public class EnemyStrategy6 : EnemyStrategy
+public class EnemyBehavior6 : EnemyBehavior
 {
     private List<CircleEnemyShotBehavior> shots;
     private float anglePivot;
 
-    public EnemyStrategy6(EnemyApi api) : base(api)
+    public EnemyBehavior6(EnemyApi api) : base(api)
     {
         shots = new List<CircleEnemyShotBehavior>();
     }
@@ -52,6 +52,7 @@ public class EnemyStrategy6 : EnemyStrategy
 
     private void ShotCircle()
 	{
+		Api.PlayShootSound();
 		for (int i = 0; i < CircleEnemyShotBehavior.Way * 4; i++)
 		{
 			var shot = Api.Shot(0, 0);

@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 using UniRx;
 
-public class EnemyStrategy1 : EnemyStrategy
+public class EnemyBehavior1 : EnemyBehavior
 {
     private static readonly float ActionDelay = 1.3f;
     private static readonly int BulletLength = 3;
@@ -11,7 +11,7 @@ public class EnemyStrategy1 : EnemyStrategy
     private Vector3 initialPosition = new Vector3(0, 200 * Def.UnitPerPixel, 0);
     private float scale;
 
-    public EnemyStrategy1(EnemyApi api) : base(api)
+    public EnemyBehavior1(EnemyApi api) : base(api)
     {
     }
 

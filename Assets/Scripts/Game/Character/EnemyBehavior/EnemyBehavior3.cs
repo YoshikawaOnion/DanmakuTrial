@@ -3,14 +3,14 @@ using System.Collections;
 using System;
 using UniRx;
 
-public class EnemyStrategy3 : EnemyStrategy
+public class EnemyBehavior3 : EnemyBehavior
 {
     private static readonly int Way = 72;
     private static readonly int HoleSize = 4;
     private static readonly float Frequency = 1.0f / 8;
     private static readonly float Amplitude = 20;
 
-    public EnemyStrategy3(EnemyApi api) : base(api)
+    public EnemyBehavior3(EnemyApi api) : base(api)
     {
     }
 

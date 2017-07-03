@@ -3,9 +3,9 @@ using System.Collections;
 using System;
 using UniRx;
 
-public class EnemyStrategy7 : EnemyStrategy
+public class EnemyBehavior7 : EnemyBehavior
 {
-    public EnemyStrategy7(EnemyApi api) : base(api)
+    public EnemyBehavior7(EnemyApi api) : base(api)
     {
     }
 
@@ -18,10 +18,11 @@ public class EnemyStrategy7 : EnemyStrategy
     {
         while (true)
         {
+            Api.PlayShootSound();
             Shot();
 			yield return new WaitForSeconds(0.1f);
 			Shot();
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(0.8f);
         }
     }
 

@@ -66,6 +66,11 @@ public class EnemyApi
         audioSource.PlayOneShot(Enemy.ShootSound);
     }
 
+    public void PlayDefeatedSound()
+    {
+        audioSource.PlayOneShot(Enemy.DefeatedSound);
+    }
+
     public Vector3 GetAngleToPlayer(Vector3 source)
     {
         return GameManager.I.Player.transform.position - source;

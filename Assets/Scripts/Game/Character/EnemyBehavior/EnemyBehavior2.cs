@@ -4,7 +4,7 @@ using System;
 using UniRx;
 using System.Collections.Generic;
 
-public class EnemyStrategy2 : EnemyStrategy
+public class EnemyBehavior2 : EnemyBehavior
 {
     private static readonly int Way = 8;
 
@@ -12,7 +12,7 @@ public class EnemyStrategy2 : EnemyStrategy
     private Coroutine coroutine2;
     private IDisposable actionSubscription;
 
-    public EnemyStrategy2(EnemyApi api) : base(api)
+    public EnemyBehavior2(EnemyApi api) : base(api)
     {
     }
 

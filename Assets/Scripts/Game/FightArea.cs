@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FightArea : MonoBehaviour {
-
 	// Use this for initialization
 	void Start () {
 		
@@ -22,7 +21,7 @@ public class FightArea : MonoBehaviour {
 			enemy.AudioSource.PlayOneShot(enemy.DamageSound);
 			enemy.StartNextRound();
         }
-        else if(collision.gameObject.tag == "Player")
+        else if(!GameManager.I.Enemy.IsTimeToNextRound && collision.gameObject.tag == "Player")
         {
             var player = collision.gameObject.GetComponent<Player>();
 			player.AudioSource.PlayOneShot(player.DamageSound);

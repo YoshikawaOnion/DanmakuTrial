@@ -28,6 +28,7 @@ public class Player : MonoBehaviour {
     private int shotTime = 0;
     private Script_SpriteStudio_Root sprite;
 	private bool isEnabled;
+    private IDisposable mouseSubscription;
     internal AudioSource AudioSource;
 
 	// Use this for initialization
@@ -37,7 +38,6 @@ public class Player : MonoBehaviour {
         AudioSource = GetComponent<AudioSource>();
         shotPosition = ShotObject.transform.localPosition;
         SetSpriteUp();
-        SetMouseControlUp();
         isEnabled = false;
         DamageArea.Owner = this;
         isDefeated = false;
@@ -68,11 +68,11 @@ public class Player : MonoBehaviour {
     {
         var drag = Observable.EveryUpdate()
                              .Where(t => isEnabled && !isDefeated)
-			                 .SkipWhile(t => !Input.GetMouseButtonDown(0))
+			                 .SkipWhile(t => !Input.GetMouseButton(0))
 			                 .Select(t => Input.mousePosition)
                              .Select(p => SpriteStudioManager.I.MainCamera.ScreenToWorldPoint(p))
 			                 .TakeWhile(t => !Input.GetMouseButtonUp(0));
-        drag.Zip(drag.Skip(1), (arg1, arg2) => arg2 - arg1)
+        mouseSubscription = drag.Zip(drag.Skip(1), (arg1, arg2) => arg2 - arg1)
             .Repeat()
             .Subscribe(delta =>
 		{
@@ -125,10 +125,31 @@ public class Player : MonoBehaviour {
     public void StartAction()
     {
         isEnabled = true;
+        SetMouseControlUp();
     }
 
     public void StopAction()
     {
         isEnabled = false;
+        if (mouseSubscription != null)
+		{
+			mouseSubscription.Dispose();
+			mouseSubscription = null;
+        }
+    }
+
+    public void ForceToMove(Vector3 goal, int durationFrame)
+    {
+        var initial = transform.position;
+        if (rigidBody != null)
+		{
+			rigidBody.velocity = Vector3.zero;
+        }
+        Observable.EveryUpdate()
+                  .Take(durationFrame)
+                  .Select(t => (float)t / durationFrame)
+                  .Select(t => -(t - 1) * (t - 1) + 1)
+                  .Select(t => initial * (1 - t) + goal * t)
+                  .Subscribe(p => transform.position = p);
     }
 }

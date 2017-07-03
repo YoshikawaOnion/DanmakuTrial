@@ -3,9 +3,9 @@ using System.Collections;
 using System;
 using UniRx;
 
-public class EnemyStrategy5 : EnemyStrategy
+public class EnemyBehavior5 : EnemyBehavior
 {
-    public EnemyStrategy5(EnemyApi api) : base(api)
+    public EnemyBehavior5(EnemyApi api) : base(api)
     {
     }
 

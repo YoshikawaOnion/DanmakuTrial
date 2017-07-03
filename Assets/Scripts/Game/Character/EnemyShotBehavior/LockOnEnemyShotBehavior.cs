@@ -26,15 +26,16 @@ public class LockOnEnemyShotBehavior : EnemyShotBehavior
         rigidbody.velocity = Vector3.zero;
 
 		yield return Observable.EveryUpdate()
-                               .Take(50)
-                               .Select(t => (float)t / 50)
+                               .Take(20)
+                               .Select(t => (float)t / 20)
 							   .Select(t => -(t - 1) * (t - 1) + 1)
 							   .Select(t => initialPos + offset.ToVector3() * t)
+                               .TakeWhile(t => Owner != null)
 			                   .Do(p => Owner.transform.position = p)
 			                   .ToYieldInstruction();
         
         yield return new WaitForSeconds(0.5f);
 
-        rigidbody.velocity = Owner.Api.GetAngleToPlayer(Owner.transform.position).normalized * 100 * Def.UnitPerPixel;
+        rigidbody.velocity = Owner.Api.GetAngleToPlayer(Owner.transform.position).normalized * 200 * Def.UnitPerPixel;
     }
 }

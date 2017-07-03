@@ -25,6 +25,7 @@ public class GameManager : Singleton<GameManager>
 	internal Player Player;
 
     public AudioClip Bgm;
+    public EnemyStrategy EnemyStrategy;
 
     private BulletRenderer bulletRenderer;
     private StateMachine stateMachine;
@@ -98,6 +99,7 @@ public class GameManager : Singleton<GameManager>
 
         Enemy = e.GetComponent<Enemy>();
         Enemy.BulletRenderer = bulletRenderer;
+        Enemy.strategy = EnemyStrategy;
         objectsToDestroy.Add(Enemy.gameObject);
     }
 

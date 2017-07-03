@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 using UniRx;
 
-public abstract class EnemyStrategy
+public abstract class EnemyBehavior
 {
     protected EnemyApi Api;
     protected Player Player
@@ -13,7 +13,7 @@ public abstract class EnemyStrategy
 
 	private IDisposable actionSubscription;
 
-    public EnemyStrategy(EnemyApi api)
+    public EnemyBehavior(EnemyApi api)
     {
         Api = api;
     }

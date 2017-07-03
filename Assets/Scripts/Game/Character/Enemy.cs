@@ -20,10 +20,11 @@ public class Enemy : MonoBehaviour
     public Script_SpriteStudio_Root spriteStudioRoot;
     public bool IsDefeated { get; private set; }
 
-    private bool isEnabled;
-    internal bool isGutsMode;
-    private bool isTimeToNextRound;
-    private EnemyStrategy executingStrategy;
+    internal EnemyStrategy strategy;
+    internal bool IsEnabled;
+    internal bool IsGutsMode;
+    internal bool IsTimeToNextRound;
+    private EnemyBehavior executingBehavior;
 
     private Vector3 initialPos;
     private IDisposable moveSubscription;
@@ -38,10 +39,10 @@ public class Enemy : MonoBehaviour
         rigidbody = GetComponent<Rigidbody2D>();
         initialPos = transform.position;
 		StartCoroutine(Act());
-        isEnabled = false;
+        IsEnabled = false;
         IsDefeated = false;
-        isGutsMode = false;
-        isTimeToNextRound = false;
+        IsGutsMode = false;
+        IsTimeToNextRound = false;
         api = new EnemyApi(this)
         {
             BulletRenderer = BulletRenderer
@@ -51,7 +52,7 @@ public class Enemy : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-        if (isGutsMode)
+        if (IsGutsMode)
         {
             rigidbody.AddForce(RecoverOnGuts * Def.UnitPerPixel);
         }
@@ -63,7 +64,7 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!isEnabled || isTimeToNextRound)
+        if (!IsEnabled || IsTimeToNextRound)
         {
             return;
         }
@@ -75,22 +76,28 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private IEnumerator RunStrategy(EnemyStrategy strategy)
+    private IEnumerator RunStrategy(EnemyBehavior strategy)
 	{
+        var player = GameManager.I.Player;
+
 		api.Move(initialPos, 20);
-        yield return new WaitForSeconds(2);
+        player.ForceToMove(-initialPos, 20);
+        player.StopAction();
+        yield return GameUIManager.I.AnimateGameStart();
+		player.StartAction();
+        yield return new WaitForSeconds(0.5f);
 
         rigidbody.velocity = Vector3.zero;
-        executingStrategy = strategy;
-        isGutsMode = false;
-        isTimeToNextRound = false;
+        executingBehavior = strategy;
+        IsGutsMode = false;
+        IsTimeToNextRound = false;
 
-        if (isEnabled)
+        if (IsEnabled)
 		{
-			executingStrategy.Start();
+			executingBehavior.Start();
         }
 
-		while (!isTimeToNextRound)
+		while (!IsTimeToNextRound)
 		{
 			yield return new WaitForSeconds(Time.deltaTime);
 		}
@@ -99,25 +106,22 @@ public class Enemy : MonoBehaviour
         {
             Destroy(bullet.gameObject);
         }
-        executingStrategy.Stop();
+        executingBehavior.Stop();
         AudioSource.PlayOneShot(DefeatedSound);
     }
 
     private IEnumerator Act()
 	{
-        while (!isEnabled)
+        while (!IsEnabled)
         {
             yield return new WaitForSeconds(Time.deltaTime);
         }
 
-		isTimeToNextRound = true;
-		yield return RunStrategy(new EnemyStrategy7(api));
-		yield return RunStrategy(new EnemyStrategy6(api));
-		yield return RunStrategy(new EnemyStrategy5(api));
-		yield return RunStrategy(new EnemyStrategy1(api));
-		yield return RunStrategy(new EnemyStrategy4(api));
-		yield return RunStrategy(new EnemyStrategy2(api));
-		yield return RunStrategy(new EnemyStrategy3(api));
+		IsTimeToNextRound = true;
+        foreach (EnemyBehavior item in strategy.GetBehaviors(api))
+        {
+            yield return RunStrategy(item);
+        }
 
 		// 死亡処理
         if (moveSubscription != null)
@@ -135,38 +139,38 @@ public class Enemy : MonoBehaviour
 
     public void StartAction()
     {
-        if (isEnabled || IsDefeated)
+        if (IsEnabled || IsDefeated)
         {
             return;
         }
-        if (executingStrategy != null)
+        if (executingBehavior != null)
 		{
             // TODO: ポーズを採用したら続きから再開の処理が要りそう
-			executingStrategy.Start();
+			executingBehavior.Start();
         }
-        isEnabled = true;
+        IsEnabled = true;
     }
 
     public void StopAction()
     {
-        if (!isEnabled || IsDefeated)
+        if (!IsEnabled || IsDefeated)
         {
             return;
         }
-        if (executingStrategy != null)
+        if (executingBehavior != null)
         {
-            executingStrategy.Stop();
+            executingBehavior.Stop();
         }
-        isEnabled = false;
+        IsEnabled = false;
     }
 
     public void ChangeGutsMode(bool isGuts)
     {
-        isGutsMode = isGuts;
+        IsGutsMode = isGuts;
     }
 
     public void StartNextRound()
     {
-        isTimeToNextRound = true;
+        IsTimeToNextRound = true;
     }
 }
