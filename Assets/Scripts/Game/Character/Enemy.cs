@@ -80,7 +80,7 @@ public class Enemy : MonoBehaviour
 	{
         var player = GameManager.I.Player;
 
-		api.Move(initialPos, 20);
+        api.Move(initialPos, 20);
         player.ForceToMove(-initialPos, 20);
         player.StopAction();
         yield return GameUIManager.I.AnimateGameStart();
@@ -102,6 +102,7 @@ public class Enemy : MonoBehaviour
 			yield return new WaitForSeconds(Time.deltaTime);
 		}
 
+		rigidbody.velocity = Vector3.zero;
         foreach (var bullet in BulletRenderer.Bullets)
         {
             Destroy(bullet.gameObject);
