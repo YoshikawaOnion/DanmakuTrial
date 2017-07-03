@@ -122,12 +122,18 @@ public class Player : MonoBehaviour {
         transform.position += velocity * Speed * Def.UnitPerPixel;
     }
 
+    /// <summary>
+    /// プレイヤーの動作を開始します。
+    /// </summary>
     public void StartAction()
     {
         isEnabled = true;
         SetMouseControlUp();
     }
 
+    /// <summary>
+    /// プレイヤーの動作を停止します。
+    /// </summary>
     public void StopAction()
     {
         isEnabled = false;
@@ -138,6 +144,11 @@ public class Player : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// プレイヤーに移動を強制します。
+    /// </summary>
+    /// <param name="goal">移動の目的地点。</param>
+    /// <param name="durationFrame">移動にかかる時間。</param>
     public void ForceToMove(Vector3 goal, int durationFrame)
     {
         var initial = transform.position;
@@ -145,6 +156,7 @@ public class Player : MonoBehaviour {
 		{
 			rigidBody.velocity = Vector3.zero;
         }
+        // 2次曲線によるイージングで移動します。
         Observable.EveryUpdate()
                   .Take(durationFrame)
                   .Select(t => (float)t / durationFrame)

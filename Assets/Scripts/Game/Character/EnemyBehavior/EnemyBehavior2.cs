@@ -8,10 +8,6 @@ public class EnemyBehavior2 : EnemyBehavior
 {
     private static readonly int Way = 8;
 
-    private Coroutine coroutine1;
-    private Coroutine coroutine2;
-    private IDisposable actionSubscription;
-
     public EnemyBehavior2(EnemyApi api) : base(api)
     {
     }

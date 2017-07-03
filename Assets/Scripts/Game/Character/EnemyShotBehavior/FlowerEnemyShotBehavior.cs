@@ -3,6 +3,9 @@ using System.Collections;
 using System;
 using UniRx;
 
+/// <summary>
+/// 弾から弾を発射させるクラス。
+/// </summary>
 public class FlowerEnemyShotBehavior : EnemyShotBehavior
 {
     public int Way { get; set; }

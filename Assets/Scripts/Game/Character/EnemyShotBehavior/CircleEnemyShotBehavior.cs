@@ -4,6 +4,9 @@ using System;
 using UniRx;
 using System.Collections.Generic;
 
+/// <summary>
+/// 敵を中心に回転しながら離れていくように弾を制御するクラス。
+/// </summary>
 public class CircleEnemyShotBehavior : EnemyShotBehavior
 {
     public static readonly int Way = 4;

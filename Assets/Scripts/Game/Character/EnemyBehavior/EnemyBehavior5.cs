@@ -46,7 +46,7 @@ public class EnemyBehavior5 : EnemyBehavior
                          .TakeUntil(Observable.Timer(TimeSpan.FromSeconds(3)))
                          .Do(t =>
         {
-            Api.Enemy.rigidbody.AddForce(new Vector2(0, -6 * Def.UnitPerPixel));
+            Api.Enemy.Rigidbody.AddForce(new Vector2(0, -6 * Def.UnitPerPixel));
         })
                          .Select(t => Unit.Default);
     }

@@ -3,6 +3,9 @@ using System.Collections;
 using System;
 using UniRx;
 
+/// <summary>
+/// ランダムな地点まで飛んでからプレイヤーへ向けて向きを変えるよう弾を制御するクラス。
+/// </summary>
 public class LockOnEnemyShotBehavior : EnemyShotBehavior
 {
     private float angle;

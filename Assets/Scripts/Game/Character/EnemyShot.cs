@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
+/// <summary>
+/// 敵のショットを表すクラス。
+/// </summary>
 public class EnemyShot : MonoBehaviour {
     public IObservable<Unit> DestroyEvent;
 	public EnemyShotBehavior behavior;

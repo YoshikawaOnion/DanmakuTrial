@@ -8,13 +8,14 @@ public class AppManager : Singleton<AppManager> {
     public static readonly string TitleStateName = "AppState_Title";
     public static readonly string GameStateName = "AppState_Game";
 
-    public GameManager GameManagerPrefub;
+    [SerializeField]
+    private GameManager gameManagerPrefub;
     private StateMachine stateMachine;
 
     protected override void Init()
     {
         stateMachine = GetComponent<StateMachine>();
-        Instantiate(GameManagerPrefub);
+        Instantiate(gameManagerPrefub);
         ChangeState(InitStateName);
     }
 

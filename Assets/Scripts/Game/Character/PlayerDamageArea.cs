@@ -5,19 +5,23 @@ using UniRx;
 using UnityEngine;
 
 public class PlayerDamageArea : MonoBehaviour {
-    public GameObject PlayerSprite;
     public Player Owner;
+
+    [SerializeField]
+    private GameObject playerSprite;
     [Tooltip("被弾時の押し出し[px*kg/sec^2]")]
-    public Vector2 PushOnShoot;
+    [SerializeField]
+    private Vector2 pushOnShoot;
     [Tooltip("敵と接触時の押し出し[px*kg/sec^2]")]
-    public Vector2 PushOnCollide;
+    [SerializeField]
+    private Vector2 pushOnCollide;
 
 	private Script_SpriteStudio_Root sprite;
     private IDisposable damageSubscription;
 
     // Use this for initialization
     void Start () {
-        sprite = PlayerSprite.GetComponent<Script_SpriteStudio_Root>();
+        sprite = playerSprite.GetComponent<Script_SpriteStudio_Root>();
 	}
 	
 	// Update is called once per frame
@@ -34,12 +38,12 @@ public class PlayerDamageArea : MonoBehaviour {
         if (collision.tag == "EnemyShot")
 		{
 			Destroy(collision.gameObject);
-			Owner.rigidBody.AddForce(PushOnShoot * Def.UnitPerPixel);
+			Owner.rigidBody.AddForce(pushOnShoot * Def.UnitPerPixel);
 			AnimateDamage();
 		}
         if (collision.tag == "Enemy")
 		{
-			Owner.rigidBody.AddForce(PushOnCollide * Def.UnitPerPixel);
+			Owner.rigidBody.AddForce(pushOnCollide * Def.UnitPerPixel);
             AnimateDamage();
         }
     }

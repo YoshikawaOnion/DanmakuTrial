@@ -25,8 +25,6 @@ public class GameUIManager : Singleton<GameUIManager>
 	public AudioClip WinSound;
 	internal AudioSource AudioSource;
 
-    private Vector3 ScrollPaperSize;
-
     protected override void Init()
     {
         AudioSource = GetComponent<AudioSource>();

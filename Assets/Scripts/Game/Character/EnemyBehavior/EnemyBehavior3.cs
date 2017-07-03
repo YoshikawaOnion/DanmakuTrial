@@ -8,7 +8,7 @@ public class EnemyBehavior3 : EnemyBehavior
     private static readonly int Way = 72;
     private static readonly int HoleSize = 4;
     private static readonly float Frequency = 1.0f / 8;
-    private static readonly float Amplitude = 20;
+    private static readonly float Amplitude = 30;
 
     public EnemyBehavior3(EnemyApi api) : base(api)
     {
