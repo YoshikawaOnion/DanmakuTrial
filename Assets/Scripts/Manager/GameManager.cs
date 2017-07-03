@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable CS0649
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UniRx;
@@ -19,6 +21,8 @@ public class GameManager : Singleton<GameManager>
     private static readonly float WallThickness = 10;
 
     [SerializeField]
+    private GameObject gameUiManagerPrefab;
+    [SerializeField]
     private GameObject wallPrefab;
     [SerializeField]
     private GameObject playerPrefab;
@@ -32,18 +36,15 @@ public class GameManager : Singleton<GameManager>
 	internal Enemy Enemy;
 	internal Player Player;
 
-    public AudioClip Bgm;
     public EnemyStrategy EnemyStrategy;
 
     private BulletRenderer bulletRenderer;
     private StateMachine stateMachine;
 	private List<GameObject> objectsToDestroy;
-    private AudioSource audioSource;
 
     protected override void Init()
     {
         stateMachine = GetComponent<StateMachine>();
-        audioSource = GetComponent<AudioSource>();
         objectsToDestroy = new List<GameObject>();
     }
 
@@ -61,6 +62,8 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void InitializeGame()
     {
+        Instantiate(gameUiManagerPrefab);
+
         var bottomLeft = new Vector3(-45, -80);
         var topRight = new Vector3(45, 80);
         var size = topRight - bottomLeft;
@@ -71,8 +74,7 @@ public class GameManager : Singleton<GameManager>
         SetPlayerUp(bottomLeft, size);
         SetEnemyUp(topRight, size);
 
-        audioSource.clip = Bgm;
-        audioSource.Play();
+        SoundManager.I.PlayBgm(BgmKind.Game);
 	}
 
     /// <summary>
@@ -84,7 +86,7 @@ public class GameManager : Singleton<GameManager>
         {
             Destroy(item);
         }
-        audioSource.Stop();
+        SoundManager.I.PlayBgm(BgmKind.Game);
     }
 
     /// <summary>

@@ -9,7 +9,7 @@ public class FightArea : MonoBehaviour
         var enemy = collision.gameObject.GetComponent<Enemy>();
         if (enemy != null)
 		{
-			enemy.AudioSource.PlayOneShot(enemy.DamageSound);
+            SoundManager.I.PlaySe(SeKind.EnemyDamaged);
 			enemy.StartNextRound();
             return;
         }
@@ -17,7 +17,7 @@ public class FightArea : MonoBehaviour
         var player = collision.gameObject.GetComponent<Player>();
         if (player != null)
 		{
-			player.AudioSource.PlayOneShot(player.DamageSound);
+            SoundManager.I.PlaySe(SeKind.PlayerDamaged);
 			player.isDefeated = true;
         }
     }

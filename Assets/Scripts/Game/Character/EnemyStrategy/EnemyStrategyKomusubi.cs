@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 
-public class EnemyStrategy小結 : EnemyStrategy
+public class EnemyStrategyKomusubi : EnemyStrategy
 {
     public override IEnumerable GetBehaviors(EnemyApi api)
     {

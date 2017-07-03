@@ -7,6 +7,5 @@ public class AppState_Init : StateMachine
     protected override void EvStateEnter()
     {
         AppManager.I.ChangeState(AppManager.TitleStateName);
-        GameUiManager.I.gameObject.SetActive(false);
     }
 }

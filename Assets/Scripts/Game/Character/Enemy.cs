@@ -73,7 +73,7 @@ public class Enemy : MonoBehaviour
         if (collision.gameObject.tag == "PlayerShot")
         {
             Destroy(collision.gameObject);
-            AudioSource.PlayOneShot(DamageSound, 0.2f);
+            SoundManager.I.PlaySe(SeKind.EnemyDamaged, 0.2f);
             Rigidbody.AddForce(PushOnShoot * Def.UnitPerPixel);
         }
     }
@@ -115,7 +115,7 @@ public class Enemy : MonoBehaviour
             Destroy(bullet.gameObject);
         }
         executingBehavior.Stop();
-        AudioSource.PlayOneShot(DefeatedSound);
+        SoundManager.I.PlaySe(SeKind.EnemyDefeated);
     }
 
     /// <summary>

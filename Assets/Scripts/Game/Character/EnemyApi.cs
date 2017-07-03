@@ -20,12 +20,10 @@ public class EnemyApi
     }
 
     private IDisposable moveSubscription { get; set; }
-    private AudioSource audioSource { get; set; }
 
     public EnemyApi(Enemy enemy)
     {
         this.Enemy = enemy;
-        audioSource = enemy.GetComponent<AudioSource>();
 	}
 
     /// <summary>
@@ -94,7 +92,7 @@ public class EnemyApi
     /// </summary>
     public void PlayShootSound()
     {
-        audioSource.PlayOneShot(Enemy.ShootSound);
+        SoundManager.I.PlaySe(SeKind.EnemyShot);
     }
 
     /// <summary>
@@ -102,7 +100,7 @@ public class EnemyApi
     /// </summary>
     public void PlayDefeatedSound()
     {
-        audioSource.PlayOneShot(Enemy.DefeatedSound);
+        SoundManager.I.PlaySe(SeKind.EnemyDefeated);
     }
 
     /// <summary>

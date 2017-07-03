@@ -1,3 +1,5 @@
+#pragma warning disable CS0649
+
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
@@ -8,32 +10,19 @@ using UniRx;
 /// </summary>
 public class TitleUiManager : Singleton<TitleUiManager>
 {
+    public IObservable<EnemyStrategy> LevelSelectedObservable { get; set; }
+
     [SerializeField]
     private Button buttonKomusubi;
     [SerializeField]
     private Button buttonSekiwaki;
 
-    private System.Action m_onPressKoimusubiCallback;
-    public System.Action onPressKoimusubiCallback { get { return m_onPressKoimusubiCallback; } set { m_onPressKoimusubiCallback = value; } }
-
     protected override void Init()
     {
-        buttonKomusubi.OnClickAsObservable()
-                .Subscribe(x =>
-        {
-            GameManager.I.EnemyStrategy = new EnemyStrategy小結();
-            AppManager.I.ChangeState(AppManager.GameStateName);
-
-            if (m_onPressKoimusubiCallback != null)
-            {
-                m_onPressKoimusubiCallback();
-            }
-        });
-        buttonSekiwaki.OnClickAsObservable()
-                .Subscribe(x =>
-        {
-            GameManager.I.EnemyStrategy = new EnemyStrategy関脇();
-            AppManager.I.ChangeState(AppManager.GameStateName);
-        });
+        var komusubi = buttonKomusubi.OnClickAsObservable()
+                                     .Select(x => (EnemyStrategy)new EnemyStrategyKomusubi());
+        var sekiwaki = buttonSekiwaki.OnClickAsObservable()
+                                     .Select(x => (EnemyStrategy)new EnemyStrategySekiwaki());
+        LevelSelectedObservable = komusubi.Merge(sekiwaki);
     }
 }

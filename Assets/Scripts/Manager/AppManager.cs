@@ -10,6 +10,8 @@ public class AppManager : Singleton<AppManager> {
 
     [SerializeField]
     private GameManager gameManagerPrefub;
+    [SerializeField]
+    private SoundManager soundManagerPrefub;
     private StateMachine stateMachine;
 
     protected override void Init()
@@ -17,6 +19,7 @@ public class AppManager : Singleton<AppManager> {
         stateMachine = GetComponent<StateMachine>();
         Instantiate(gameManagerPrefub);
         ChangeState(InitStateName);
+        Instantiate(soundManagerPrefub);
     }
 
     public void ChangeState(string stateName)

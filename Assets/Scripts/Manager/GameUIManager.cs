@@ -32,12 +32,6 @@ public class GameUiManager : Singleton<GameUiManager>
     [SerializeField]
     private Button titleButton;
 
-    [SerializeField]
-    private AudioClip startSound;
-    [SerializeField]
-    private AudioClip winSound;
-    internal AudioSource AudioSource;
-
     public GameUiManager()
     {
         imageHakkeyoiPrefab = null;
@@ -48,13 +42,10 @@ public class GameUiManager : Singleton<GameUiManager>
         scrollPaper = null;
         retryButton = null;
         titleButton = null;
-        startSound = null;
-        winSound = null;
     }
 
     protected override void Init()
     {
-        AudioSource = GetComponent<AudioSource>();
         scrollPaper.fillAmount = 0;
     }
 
@@ -111,7 +102,7 @@ public class GameUiManager : Singleton<GameUiManager>
     public IEnumerator AnimateGameStart()
     {
         yield return StartScrollPaperAnimation(0, 1);
-        AudioSource.PlayOneShot(startSound);
+        SoundManager.I.PlaySe(SeKind.Start);
         yield return StartMessageAnimation(imageHakkeyoiPrefab);
         yield return StartMessageAnimation(imageNokottaPrefab);
         yield return StartScrollPaperAnimation(1, 0);
@@ -121,7 +112,7 @@ public class GameUiManager : Singleton<GameUiManager>
     {
         yield return StartScrollPaperAnimation(0, 1);
         yield return StartMessageAnimation(imageGamePrefab);
-        AudioSource.PlayOneShot(winSound);
+        SoundManager.I.PlaySe(SeKind.Win);
         yield return StartMessageAnimation(imageWinPrefab);
         yield return StartScrollPaperAnimation(1, 0);
     }
