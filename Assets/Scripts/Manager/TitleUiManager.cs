@@ -9,16 +9,16 @@ using UniRx;
 public class TitleUiManager : Singleton<TitleUiManager>
 {
     [SerializeField]
-    private Button button小結;
+    private Button buttonKomusubi;
     [SerializeField]
-    private Button button関脇;
+    private Button buttonSekiwaki;
 
     private System.Action m_onPressKoimusubiCallback;
     public System.Action onPressKoimusubiCallback { get { return m_onPressKoimusubiCallback; } set { m_onPressKoimusubiCallback = value; } }
 
     protected override void Init()
     {
-        button小結.OnClickAsObservable()
+        buttonKomusubi.OnClickAsObservable()
                 .Subscribe(x =>
         {
             GameManager.I.EnemyStrategy = new EnemyStrategy小結();
@@ -29,7 +29,7 @@ public class TitleUiManager : Singleton<TitleUiManager>
                 m_onPressKoimusubiCallback();
             }
         });
-        button関脇.OnClickAsObservable()
+        buttonSekiwaki.OnClickAsObservable()
                 .Subscribe(x =>
         {
             GameManager.I.EnemyStrategy = new EnemyStrategy関脇();

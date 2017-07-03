@@ -24,9 +24,7 @@ public class Player : MonoBehaviour {
     }
 
     internal Rigidbody2D rigidBody;
-    private Vector3 shotPosition;
     private int shotTime = 0;
-    private Script_SpriteStudio_Root sprite;
 	private bool isEnabled;
     private IDisposable mouseSubscription;
     internal AudioSource AudioSource;
@@ -36,8 +34,6 @@ public class Player : MonoBehaviour {
     {
         rigidBody = GetComponent<Rigidbody2D>();
         AudioSource = GetComponent<AudioSource>();
-        shotPosition = ShotObject.transform.localPosition;
-        SetSpriteUp();
         isEnabled = false;
         DamageArea.Owner = this;
         isDefeated = false;
@@ -55,13 +51,6 @@ public class Player : MonoBehaviour {
         {
             rigidBody.velocity = Vector3.zero;
         }
-    }
-
-    private void SetSpriteUp()
-    {
-        var spriteControl = GetComponent<Script_SpriteStudio_ControlPrefab>();
-        var prefab = spriteControl.PrefabUnderControl as GameObject;
-        sprite = prefab.GetComponent<Script_SpriteStudio_Root>();
     }
 
     private void SetMouseControlUp()

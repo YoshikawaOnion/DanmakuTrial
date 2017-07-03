@@ -16,35 +16,35 @@ public class GameUiManager : Singleton<GameUiManager>
     }
 
     [SerializeField]
-    private Image imageはっけよいPrefab;
-	[SerializeField]
-    private Image imageのこったPrefab;
-	[SerializeField]
-    private Image image勝負ありPrefab;
-	[SerializeField]
-    private Image image勝ちPrefab;
-	[SerializeField]
-    private Image image負けPrefab;
-	[SerializeField]
+    private Image imageHakkeyoiPrefab;
+    [SerializeField]
+    private Image imageNokottaPrefab;
+    [SerializeField]
+    private Image imageGamePrefab;
+    [SerializeField]
+    private Image imageWinPrefab;
+    [SerializeField]
+    private Image imageLosePrefab;
+    [SerializeField]
     private Image scrollPaper;
-	[SerializeField]
+    [SerializeField]
     private Button retryButton;
-	[SerializeField]
+    [SerializeField]
     private Button titleButton;
 
     [SerializeField]
     private AudioClip startSound;
-	[SerializeField]
+    [SerializeField]
     private AudioClip winSound;
-	internal AudioSource AudioSource;
+    internal AudioSource AudioSource;
 
     public GameUiManager()
     {
-        imageはっけよいPrefab = null;
-        imageのこったPrefab = null;
-        image勝負ありPrefab = null;
-        image勝ちPrefab = null;
-        image負けPrefab = null;
+        imageHakkeyoiPrefab = null;
+        imageNokottaPrefab = null;
+        imageGamePrefab = null;
+        imageWinPrefab = null;
+        imageLosePrefab = null;
         scrollPaper = null;
         retryButton = null;
         titleButton = null;
@@ -86,61 +86,61 @@ public class GameUiManager : Singleton<GameUiManager>
     }
 
     private IEnumerator StartMessageAnimateIn(Image str, Image aura)
-	{
+    {
         str.transform.SetParent(transform, false);
         aura.transform.SetParent(transform, false);
 
-		str.transform.localPosition = Vector3.zero;
-		aura.transform.localPosition = Vector3.zero;
+        str.transform.localPosition = Vector3.zero;
+        aura.transform.localPosition = Vector3.zero;
 
-		var scale = aura.transform.localScale.x;
+        var scale = aura.transform.localScale.x;
 
         // 拡大しながら不透明度を薄くする。二次曲線によるイージングを用いる
-		yield return Observable.EveryUpdate()
-							   .Take(20)
-							   .Select(t => (float)t / 20)
-							   .Select(t => -(t - 1) * (t - 1) + 1)
-							   .Do(v =>
-		{
-			aura.transform.localScale = Vector3.one * (v * 0.3f + 1) * scale;
-			aura.color = new Color(1, 1, 1, 1 - v);
-		})
-							   .ToYieldInstruction();
+        yield return Observable.EveryUpdate()
+                               .Take(20)
+                               .Select(t => (float)t / 20)
+                               .Select(t => -(t - 1) * (t - 1) + 1)
+                               .Do(v =>
+        {
+            aura.transform.localScale = Vector3.one * (v * 0.3f + 1) * scale;
+            aura.color = new Color(1, 1, 1, 1 - v);
+        })
+                               .ToYieldInstruction();
     }
 
     public IEnumerator AnimateGameStart()
     {
         yield return StartScrollPaperAnimation(0, 1);
         AudioSource.PlayOneShot(startSound);
-        yield return StartMessageAnimation(imageはっけよいPrefab);
-        yield return StartMessageAnimation(imageのこったPrefab);
+        yield return StartMessageAnimation(imageHakkeyoiPrefab);
+        yield return StartMessageAnimation(imageNokottaPrefab);
         yield return StartScrollPaperAnimation(1, 0);
     }
 
     public IEnumerator AnimateWin()
     {
         yield return StartScrollPaperAnimation(0, 1);
-        yield return StartMessageAnimation(image勝負ありPrefab);
+        yield return StartMessageAnimation(imageGamePrefab);
         AudioSource.PlayOneShot(winSound);
-        yield return StartMessageAnimation(image勝ちPrefab);
+        yield return StartMessageAnimation(imageWinPrefab);
         yield return StartScrollPaperAnimation(1, 0);
     }
 
     public IEnumerator InputGameOverMenu(Action<GameOverOption> returnCallback)
-	{
-		yield return StartScrollPaperAnimation(0, 1);
-		yield return StartMessageAnimation(image勝負ありPrefab);
+    {
+        yield return StartScrollPaperAnimation(0, 1);
+        yield return StartMessageAnimation(imageGamePrefab);
 
-        var str = Instantiate(image負けPrefab);
-        var aura = Instantiate(image負けPrefab);
-		yield return StartMessageAnimateIn(str, aura);
+        var str = Instantiate(imageLosePrefab);
+        var aura = Instantiate(imageLosePrefab);
+        yield return StartMessageAnimateIn(str, aura);
 
         yield return InputGameOverMenu().Do(x => returnCallback(x))
                                         .ToYieldInstruction();
 
-		Destroy(str.gameObject);
-		Destroy(aura.gameObject);
-		yield return StartScrollPaperAnimation(1, 0);
+        Destroy(str.gameObject);
+        Destroy(aura.gameObject);
+        yield return StartScrollPaperAnimation(1, 0);
     }
 
     public IObservable<GameOverOption> InputGameOverMenu()
