@@ -111,6 +111,7 @@ public class Enemy : MonoBehaviour
         }
 
 		isTimeToNextRound = true;
+		yield return RunStrategy(new EnemyStrategy7(api));
 		yield return RunStrategy(new EnemyStrategy6(api));
 		yield return RunStrategy(new EnemyStrategy5(api));
 		yield return RunStrategy(new EnemyStrategy1(api));

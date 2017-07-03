@@ -129,6 +129,13 @@ public static class Vector2Extensions {
 		return new Vector3 (v.x, v.y, z);
 	}
 
+	public static Vector2 FromAngleLength(float angle, float length)
+	{
+		var x = Mathf.Sin(angle * Mathf.Deg2Rad);
+		var y = Mathf.Cos(angle * Mathf.Deg2Rad);
+		return new Vector2(x, y) * length;
+	}
+
 	public static bool IsNaN (this Vector2 v) {
 		if (float.IsNaN (v.x) || float.IsNaN (v.y)) {
 			return true;

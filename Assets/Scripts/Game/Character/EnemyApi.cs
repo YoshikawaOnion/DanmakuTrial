@@ -7,6 +7,14 @@ public class EnemyApi
 {
     internal BulletRenderer BulletRenderer { get; set; }
     internal Enemy Enemy { get; private set; }
+    internal Transform Transform
+    {
+        get { return Enemy.transform; }
+    }
+    internal Rigidbody2D Rigidbody
+    {
+        get { return Enemy.rigidbody; }
+    }
 
     private IDisposable moveSubscription { get; set; }
     private AudioSource audioSource { get; set; }
@@ -56,5 +64,10 @@ public class EnemyApi
     public void PlayShootSound()
     {
         audioSource.PlayOneShot(Enemy.ShootSound);
+    }
+
+    public Vector3 GetAngleToPlayer(Vector3 source)
+    {
+        return GameManager.I.Player.transform.position - source;
     }
 }
