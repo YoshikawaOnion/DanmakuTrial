@@ -9,18 +9,18 @@ using System.Collections.Generic;
 /// </summary>
 public class CircleEnemyShotBehavior : EnemyShotBehavior
 {
-    public static readonly int Way = 4;
-
     internal float AnglePivot { get; set; }
     internal float Distance { get; set; }
 
     private int index;
+    private int way;
 
-    public CircleEnemyShotBehavior(EnemyShot owner, int index, float angle) : base(owner)
+    public CircleEnemyShotBehavior(EnemyShot owner, int index, float angle, int way) : base(owner)
     {
         AnglePivot = angle;
         Distance = 0;
         this.index = index;
+        this.way = way;
     }
 
     protected override IObservable<Unit> GetAction()
@@ -31,7 +31,8 @@ public class CircleEnemyShotBehavior : EnemyShotBehavior
                          .Select(t => Unit.Default)
                          .Do(t =>
         {
-            var angle = AnglePivot + index * (360 / Way + 2);
+            // 角度は1周分から少しずらして少しづつずれるように
+            var angle = AnglePivot + index * (360 / way + 2);
 			var x = Mathf.Cos(angle * Mathf.Deg2Rad) * Distance;
 			var y = Mathf.Sin(angle * Mathf.Deg2Rad) * Distance;
             Owner.transform.position = center + new Vector3(x, y, 10);

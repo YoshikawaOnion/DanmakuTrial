@@ -57,7 +57,6 @@ public class Player : MonoBehaviour {
 
     private void SetMouseControlUp()
     {
-        Debug.Log("MouseSetUp");
         var drag = Observable.EveryUpdate()
                              .Where(t => isEnabled && !IsDefeated)
 			                 .SkipWhile(t => !Input.GetMouseButton(0))

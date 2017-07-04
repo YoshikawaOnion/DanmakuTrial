@@ -54,13 +54,32 @@ public class PlayerDamageArea : MonoBehaviour {
 		{
 			damageSubscription.Dispose();
 		}
-		damageSubscription = Observable.TimerFrame(60)
-			.Subscribe(t =>
+
+        var composite = new CompositeDisposable();
+
+        Observable.EveryUpdate()
+                  .TakeUntil(Observable.Timer(TimeSpan.FromSeconds(0.3)))
+                  .Select(t => new
+        {
+            X = Mathf.Sin(t * 8) * 2 * Def.UnitPerPixel,
+            Y = Mathf.Cos(t * 8) * 2 * Def.UnitPerPixel,
+        })
+                  .Subscribe(p =>
+        {
+            SpriteStudioManager.I.MainCamera.transform.position = new Vector3(p.X, p.Y, 0);
+        })
+                  .AddTo(composite);
+
+		Observable.TimerFrame(60)
+			      .Subscribe(t =>
 		{
 			SetAnimation("Player");
 			damageSubscription = null;
-		});
-		SetAnimation("Damage");        
+		})
+                  .AddTo(composite);
+		SetAnimation("Damage");
+
+        damageSubscription = composite;
     }
 
     private void SetAnimation(string name)
