@@ -53,6 +53,7 @@ public class SoundManager : Singleton<SoundManager>
         seAudioClips[SeKind.PlayerDamaged] = playerDamagedSound;
         seAudioClips[SeKind.EnemyDamaged] = enemyDamagedSound;
         seAudioClips[SeKind.EnemyDefeated] = enemyDefeatedSound;
+        seAudioClips[SeKind.Hit] = hitSound;
 
 		bgmAudioSources = new Dictionary<BgmKind, AudioSource>();
 		bgmAudioSources[BgmKind.Game] = Instantiate(gameBgmSource);

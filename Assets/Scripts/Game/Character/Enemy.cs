@@ -11,183 +11,120 @@ using Ist;
 /// </summary>
 public class Enemy : MonoBehaviour
 {
+    public static readonly string OpeningStateName = "EnemyState_Opening";
+    public static readonly string FightStateName = "EnemyState_Fight";
+    public static readonly string GutsStateName = "EnemyState_Guts";
+    public static readonly string NextRoundStateName = "EnemyState_NextRound";
+    public static readonly string DefeatedStateName = "EnemyState_Defeated";
+
 	public GameObject LeftHand;
 	public GameObject RightHand;
+    public Vector2 PushOnShoot = new Vector2(0, 100);
+    public Vector2 RecoverOnGuts = new Vector2(0, -7);
 
-    [SerializeField]
-    private Vector2 pushOnShoot = new Vector2(0, 100);
-    [SerializeField]
-    private Vector2 recoverOnGuts = new Vector2(0, -7);
     [SerializeField]
     private Script_SpriteStudio_Root spriteStudioRoot;
 
     public bool IsDefeated { get; private set; }
-    public bool IsEnabled { get; set; }
-    public bool IsGutsMode { get; set; }
-	public bool IsTimeToNextRound { get; set; }
 	public EnemyStrategy Strategy { get; set; }
 	public Rigidbody2D Rigidbody { get; private set; }
 	public BulletRenderer BulletRenderer { get; set; }
+	public StateMachine StateMachine { get; private set; }
 
-    private EnemyBehavior executingBehavior;
-    private Vector3 initialPos;
-    private EnemyApi api;
+    public IObservable<Unit> OnExitSafeAreaObservable
+    {
+        get { return onExitSafeArea; }
+    }
+    public IObservable<Unit> OnExitFightAreaObservable
+    {
+        get { return onExitFightArea; }
+    }
+	public IObservable<Unit> OnEnterSafeAreaObservable
+	{
+		get { return onEnterSafeArea; }
+	}
+	public IObservable<Collider2D> OnHitPlayerShotObservable
+	{
+		get { return onHitPlayerShot; }
+	}
+    private Subject<Unit> onExitSafeArea;
+    private Subject<Unit> onEnterSafeArea;
+    private Subject<Unit> onExitFightArea;
+    private Subject<Collider2D> onHitPlayerShot;
 
 	// Use this for initialization
 	void Start ()
     {
-        Rigidbody = GetComponent<Rigidbody2D>();
-        initialPos = transform.position;
-		StartCoroutine(Act());
-        IsEnabled = false;
-        IsDefeated = false;
-        IsGutsMode = false;
-        IsTimeToNextRound = false;
-        api = new EnemyApi(this)
-        {
-            BulletRenderer = BulletRenderer
-        };
-	}
+        onExitSafeArea = new Subject<Unit>();
+        onEnterSafeArea = new Subject<Unit>();
+        onExitFightArea = new Subject<Unit>();
+        onHitPlayerShot = new Subject<Collider2D>();
 
-	// Update is called once per frame
-	void Update()
-	{
-        if (IsGutsMode)
-        {
-            Rigidbody.AddForce(recoverOnGuts * Def.UnitPerPixel);
-        }
-    }
+        Rigidbody = GetComponent<Rigidbody2D>();
+        StateMachine = GetComponent<StateMachine>();
+        IsDefeated = false;
+	}
 
     private void OnDestroy()
     {
+        Rigidbody = null;
+        StateMachine = null;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!IsEnabled || IsTimeToNextRound)
+        onHitPlayerShot.OnNext(collision);
+    }
+
+
+    public void StartAction()
+	{
+		var api = new EnemyApi(this)
+		{
+			BulletRenderer = BulletRenderer
+		};
+        var context = new EnemyStateContext
         {
-            return;
-        }
-        if (collision.gameObject.tag == "PlayerShot")
-        {
-            Destroy(collision.gameObject);
-            SoundManager.I.PlaySe(SeKind.EnemyDamaged, 0.2f);
-            Rigidbody.AddForce(pushOnShoot * Def.UnitPerPixel);
-        }
+            Api = api,
+            BulletRenderer = BulletRenderer,
+            Behaviors = Strategy.GetBehaviors(api).GetEnumerator(),
+            Enemy = this,
+            InitialPos = transform.position,
+        };
+        context.ChangeState(NextRoundStateName);
     }
 
     /// <summary>
-    /// EnemyBehaviorの実装クラスに従って行動を開始します。
+    /// 安全圏を飛び出したことをこのオブジェクトに通知します。
     /// </summary>
-    /// <returns>The strategy.</returns>
-    /// <param name="strategy">Strategy.</param>
-    private IEnumerator RunStrategy(EnemyBehavior strategy)
-	{
-        var player = GameManager.I.Player;
-
-        api.Move(initialPos, 20);
-        player.ForceToMove(-initialPos, 20);
-        player.StopAction();
-        yield return GameUiManager.I.AnimateGameStart();
-		player.StartAction();
-        yield return new WaitForSeconds(0.5f);
-
-        Rigidbody.velocity = Vector3.zero;
-        executingBehavior = strategy;
-        IsGutsMode = false;
-        IsTimeToNextRound = false;
-
-        if (IsEnabled)
-		{
-			executingBehavior.Start();
-        }
-
-		while (!IsTimeToNextRound)
-		{
-			yield return new WaitForSeconds(Time.deltaTime);
-		}
-
-		Rigidbody.velocity = Vector3.zero;
-        foreach (var bullet in BulletRenderer.Bullets)
-        {
-            Destroy(bullet.gameObject);
-        }
-        executingBehavior.Stop();
-        SoundManager.I.PlaySe(SeKind.EnemyDefeated);
+    public void RaiseExitSafeArea()
+    {
+        onExitSafeArea.OnNext(Unit.Default);
     }
 
     /// <summary>
-    /// 敵キャラクターの制御フローを開始します。
+    /// 安全圏に戻ってきたことをこのオブジェクトに通知します。
     /// </summary>
-    /// <returns>The act.</returns>
-    private IEnumerator Act()
+    public void RaiseEnterSafeArea()
+    {
+        onEnterSafeArea.OnNext(Unit.Default);
+    }
+
+    /// <summary>
+    /// 土俵を飛び出したことをこのオブジェクトに通知します。
+    /// </summary>
+    public void RaiseExitFightArea()
+    {
+        onExitFightArea.OnNext(Unit.Default);
+    }
+
+    public IEnumerator Vanish()
 	{
-        while (!IsEnabled)
-        {
-            yield return new WaitForSeconds(Time.deltaTime);
-        }
-
-		IsTimeToNextRound = true;
-        foreach (EnemyBehavior item in Strategy.GetBehaviors(api))
-        {
-            yield return RunStrategy(item);
-        }
-
-        // 死亡処理ds
-        spriteStudioRoot.enabled = false;
+		// 死亡処理
+		spriteStudioRoot.enabled = false;
 		IsDefeated = true;
 
-        yield return new WaitForSeconds(0.5f);
-		Destroy(gameObject);
-    }
-
-    /// <summary>
-    /// 敵キャラクターの動作を開始します。
-    /// </summary>
-    public void StartAction()
-    {
-        if (IsEnabled || IsDefeated)
-        {
-            return;
-        }
-        if (executingBehavior != null)
-		{
-            // TODO: ポーズを採用したら続きから再開の処理が要りそう
-			executingBehavior.Start();
-        }
-        IsEnabled = true;
-    }
-
-    /// <summary>
-    /// 敵キャラクターの動作を停止します。
-    /// </summary>
-    public void StopAction()
-    {
-        if (!IsEnabled || IsDefeated)
-        {
-            return;
-        }
-        if (executingBehavior != null)
-        {
-            executingBehavior.Stop();
-        }
-        IsEnabled = false;
-    }
-
-    /// <summary>
-    /// 踏ん張りモード(踏ん張って押し出しにくくなるモード)を切り替えます。
-    /// </summary>
-    /// <param name="isGuts">踏ん張りモードをオンにするかどうかを表す真偽値。</param>
-    public void ChangeGutsMode(bool isGuts)
-    {
-        IsGutsMode = isGuts;
-    }
-
-    /// <summary>
-    /// 現在行なっている弾幕パターンを終了して次のパターンへ移させます。
-    /// </summary>
-    public void StartNextRound()
-    {
-        IsTimeToNextRound = true;
+		yield return new WaitForSeconds(0.5f);
+		Destroy(gameObject);        
     }
 }

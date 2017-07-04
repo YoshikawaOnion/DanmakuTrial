@@ -4,7 +4,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class EventContext : Object {
+public class EventContext : System.Object {
 	public GameObject sender = null;
 	public bool  shouldThrowEventToParent = true;
 }

@@ -12,7 +12,6 @@ public class GameState_Play : StateMachine {
 
     protected override void EvStateExit()
     {
-        GameManager.I.Enemy.StopAction();
         GameManager.I.Player.StopAction();
     }
 

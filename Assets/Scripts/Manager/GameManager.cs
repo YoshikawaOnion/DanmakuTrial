@@ -35,8 +35,7 @@ public class GameManager : Singleton<GameManager>
 
     public Enemy Enemy { get; private set; }
     public Player Player { get; private set; }
-
-    public EnemyStrategy EnemyStrategy;
+    public EnemyStrategy EnemyStrategy { get; set; }
 
     private BulletRenderer bulletRenderer;
     private StateMachine stateMachine;
@@ -54,7 +53,7 @@ public class GameManager : Singleton<GameManager>
     /// <param name="stateName">遷移先のステート名.</param>
     public void ChangeState(string stateName)
     {
-        stateMachine.ChangeSubState(stateName);
+        stateMachine.ChangeSubState(stateName, new EnemyStateContext());
     }
 
     /// <summary>
@@ -89,24 +88,6 @@ public class GameManager : Singleton<GameManager>
             Destroy(item);
         }
         SoundManager.I.StopBgm(BgmKind.Game);
-    }
-
-    /// <summary>
-    /// ゲームの進行を開始します。
-    /// </summary>
-    public void StartGameAction()
-    {
-        Enemy.StartAction();
-        Player.StartAction();
-    }
-
-    /// <summary>
-    /// ゲームの進行を停止します。
-    /// </summary>
-    public void StopGameAction()
-    {
-        Enemy.StopAction();
-        Player.StopAction();
     }
 
 

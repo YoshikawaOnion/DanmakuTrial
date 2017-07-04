@@ -10,7 +10,7 @@ public class FightArea : MonoBehaviour
         if (enemy != null)
 		{
             SoundManager.I.PlaySe(SeKind.EnemyDamaged);
-			enemy.StartNextRound();
+			enemy.RaiseExitFightArea();
             return;
         }
 

@@ -26,7 +26,7 @@ public class EventCaster : MonoBehaviour {
 	// intended for StateMachines
 	
 	public void  CastEvent ( string msg ,   EventContext context  ){
-		if(!context) Debug.LogError("context required");
+		if(context != null) Debug.LogError("context required");
 		if(!context.sender) Debug.LogError("context.sender required");
 		foreach(GameObject p in listeners){
 			if (p != null) {
@@ -41,7 +41,7 @@ public class EventCaster : MonoBehaviour {
 	static public void  CastEvent ( GameObject sender ,   string msg ,   EventContext context  ){
 		EventCaster ec = sender.GetComponent< EventCaster >();
 		if( ec ) {
-			if( !context ) {
+			if( context != null ) {
 				context = new EventContext();
 			}
 			context.sender = sender;
