@@ -53,7 +53,6 @@ public class GameUiManager : Singleton<GameUiManager>
     {
         int duration = 30;
         scrollPaper.fillAmount = start;
-        Debug.Log("Paper:" + goal);
 
         // durationだけ時間をかけて、fillAmountをstartからgoalまで変化させる
         // 二次曲線によるイージングを用いる

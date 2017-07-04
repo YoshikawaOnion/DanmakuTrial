@@ -31,19 +31,19 @@ public class PlayerDamageArea : MonoBehaviour {
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-        if (!Owner.IsEnabled || Owner.isDefeated)
+        if (!Owner.IsEnabled || Owner.IsDefeated)
         {
             return;
         }
         if (collision.tag == "EnemyShot")
 		{
 			Destroy(collision.gameObject);
-			Owner.rigidBody.AddForce(pushOnShoot * Def.UnitPerPixel);
+			Owner.Rigidbody.AddForce(pushOnShoot * Def.UnitPerPixel);
 			AnimateDamage();
 		}
         if (collision.tag == "Enemy")
 		{
-			Owner.rigidBody.AddForce(pushOnCollide * Def.UnitPerPixel);
+			Owner.Rigidbody.AddForce(pushOnCollide * Def.UnitPerPixel);
             AnimateDamage();
         }
     }

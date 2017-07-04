@@ -18,7 +18,7 @@ public class FightArea : MonoBehaviour
         if (player != null)
 		{
             SoundManager.I.PlaySe(SeKind.PlayerDamaged);
-			player.isDefeated = true;
+			player.IsDefeated = true;
         }
     }
 }

@@ -23,7 +23,7 @@ public class GameState_Play : StateMachine {
             Observable.TimerFrame(40)
                       .Subscribe(t => GameManager.I.ChangeState(GameManager.WinStateName));
         }
-        if (GameManager.I.Player.isDefeated)
+        if (GameManager.I.Player.IsDefeated)
         {
             Observable.TimerFrame(40)
                       .Subscribe(t => GameManager.I.ChangeState(GameManager.GameOverStateName));

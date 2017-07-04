@@ -11,33 +11,31 @@ using Ist;
 /// </summary>
 public class Enemy : MonoBehaviour
 {
-    public Vector2 PushOnShoot = new Vector2(0, 100);
-    public Vector2 RecoverOnGuts = new Vector2(0, -7);
+	public GameObject LeftHand;
+	public GameObject RightHand;
 
-    public BulletRenderer BulletRenderer;
-    public GameObject LeftHand;
-    public GameObject RightHand;
-    public AudioClip ShootSound;
-    public AudioClip DefeatedSound;
-    public AudioClip DamageSound;
-    public Script_SpriteStudio_Root SpriteStudioRoot;
+    [SerializeField]
+    private Vector2 pushOnShoot = new Vector2(0, 100);
+    [SerializeField]
+    private Vector2 recoverOnGuts = new Vector2(0, -7);
+    [SerializeField]
+    private Script_SpriteStudio_Root spriteStudioRoot;
+
     public bool IsDefeated { get; private set; }
+    public bool IsEnabled { get; set; }
+    public bool IsGutsMode { get; set; }
+	public bool IsTimeToNextRound { get; set; }
+	public EnemyStrategy Strategy { get; set; }
+	public Rigidbody2D Rigidbody { get; private set; }
+	public BulletRenderer BulletRenderer { get; set; }
 
-    internal EnemyStrategy Strategy;
-    internal bool IsEnabled;
-    internal bool IsGutsMode;
-    internal bool IsTimeToNextRound;
     private EnemyBehavior executingBehavior;
-
     private Vector3 initialPos;
     private EnemyApi api;
-    internal Rigidbody2D Rigidbody;
-    internal AudioSource AudioSource;
 
 	// Use this for initialization
 	void Start ()
     {
-        AudioSource = GetComponent<AudioSource>();
         Rigidbody = GetComponent<Rigidbody2D>();
         initialPos = transform.position;
 		StartCoroutine(Act());
@@ -56,7 +54,7 @@ public class Enemy : MonoBehaviour
 	{
         if (IsGutsMode)
         {
-            Rigidbody.AddForce(RecoverOnGuts * Def.UnitPerPixel);
+            Rigidbody.AddForce(recoverOnGuts * Def.UnitPerPixel);
         }
     }
 
@@ -74,7 +72,7 @@ public class Enemy : MonoBehaviour
         {
             Destroy(collision.gameObject);
             SoundManager.I.PlaySe(SeKind.EnemyDamaged, 0.2f);
-            Rigidbody.AddForce(PushOnShoot * Def.UnitPerPixel);
+            Rigidbody.AddForce(pushOnShoot * Def.UnitPerPixel);
         }
     }
 
@@ -136,7 +134,7 @@ public class Enemy : MonoBehaviour
         }
 
         // 死亡処理ds
-        SpriteStudioRoot.enabled = false;
+        spriteStudioRoot.enabled = false;
 		IsDefeated = true;
 
         yield return new WaitForSeconds(0.5f);

@@ -6,57 +6,58 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
     [Tooltip("最高速度[px/frame]")]
-	public float Speed = 0.1f;
+    [SerializeField]
+    private float speed = 0.1f;
 	[Tooltip("マウス移動速度[px/frame]")]
-    public float MouseSpeed = 0.1f;
-	public int shotSpan = 20;
-    public bool isDefeated;
-
-    public GameObject ShotObject;
-    public GameObject ShotSource;
-    public PlayerDamageArea DamageArea;
-    public AudioClip ShootSound;
-    public AudioClip DamageSound;
+	[SerializeField]
+    private float mouseSpeed = 0.1f;
+	[SerializeField]
+	private int shotSpan = 20;
+	[SerializeField]
+    private GameObject shotObject;
+	[SerializeField]
+    private GameObject shotSource;
+	[SerializeField]
+    private PlayerDamageArea damageArea;
 
     public bool IsEnabled
     {
         get { return isEnabled; }
-    }
+	}
+    public bool IsDefeated { get; set; }
 
-    internal Rigidbody2D rigidBody;
+	public Rigidbody2D Rigidbody { get; private set; }
     private int shotTime = 0;
 	private bool isEnabled;
     private IDisposable mouseSubscription;
-    internal AudioSource AudioSource;
 
 	// Use this for initialization
 	void Start ()
     {
-        rigidBody = GetComponent<Rigidbody2D>();
-        AudioSource = GetComponent<AudioSource>();
+        Rigidbody = GetComponent<Rigidbody2D>();
         isEnabled = false;
-        DamageArea.Owner = this;
-        isDefeated = false;
+        damageArea.Owner = this;
+        IsDefeated = false;
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-        if (isEnabled && !isDefeated)
+        if (isEnabled && !IsDefeated)
 		{
 			Move();
 			Shot();
         }
         else
         {
-            rigidBody.velocity = Vector3.zero;
+            Rigidbody.velocity = Vector3.zero;
         }
     }
 
     private void SetMouseControlUp()
     {
         var drag = Observable.EveryUpdate()
-                             .Where(t => isEnabled && !isDefeated)
+                             .Where(t => isEnabled && !IsDefeated)
 			                 .SkipWhile(t => !Input.GetMouseButton(0))
 			                 .Select(t => Input.mousePosition)
                              .Select(p => SpriteStudioManager.I.MainCamera.ScreenToWorldPoint(p))
@@ -73,10 +74,10 @@ public class Player : MonoBehaviour {
     {
         if (shotTime >= shotSpan)
 		{
-			var obj = Instantiate(ShotObject);
-            obj.transform.position = ShotSource.transform.position;
+			var obj = Instantiate(shotObject);
+            obj.transform.position = shotSource.transform.position;
             obj.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
-            AudioSource.PlayOneShot(ShootSound, 0.1f);
+            SoundManager.I.PlaySe(SeKind.PlayerShot, 0.1f);
             shotTime = 0;
 		}
 		++shotTime;
@@ -108,7 +109,7 @@ public class Player : MonoBehaviour {
         {
             velocity /= length;
         }
-        transform.position += velocity * Speed * Def.UnitPerPixel;
+        transform.position += velocity * speed * Def.UnitPerPixel;
     }
 
     /// <summary>
@@ -141,9 +142,9 @@ public class Player : MonoBehaviour {
     public void ForceToMove(Vector3 goal, int durationFrame)
     {
         var initial = transform.position;
-        if (rigidBody != null)
+        if (Rigidbody != null)
 		{
-			rigidBody.velocity = Vector3.zero;
+			Rigidbody.velocity = Vector3.zero;
         }
         // 2次曲線によるイージングで移動します。
         Observable.EveryUpdate()
