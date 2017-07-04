@@ -2,13 +2,11 @@ using UnityEngine;
 using System.Collections;
 using System;
 using UniRx;
+using UnityEditor;
 
 public class EnemyBehavior3 : EnemyBehavior
 {
-    private static readonly int Way = 72;
-    private static readonly int HoleSize = 4;
-    private static readonly float Frequency = 1.0f / 8;
-    private static readonly float Amplitude = 30;
+    private EnemyBehavior3Asset asset;
 
     public EnemyBehavior3(EnemyApi api) : base(api)
     {
@@ -16,23 +14,26 @@ public class EnemyBehavior3 : EnemyBehavior
 
     protected override IObservable<Unit> GetAction()
     {
+        asset = AssetDatabase.LoadAssetAtPath<EnemyBehavior3Asset>
+                             ("Assets/Editor/EnemyBehavior3Asset.asset");
         return Act().ToObservable();
     }
 
     private IEnumerator Act()
 	{
-		var span = 360.0f / Way;
+		var span = 360.0f / asset.Way;
         float time = 0;
         float angleCenter = 0;
         while (true)
 		{
-            angleCenter = Mathf.Sin(time * Mathf.PI * 2 * Frequency) * Amplitude;
-			for (int i = 0; i < Way; i++)
+            var d = time * Mathf.PI * 2 * asset.Frequency;
+            angleCenter = Mathf.Sin(d) * asset.Amplitude;
+			for (int i = 0; i < asset.Way; i++)
 			{
-				if (Mathf.Abs(i - Way / 2) > HoleSize)
+				if (Mathf.Abs(i - asset.Way / 2) > asset.HoleSize)
 				{
-					var angle = 180 + angleCenter - (i - Way / 2) * span;
-					Api.Shot(angle, 120 * Def.UnitPerPixel);
+					var angle = 180 + angleCenter - (i - asset.Way / 2) * span;
+					Api.Shot(angle, asset.Speed * Def.UnitPerPixel);
 				}
 			}
             yield return new WaitForSeconds(0.15f);

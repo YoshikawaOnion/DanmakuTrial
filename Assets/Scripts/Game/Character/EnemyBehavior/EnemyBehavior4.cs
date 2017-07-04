@@ -3,15 +3,20 @@ using System.Collections;
 using System;
 using UniRx;
 using System.Linq;
+using UnityEditor;
 
 public class EnemyBehavior4 : EnemyBehavior
 {
+    private EnemyBehavior4Asset asset;
+
     public EnemyBehavior4(EnemyApi api) : base(api)
     {
     }
 
     protected override IObservable<Unit> GetAction()
     {
+        asset = AssetDatabase.LoadAssetAtPath<EnemyBehavior4Asset>
+                             ("Assets/Editor/EnemyBehavior4Asset.asset");
         var c1 = Coroutine().ToObservable();
         var c2 = SubShotCoroutine().ToObservable();
         return c1.Merge(c2);
@@ -19,12 +24,12 @@ public class EnemyBehavior4 : EnemyBehavior
 
     private IEnumerator SubShotCoroutine()
     {
-        var span = 137.507764f;
+        var span = asset.FlowerShotSpan;
         var angle = 0.0f;
         while (true)
         {
             angle += span;
-            Api.Shot(angle, 180 * Def.UnitPerPixel);
+            Api.Shot(angle, asset.FlowerShotSpeed * Def.UnitPerPixel);
             yield return new WaitForSeconds(0.2f);
         }
     }
@@ -32,12 +37,16 @@ public class EnemyBehavior4 : EnemyBehavior
     private IEnumerator Coroutine()
 	{
         var angle = 180;
-        var speed = 420 * Def.UnitPerPixel;
-        var offsets = Enumerable.Range(-1, 3).Select(x => x * 2);
+        var speed = asset.BeamSpeed * Def.UnitPerPixel;
+        var offsets = Enumerable.Range(
+            -(asset.BeamColumns/2),
+            asset.BeamColumns)
+								.Select(x => x * 2);
+		var offsetSize = asset.BeamColumnOffset * Def.UnitPerPixel;
         while (true)
 		{
             // プレイヤーを狙って移動
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < asset.WaitTimeFrame; i++)
             {
                 var ownerPos = Api.Enemy.transform.position;
                 var playerPos = Player.gameObject.transform.position;
@@ -47,9 +56,8 @@ public class EnemyBehavior4 : EnemyBehavior
 
 			// レーザービーム
 			Api.PlayShootSound();
-			for (int j = 0; j < 15; j++)
+			for (int j = 0; j < asset.BeamRows; j++)
 			{
-				var offsetSize = 5 * Def.UnitPerPixel;
                 foreach (var i in offsets)
                 {
                     var offset = new Vector3(i * offsetSize, 0);

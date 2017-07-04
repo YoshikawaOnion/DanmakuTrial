@@ -5,6 +5,8 @@ using UniRx;
 
 public class EnemyBehavior5 : EnemyBehavior
 {
+    private EnemyBehavior5Asset asset;
+
     public EnemyBehavior5(EnemyApi api) : base(api)
     {
     }
@@ -21,21 +23,21 @@ public class EnemyBehavior5 : EnemyBehavior
         float subAngle = 0;
         while (true)
         {
-            ShotFlower(90, subAngle);
-            ShotFlower(-90, subAngle);
+            ShotFlower(asset.ShotAngle, subAngle);
+            ShotFlower(-asset.ShotAngle, subAngle);
             Api.PlayShootSound();
-            subAngle += 13;
-            yield return new WaitForSeconds(2.5f);
+            subAngle += asset.FlowerAngleRotation;
+            yield return new WaitForSeconds(asset.MainShotTimeSpan);
         }
     }
 
     private void ShotFlower(float angle, float subAngle)
     {
-        var shot = Api.Shot(angle, 150 * Def.UnitPerPixel);
+        var shot = Api.Shot(angle, asset.FlowerShotSpeed * Def.UnitPerPixel);
 		var behavior = new FlowerEnemyShotBehavior(shot);
-        behavior.Way = 6;
-        behavior.Speed = 240;
-        behavior.TimeSpan = 0.6f;
+        behavior.Way = asset.FlowerShotWay;
+        behavior.Speed = asset.FlowerShotSpeed;
+        behavior.TimeSpan = asset.FlowerShotTimeSpan;
         behavior.Angle = subAngle;
         shot.behavior = behavior;
     }
@@ -47,7 +49,7 @@ public class EnemyBehavior5 : EnemyBehavior
                          .TakeUntil(Observable.Timer(TimeSpan.FromSeconds(3)))
                          .Do(t =>
         {
-            Api.Enemy.Rigidbody.AddForce(new Vector2(0, -6 * Def.UnitPerPixel));
+            Api.Enemy.Rigidbody.AddForce(new Vector2(0, asset.GutsForce * Def.UnitPerPixel));
         })
                          .Select(t => Unit.Default);
     }
