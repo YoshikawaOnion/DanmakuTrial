@@ -2,13 +2,11 @@ using UnityEngine;
 using System.Collections;
 using System;
 using UniRx;
+using UnityEditor;
 
 public class EnemyBehavior1 : EnemyBehavior
 {
-    private static readonly float ActionDelay = 1.3f;
-    private static readonly int BulletLength = 3;
-
-    private Vector3 initialPosition = new Vector3(0, 200 * Def.UnitPerPixel, 0);
+    private EnemyBehavior1Asset asset;
 
     public EnemyBehavior1(EnemyApi api) : base(api)
     {
@@ -16,25 +14,21 @@ public class EnemyBehavior1 : EnemyBehavior
 
     public IEnumerator Act()
 	{
+        asset = AssetDatabase.LoadAssetAtPath<EnemyBehavior1Asset>
+                             ("Assets/Editor/EnemyBehavior1Asset.asset");
         while (true)
         {
             ShotChunk(Api.Enemy.LeftHand.transform.localPosition);
-			yield return WaitRandomly(ActionDelay);
+			yield return WaitRandomly(asset.ShotTimeSpan);
 
 			ShotChunk(Api.Enemy.RightHand.transform.localPosition);
-			yield return WaitRandomly(ActionDelay);
+			yield return WaitRandomly(asset.ShotTimeSpan);
 		}
     }
 
     protected override IObservable<Unit> GetAction()
     {
         return Act().ToObservable();
-    }
-
-
-    private void MoveByOffset(Vector3 pixelOffset, int durationFrame)
-    {
-		Api.Move(initialPosition + pixelOffset * Def.UnitPerPixel, 10);
     }
 
     private WaitForSeconds WaitRandomly(float pivotWait)
@@ -46,14 +40,20 @@ public class EnemyBehavior1 : EnemyBehavior
     private void ShotChunk(Vector3 localPosition)
     {
         var sourcePos = localPosition.Mul(Api.Enemy.transform.lossyScale);
-        for (int i = 0; i < BulletLength; i++)
+        for (int i = 0; i < asset.ColumnsInChunk; i++)
         {
-            for (int j = 0; j < BulletLength + 2; j++)
+            for (int j = 0; j < asset.RowsInChunk; j++)
 			{
-                var offset = new Vector3(i - BulletLength / 2, j - BulletLength / 2, 0);
-                var offsetRandom = UnityEngine.Random.insideUnitCircle.ToVector3();
-                var position = sourcePos + (offset * 16 + offsetRandom) * Def.UnitPerPixel;
-				Api.ShotByOffset(position, 180, 240 * Def.UnitPerPixel);
+                var offset = new Vector3(
+                    i - asset.ColumnsInChunk / 2,
+                    j - asset.RowsInChunk / 2,
+                    0) * asset.OffsetSize;
+                var offsetRandom = UnityEngine.Random.insideUnitCircle
+                                              .ToVector3()
+											   * asset.RandomOffsetSize;
+                var pixelOffset = offset + offsetRandom;
+                var position = sourcePos + pixelOffset * Def.UnitPerPixel;
+				Api.ShotByOffset(position, 180, asset.Speed * Def.UnitPerPixel);
             }
         }
         Api.PlayShootSound();

@@ -7,7 +7,6 @@ public class GameState_Play : StateMachine {
     protected override void EvStateEnter()
     {
         GameManager.I.Enemy.StartAction();
-        GameManager.I.Player.StartAction();
     }
 
     protected override void EvStateExit()
