@@ -33,8 +33,8 @@ public class GameManager : Singleton<GameManager>
     [SerializeField]
     private GameObject bulletRendererPrefab;
 
-	internal Enemy Enemy;
-	internal Player Player;
+    public Enemy Enemy { get; private set; }
+    public Player Player { get; private set; }
 
     public EnemyStrategy EnemyStrategy;
 
@@ -62,7 +62,9 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void InitializeGame()
     {
-        Instantiate(gameUiManagerPrefab);
+        var uiManager = Instantiate(gameUiManagerPrefab);
+        uiManager.transform.parent = AppManager.I.Canvas.transform;
+        objectsToDestroy.Add(uiManager);
 
         var bottomLeft = new Vector3(-45, -80);
         var topRight = new Vector3(45, 80);
@@ -86,7 +88,7 @@ public class GameManager : Singleton<GameManager>
         {
             Destroy(item);
         }
-        SoundManager.I.PlayBgm(BgmKind.Game);
+        SoundManager.I.StopBgm(BgmKind.Game);
     }
 
     /// <summary>
