@@ -9,9 +9,6 @@ public class Player : MonoBehaviour {
     [Tooltip("最高速度[px/frame]")]
     [SerializeField]
     private float speed = 0.1f;
-	[Tooltip("マウス移動速度[px/frame]")]
-	[SerializeField]
-    private float mouseSpeed = 0.1f;
 	[SerializeField]
 	private int shotSpan = 20;
 	[SerializeField]
