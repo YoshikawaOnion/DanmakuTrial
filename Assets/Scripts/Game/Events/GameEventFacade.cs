@@ -48,6 +48,12 @@ public class GameEventFacade : IEnemyStateEventAccepter, IEnemyEventAccepter,
         get { return OnEnemyEntersSafeAreaSubject; }
     }
 
+    public Subject<Unit> OnEnemyDefeatedSubject { get; private set; }
+    public IObservable<Unit> OnEnemyDefeated
+    {
+        get { return OnEnemyDefeatedSubject; }
+    }
+
     public GameEventFacade()
     {
         OnNextRoundSubject = new Subject<Unit>();
@@ -57,5 +63,6 @@ public class GameEventFacade : IEnemyStateEventAccepter, IEnemyEventAccepter,
         OnRoundStartSubject = new Subject<Unit>();
         OnEnemyExitsSafeAreaSubject = new Subject<Unit>();
         OnEnemyEntersSafeAreaSubject = new Subject<Unit>();
+        OnEnemyDefeatedSubject = new Subject<Unit>();
     }
 }

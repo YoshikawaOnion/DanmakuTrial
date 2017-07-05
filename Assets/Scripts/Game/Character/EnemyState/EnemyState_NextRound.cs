@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UniRx;
 
 public class EnemyState_NextRound : StateMachine
 {
@@ -18,11 +19,13 @@ public class EnemyState_NextRound : StateMachine
 				SoundManager.I.PlaySe(SeKind.EnemyDamaged);
             }
             context.ChangeState(Enemy.OpeningStateName);
+            context.EventAccepter.OnNextRoundSubject.OnNext(Unit.Default);
         }
         else
 		{
 			SoundManager.I.PlaySe(SeKind.EnemyDefeated);
             context.ChangeState(Enemy.DefeatedStateName);
+            context.EventAccepter.OnEnemyDefeatedSubject.OnNext(Unit.Default);
         }
 	}
 }

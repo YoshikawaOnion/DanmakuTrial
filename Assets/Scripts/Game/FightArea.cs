@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 public class FightArea : MonoBehaviour
@@ -11,14 +12,15 @@ public class FightArea : MonoBehaviour
         var enemy = collision.gameObject.GetComponent<Enemy>();
         if (enemy != null)
 		{
-			enemy.RaiseExitFightArea();
+            EventAccepter.OnEnemyExitsFightAreaSubject.OnNext(Unit.Default);
             return;
         }
 
         var player = collision.gameObject.GetComponent<Player>();
         if (player != null)
 		{
-            player.RaiseExitFightArea();
+            EventAccepter.OnPlayerExitsFightAreaSubject.OnNext(Unit.Default);
+            return;
         }
     }
 }

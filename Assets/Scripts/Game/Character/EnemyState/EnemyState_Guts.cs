@@ -5,27 +5,18 @@ using System;
 
 public class EnemyState_Guts : EnemyState_Fighting
 {
-	private EnemyStateContext context;
-    private Enemy enemy
+    protected new void EvStateEnter(EnemyStateContext context)
     {
-        get { return context.Enemy; }
-    }
-
-	protected void EvStateEnter(EnemyStateContext context)
-	{
-		this.context = context;
         base.EvStateEnter(context);
 
-        enemy.OnEnterSafeArea
-             .Subscribe(u =>
-        {
-            context.ChangeState(Enemy.NeutralStateName);
-        })
+        GameManager.I.GameEvents.OnEnemyEntersSafeArea
+             .Subscribe(u => context.ChangeState(Enemy.NeutralStateName))
              .AddTo(Disposable);
-	}
+    }
 
     private void Update()
     {
-        enemy.Rigidbody.AddForce(enemy.RecoverOnGuts * Def.UnitPerPixel);
+        Context.Enemy.Rigidbody.AddForce(
+            Context.Enemy.RecoverOnGuts * Def.UnitPerPixel);
     }
 }

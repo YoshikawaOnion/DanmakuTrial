@@ -37,6 +37,10 @@ public class GameManager : Singleton<GameManager>
     public Player Player { get; private set; }
     public EnemyStrategy EnemyStrategy { get; set; }
     public GameObject Dohyou { get; set; }
+    public IGameEventObservables GameEvents
+    {
+        get { return eventFacade; }
+    }
 
     private BulletRenderer bulletRenderer;
     private StateMachine stateMachine;

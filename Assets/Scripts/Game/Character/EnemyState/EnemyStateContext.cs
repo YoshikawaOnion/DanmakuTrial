@@ -21,6 +21,7 @@ public class EnemyStateContext : EventContext
 
     public void ChangeState(string stateName)
     {
-        Enemy.StateMachine.ChangeSubState(stateName, this);
+        var stateMachine = Enemy.GetComponent<StateMachine>();
+        stateMachine.ChangeSubState(stateName, this);
     }
 }

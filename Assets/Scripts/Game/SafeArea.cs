@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 public class SafeArea : MonoBehaviour
@@ -11,7 +12,7 @@ public class SafeArea : MonoBehaviour
 		var enemy = collision.gameObject.GetComponent<Enemy>();
 		if (enemy != null)
 		{
-			enemy.RaiseExitSafeArea();
+            EventAccepter.OnEnemyExitsSafeAreaSubject.OnNext(Unit.Default);
 		}
     }
 
@@ -20,7 +21,7 @@ public class SafeArea : MonoBehaviour
 		var enemy = collision.gameObject.GetComponent<Enemy>();
 		if (enemy != null)
 		{
-			enemy.RaiseEnterSafeArea();
+            EventAccepter.OnEnemyEntersSafeAreaSubject.OnNext(Unit.Default);
 		}
     }
 }

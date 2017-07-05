@@ -12,6 +12,7 @@ public class GameState_Win : StateMachine
     {
 		yield return StartCoroutine(GameUiManager.I.AnimateWin());
         GameManager.I.ClearGameObjects();
+        yield return null;
         AppManager.I.ChangeState(AppManager.TitleStateName);
     }
 }

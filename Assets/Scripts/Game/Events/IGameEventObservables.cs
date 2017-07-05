@@ -11,4 +11,5 @@ public interface IGameEventObservables
 	IObservable<Unit> OnRoundStart { get; }
     IObservable<Unit> OnEnemyExitsSafeArea { get; }
     IObservable<Unit> OnEnemyEntersSafeArea { get; }
+    IObservable<Unit> OnEnemyDefeated { get; }
 }

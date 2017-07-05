@@ -78,7 +78,7 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        onHitPlayerShot_.OnNext(collision);
+        EventAccpter.OnHitPlayerShotSubject.OnNext(collision);
     }
 
 

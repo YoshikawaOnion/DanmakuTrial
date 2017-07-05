@@ -4,6 +4,6 @@ using UniRx;
 
 public interface IFightAreaEventAccepter
 {
-    Subject<Unit> OnEnemyExitsSafeAreaSubject { get; }
+    Subject<Unit> OnEnemyExitsFightAreaSubject { get; }
     Subject<Unit> OnPlayerExitsFightAreaSubject { get; }
 }

@@ -36,6 +36,7 @@ public class Player : MonoBehaviour {
     private int shotTime = 0;
 	private bool isEnabled;
     private IDisposable mouseSubscription;
+    private IDisposable defeatedSubscription;
     private Subject<Unit> onExitFightingArea;
 
 	// Use this for initialization
@@ -46,6 +47,13 @@ public class Player : MonoBehaviour {
         isEnabled = false;
         damageArea.Owner = this;
         IsDefeated = false;
+
+        defeatedSubscription = GameManager.I.GameEvents.OnPlayerExitsFightArea
+                                          .Subscribe(u =>
+        {
+            IsDefeated = true;
+            SoundManager.I.PlaySe(SeKind.PlayerDamaged);
+        });
 	}
 
 	// Update is called once per frame
@@ -142,6 +150,15 @@ public class Player : MonoBehaviour {
         }
     }
 
+    private void OnDestroy()
+    {
+        if (mouseSubscription != null)
+        {
+            mouseSubscription.Dispose();
+        }
+        defeatedSubscription.Dispose();
+    }
+
     /// <summary>
     /// プレイヤーに移動を強制します。
     /// </summary>
@@ -161,12 +178,5 @@ public class Player : MonoBehaviour {
                   .Select(t => -(t - 1) * (t - 1) + 1)
                   .Select(t => initial * (1 - t) + goal * t)
                   .Subscribe(p => transform.position = p);
-    }
-
-    public void RaiseExitFightArea()
-    {
-        SoundManager.I.PlaySe(SeKind.PlayerDamaged);
-        IsDefeated = true;
-        onExitFightingArea.OnNext(Unit.Default);
     }
 }
