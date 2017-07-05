@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GameState_Win : StateMachine
 {
-    protected override void EvStateEnter()
+    protected void EvStateEnter(GameStateContext context)
     {
         StartCoroutine(Animate());
     }

@@ -36,27 +36,40 @@ public class GameManager : Singleton<GameManager>
     public Enemy Enemy { get; private set; }
     public Player Player { get; private set; }
     public EnemyStrategy EnemyStrategy { get; set; }
+    public GameObject Dohyou { get; set; }
 
     private BulletRenderer bulletRenderer;
     private StateMachine stateMachine;
 	private List<GameObject> objectsToDestroy;
+    private GameEventFacade eventFacade;
 
     protected override void Init()
     {
         stateMachine = GetComponent<StateMachine>();
         objectsToDestroy = new List<GameObject>();
+        eventFacade = new GameEventFacade();
+
         var uiManager = Instantiate(gameUiManagerPrefab);
         uiManager.transform.parent = AppManager.I.Canvas.transform;
         uiManager.SetActive(false);
+    }
+
+    public void InitializeState()
+    {
+        var context = new GameStateContext
+        {
+            EventAccepter = eventFacade
+        };
+        stateMachine.ChangeSubState(GameManager.InitStateName, context);
     }
 
     /// <summary>
     /// GameManagerのステートを遷移します。
     /// </summary>
     /// <param name="stateName">遷移先のステート名.</param>
-    public void ChangeState(string stateName)
+    public void ChangeState(string stateName, GameStateContext context)
     {
-        stateMachine.ChangeSubState(stateName, new EnemyStateContext());
+        stateMachine.ChangeSubState(stateName, context);
     }
 
     /// <summary>
@@ -73,11 +86,31 @@ public class GameManager : Singleton<GameManager>
         SetShootingRoomUp(size);
         SetPlayerUp(bottomLeft, size);
         SetEnemyUp(topRight, size);
+        SetFightAreaUp();
+        SetSafeAreaUp();
 
         GameUiManager.I.gameObject.SetActive(true);
 
         SoundManager.I.PlayBgm(BgmKind.Game);
-	}
+    }
+
+    private void SetSafeAreaUp()
+    {
+        var safeArea = Dohyou.transform
+	                           .GetChildrenByName("SafeArea")
+	                           .gameObject
+	                           .GetComponent<SafeArea>();
+        safeArea.EventAccepter = eventFacade;
+    }
+
+    private void SetFightAreaUp()
+	{
+        var fightArea = Dohyou.transform
+                                .GetChildrenByName("FightArea")
+                                .gameObject
+                                .GetComponent<FightArea>();
+        fightArea.EventAccepter = eventFacade;
+    }
 
     /// <summary>
     /// ゲーム内のオブジェクトを削除します。
@@ -117,6 +150,7 @@ public class GameManager : Singleton<GameManager>
         Enemy = e.GetComponent<Enemy>();
         Enemy.BulletRenderer = bulletRenderer;
         Enemy.Strategy = EnemyStrategy;
+        Enemy.EventAccpter = eventFacade;
         objectsToDestroy.Add(Enemy.gameObject);
     }
 
@@ -174,5 +208,26 @@ public class GameManager : Singleton<GameManager>
 		objectsToDestroy.Add(leftWall);
 		objectsToDestroy.Add(topWall);
 		objectsToDestroy.Add(bottomWall);
+    }
+
+    /// <summary>
+    /// 敵キャラクターのステートを初期化し、動作を開始します。
+    /// </summary>
+    public void StartEnemyAction()
+    {
+        var api = new EnemyApi(Enemy)
+        {
+            BulletRenderer = bulletRenderer
+        };
+        var context = new EnemyStateContext
+        {
+            Api = api,
+            BulletRenderer = bulletRenderer,
+            Behaviors = EnemyStrategy.GetBehaviors(api).GetEnumerator(),
+            Enemy = Enemy,
+            InitialPos = Enemy.InitialPosition,
+            EventAccepter = eventFacade
+        };
+        context.ChangeState(Enemy.NextRoundStateName);
     }
 }

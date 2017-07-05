@@ -4,8 +4,11 @@ using UniRx;
 
 public class GameState_GameOver : StateMachine
 {
-    protected override void EvStateEnter()
+    private GameStateContext context;
+
+    protected void EvStateEnter(GameStateContext context)
     {
+        this.context = context;
         StartCoroutine(Animate());
     }
 
@@ -17,7 +20,7 @@ public class GameState_GameOver : StateMachine
         if (option == GameUiManager.GameOverOption.Retry)
 		{
 			GameManager.I.ClearGameObjects();
-            GameManager.I.ChangeState(GameManager.InitStateName);
+            context.ChangeState(GameManager.InitStateName);
         }
         else if (option == GameUiManager.GameOverOption.Title)
         {

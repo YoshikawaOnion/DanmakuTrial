@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameState_Init : StateMachine {
-    protected void EvStateEnter(EnemyStateContext context)
+    protected void EvStateEnter(GameStateContext context)
     {
         GameManager.I.InitializeGame();
-        GameManager.I.ChangeState(GameManager.OpeningStateName);
+        GameManager.I.ChangeState(GameManager.OpeningStateName, context);
     }
 }

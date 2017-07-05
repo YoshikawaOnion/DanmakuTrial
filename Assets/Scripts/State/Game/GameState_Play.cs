@@ -4,9 +4,12 @@ using UniRx;
 using UnityEngine;
 
 public class GameState_Play : StateMachine {
-    protected override void EvStateEnter()
+    private GameStateContext context;
+
+    protected void EvStateEnter(GameStateContext context)
     {
-        GameManager.I.Enemy.StartAction();
+        this.context = context;
+        GameManager.I.StartEnemyAction();
     }
 
     protected override void EvStateExit()
@@ -19,12 +22,12 @@ public class GameState_Play : StateMachine {
         if (GameManager.I.Enemy.IsDefeated)
         {
             Observable.TimerFrame(40)
-                      .Subscribe(t => GameManager.I.ChangeState(GameManager.WinStateName));
+                      .Subscribe(t => context.ChangeState(GameManager.WinStateName));
         }
         if (GameManager.I.Player.IsDefeated)
         {
             Observable.TimerFrame(40)
-                      .Subscribe(t => GameManager.I.ChangeState(GameManager.GameOverStateName));
+                      .Subscribe(t => context.ChangeState(GameManager.GameOverStateName));
         }
     }
 }

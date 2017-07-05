@@ -24,10 +24,10 @@ public class GameEventFacade : IEnemyStateEventAccepter, IEnemyEventAccepter,
         get { return OnEnemyExitsFightAreaSubject; }
     }
 
-    public Subject<Unit> OnPlayerExitsSubject { get; private set; }
+    public Subject<Unit> OnPlayerExitsFightAreaSubject { get; private set; }
     public IObservable<Unit> OnPlayerExitsFightArea
     {
-        get { return OnPlayerExitsSubject; }
+        get { return OnPlayerExitsFightAreaSubject; }
     }
 
     public Subject<Unit> OnRoundStartSubject { get; private set; }
@@ -46,5 +46,16 @@ public class GameEventFacade : IEnemyStateEventAccepter, IEnemyEventAccepter,
     public IObservable<Unit> OnEnemyEntersSafeArea
     {
         get { return OnEnemyEntersSafeAreaSubject; }
+    }
+
+    public GameEventFacade()
+    {
+        OnNextRoundSubject = new Subject<Unit>();
+        OnHitPlayerShotSubject = new Subject<Collider2D>();
+        OnEnemyExitsFightAreaSubject = new Subject<Unit>();
+        OnPlayerExitsFightAreaSubject = new Subject<Unit>();
+        OnRoundStartSubject = new Subject<Unit>();
+        OnEnemyExitsSafeAreaSubject = new Subject<Unit>();
+        OnEnemyEntersSafeAreaSubject = new Subject<Unit>();
     }
 }

@@ -11,17 +11,24 @@ public class AppManager : Singleton<AppManager> {
     public GameObject Canvas;
 	
     [SerializeField]
-    private GameManager gameManagerPrefub;
+    private GameManager gameManagerPrefab;
     [SerializeField]
-    private SoundManager soundManagerPrefub;
+    private SoundManager soundManagerPrefab;
+    [SerializeField]
+    private GameObject dohyoBackgroundPrefab;
     private StateMachine stateMachine;
 
     protected override void Init()
     {
         stateMachine = GetComponent<StateMachine>();
-        Instantiate(gameManagerPrefub);
+        Instantiate(gameManagerPrefab);
         ChangeState(InitStateName);
-        Instantiate(soundManagerPrefub);
+        Instantiate(soundManagerPrefab);
+
+        var bg = Instantiate(dohyoBackgroundPrefab);
+        bg.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
+
+        GameManager.I.Dohyou = bg;
     }
 
     public void ChangeState(string stateName)

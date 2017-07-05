@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FightArea : MonoBehaviour
 {
+    public IFightAreaEventAccepter EventAccepter { get; set; }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         var enemy = collision.gameObject.GetComponent<Enemy>();

@@ -7,7 +7,8 @@ public class AppState_Game : StateMachine
 	protected override void EvStateEnter()
 	{
 		TitleUiManager.I.gameObject.SetActive(false);
-		GameManager.I.ChangeState(GameManager.InitStateName);
+
+        GameManager.I.InitializeState();
         GameManager.I.gameObject.SetActive(true);
 	}
 }

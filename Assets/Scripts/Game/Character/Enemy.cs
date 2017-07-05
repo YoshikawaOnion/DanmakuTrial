@@ -32,6 +32,7 @@ public class Enemy : MonoBehaviour
 	public BulletRenderer BulletRenderer { get; set; }
 	public StateMachine StateMachine { get; private set; }
     public Vector3 InitialPosition { get; private set; }
+    public IEnemyEventAccepter EventAccpter { get; set; }
 
     public IObservable<Unit> OnExitSafeArea
     {
@@ -80,23 +81,6 @@ public class Enemy : MonoBehaviour
         onHitPlayerShot_.OnNext(collision);
     }
 
-
-    public void StartAction()
-	{
-		var api = new EnemyApi(this)
-		{
-			BulletRenderer = BulletRenderer
-		};
-        var context = new EnemyStateContext
-        {
-            Api = api,
-            BulletRenderer = BulletRenderer,
-            Behaviors = Strategy.GetBehaviors(api).GetEnumerator(),
-            Enemy = this,
-            InitialPos = InitialPosition,
-        };
-        context.ChangeState(NextRoundStateName);
-    }
 
     /// <summary>
     /// 安全圏を飛び出したことをこのオブジェクトに通知します。

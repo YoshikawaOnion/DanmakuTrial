@@ -3,8 +3,11 @@ using System.Collections;
 
 public class GameState_Opening : StateMachine
 {
-    protected override void EvStateEnter()
+    private GameStateContext context;
+
+    protected void EvStateEnter(GameStateContext context)
     {
+        this.context = context;
         StartCoroutine(Animate());
     }
 
@@ -13,6 +16,6 @@ public class GameState_Opening : StateMachine
 
         //yield return StartCoroutine(GameUIManager.I.AnimateGameStart());
         yield return null;
-        GameManager.I.ChangeState(GameManager.PlayStateName);
+        GameManager.I.ChangeState(GameManager.PlayStateName, context);
     }
 }
