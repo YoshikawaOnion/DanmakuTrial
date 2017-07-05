@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 using UniRx;
 
+/// <summary>
+/// ゲームプレイ中に発生するイベントの登録口・購読口を提供するクラス。
+/// </summary>
 public class GameEventFacade : IEnemyStateEventAccepter, IEnemyEventAccepter,
     IFightAreaEventAccepter, ISafeAreaEventAccepter,
     IGameStateEventAccepter, IGameEventObservables

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
+/// <summary>
+/// 敵の踏ん張りを制御するための範囲を表すクラス。
+/// </summary>
 public class SafeArea : MonoBehaviour
 {
     public ISafeAreaEventAccepter EventAccepter { get; set; }

@@ -12,6 +12,10 @@ public class EnemyStateContext : EventContext
     public BulletRenderer BulletRenderer { get; set; }
     public IEnemyStateEventAccepter EventAccepter { get; set; }
 
+    /// <summary>
+    /// CurrentBehavior を次の弾幕パターンへ移行します。
+    /// </summary>
+    /// <returns>弾幕パターンを全て攻略していれば <c>true</c>、まだ攻略すべき弾幕が残っていれば <c>false</c>。</returns>
     public bool MoveNextBehavior()
     {
         var result = Behaviors.MoveNext();
@@ -19,6 +23,10 @@ public class EnemyStateContext : EventContext
         return result;
     }
 
+    /// <summary>
+    /// この <see cref="EnemyStateContext"/> に紐づけられている Enemy のステートを遷移させます。
+    /// </summary>
+    /// <param name="stateName">遷移先のステート名。</param>
     public void ChangeState(string stateName)
     {
         var stateMachine = Enemy.GetComponent<StateMachine>();

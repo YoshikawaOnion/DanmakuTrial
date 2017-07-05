@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 using UniRx;
 
+/// <summary>
+/// 敵の弾幕パターンを開始する演出を行なっているステート。
+/// </summary>
 public class GameState_Opening : StateMachine
 {
     private GameStateContext context;

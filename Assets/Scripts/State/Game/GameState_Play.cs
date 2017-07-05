@@ -4,6 +4,9 @@ using UniRx;
 using UnityEngine;
 using System;
 
+/// <summary>
+/// プレイヤーが敵と戦っているステート。
+/// </summary>
 public class GameState_Play : StateMachine
 {
     private GameStateContext context;

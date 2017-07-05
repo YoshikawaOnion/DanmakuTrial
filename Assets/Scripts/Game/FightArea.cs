@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
+/// <summary>
+/// 土俵の範囲による勝敗の判定を制御するクラス。
+/// </summary>
 public class FightArea : MonoBehaviour
 {
     public IFightAreaEventAccepter EventAccepter { get; set; }

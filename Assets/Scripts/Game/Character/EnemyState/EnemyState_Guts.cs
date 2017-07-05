@@ -3,6 +3,9 @@ using System.Collections;
 using UniRx;
 using System;
 
+/// <summary>
+/// Enemy が踏ん張りながら弾幕を繰り出しているステート。
+/// </summary>
 public class EnemyState_Guts : EnemyState_Fighting
 {
     protected new void EvStateEnter(EnemyStateContext context)

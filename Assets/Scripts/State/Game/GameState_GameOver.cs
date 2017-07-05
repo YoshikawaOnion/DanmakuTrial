@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 using UniRx;
 
+/// <summary>
+/// プレイヤーの敗北演出や、リトライをするかどうかの質問をしているステート。
+/// </summary>
 public class GameState_GameOver : StateMachine
 {
     private GameStateContext context;

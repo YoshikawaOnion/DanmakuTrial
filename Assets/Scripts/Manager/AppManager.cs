@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// アプリケーション全体を制御するクラス。
+/// </summary>
 public class AppManager : Singleton<AppManager> {
     public static readonly string InitStateName = "AppState_Init";
     public static readonly string TitleStateName = "AppState_Title";

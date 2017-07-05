@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 using UniRx;
 
+/// <summary>
+/// Enemy が弾幕を繰り出しているステートの基底クラス。
+/// </summary>
 public class EnemyState_Fighting : StateMachine
 {
     protected EnemyStateContext Context { get; private set; }
@@ -32,6 +35,11 @@ public class EnemyState_Fighting : StateMachine
         context.ChangeState(Enemy.WinStateName);
     }
 
+    /// <summary>
+    /// 敵がプレイヤーの弾に衝突した時に呼ばれるイベント。
+    /// </summary>
+    /// <param name="collision">Collision.</param>
+    /// <param name="enemy">Enemy.</param>
     private static void OnHitPlayerShot(Collider2D collision, Enemy enemy)
     {
         if (collision.gameObject.tag == Def.PlayerShotTag)
@@ -42,6 +50,10 @@ public class EnemyState_Fighting : StateMachine
         }
     }
 
+    /// <summary>
+    /// 敵が弾幕パターンを攻略された時に呼ばれるイベント。
+    /// </summary>
+    /// <param name="context">Context.</param>
     private static void OnDamaged(EnemyStateContext context)
     {
         context.Enemy.Rigidbody.velocity = Vector3.zero;
