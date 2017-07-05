@@ -100,6 +100,7 @@ public class EnemyApi
     /// </summary>
     public void PlayDefeatedSound()
     {
+        Debug.Log("EnemyDefeated");
         SoundManager.I.PlaySe(SeKind.EnemyDefeated);
     }
 

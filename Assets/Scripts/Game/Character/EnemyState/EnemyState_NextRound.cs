@@ -9,26 +9,19 @@ public class EnemyState_NextRound : StateMachine
 	{
 		this.context = context;
 
-		context.Enemy.Rigidbody.velocity = Vector3.zero;
-		foreach (var bullet in context.BulletRenderer.Bullets)
-		{
-			Destroy(bullet.gameObject);
-		}
-
-        if (context.CurrentBehavior != null)
-		{
-			context.CurrentBehavior.Stop();
-        }
-
-		SoundManager.I.PlaySe(SeKind.EnemyDefeated);
-
+        var isFirst = context.CurrentBehavior == null;
         var result = context.MoveNextBehavior();
         if (result)
 		{
+            if (!isFirst)
+			{
+				SoundManager.I.PlaySe(SeKind.EnemyDamaged);
+            }
             context.ChangeState(Enemy.OpeningStateName);
         }
         else
 		{
+			SoundManager.I.PlaySe(SeKind.EnemyDefeated);
             context.ChangeState(Enemy.DefeatedStateName);
         }
 	}

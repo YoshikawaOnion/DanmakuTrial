@@ -12,11 +12,13 @@ public class EnemyState_Opening : StateMachine
 	}
 
     private IEnumerator Run()
-	{
+    {
 		var player = GameManager.I.Player;
+		var enemy = GameManager.I.Enemy;
+		var api = new EnemyApi(GameManager.I.Enemy);
 
-		context.Api.Move(context.InitialPos, 20);
-		player.ForceToMove(-context.InitialPos, 20);
+		api.Move(enemy.InitialPosition, 20);
+		player.ForceToMove(-enemy.InitialPosition, 20);
 		player.StopAction();
 		yield return GameUiManager.I.AnimateGameStart();
 
@@ -24,6 +26,6 @@ public class EnemyState_Opening : StateMachine
 		yield return new WaitForSeconds(0.5f);
 
 		context.CurrentBehavior.Start();
-        context.ChangeState(Enemy.FightStateName);
+		context.ChangeState(Enemy.NeutralStateName);
     }
 }

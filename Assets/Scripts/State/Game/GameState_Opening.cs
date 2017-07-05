@@ -10,6 +10,7 @@ public class GameState_Opening : StateMachine
 
     private IEnumerator Animate()
 	{
+
         //yield return StartCoroutine(GameUIManager.I.AnimateGameStart());
         yield return null;
         GameManager.I.ChangeState(GameManager.PlayStateName);

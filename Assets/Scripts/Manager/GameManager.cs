@@ -45,6 +45,9 @@ public class GameManager : Singleton<GameManager>
     {
         stateMachine = GetComponent<StateMachine>();
         objectsToDestroy = new List<GameObject>();
+        var uiManager = Instantiate(gameUiManagerPrefab);
+        uiManager.transform.parent = AppManager.I.Canvas.transform;
+        uiManager.SetActive(false);
     }
 
     /// <summary>
@@ -61,10 +64,6 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void InitializeGame()
     {
-        var uiManager = Instantiate(gameUiManagerPrefab);
-        uiManager.transform.parent = AppManager.I.Canvas.transform;
-        objectsToDestroy.Add(uiManager);
-
         var bottomLeft = new Vector3(-45, -80);
         var topRight = new Vector3(45, 80);
         var size = topRight - bottomLeft;
@@ -74,6 +73,8 @@ public class GameManager : Singleton<GameManager>
         SetShootingRoomUp(size);
         SetPlayerUp(bottomLeft, size);
         SetEnemyUp(topRight, size);
+
+        GameUiManager.I.gameObject.SetActive(true);
 
         SoundManager.I.PlayBgm(BgmKind.Game);
 	}
@@ -87,6 +88,7 @@ public class GameManager : Singleton<GameManager>
         {
             Destroy(item);
         }
+        GameUiManager.I.gameObject.SetActive(false);
         SoundManager.I.StopBgm(BgmKind.Game);
     }
 

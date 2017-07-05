@@ -12,10 +12,11 @@ using Ist;
 public class Enemy : MonoBehaviour
 {
     public static readonly string OpeningStateName = "EnemyState_Opening";
-    public static readonly string FightStateName = "EnemyState_Fight";
+    public static readonly string NeutralStateName = "EnemyState_Neutral";
     public static readonly string GutsStateName = "EnemyState_Guts";
     public static readonly string NextRoundStateName = "EnemyState_NextRound";
-    public static readonly string DefeatedStateName = "EnemyState_Defeated";
+	public static readonly string DefeatedStateName = "EnemyState_Defeated";
+	public static readonly string WinStateName = "EnemyState_Win";
 
 	public GameObject LeftHand;
 	public GameObject RightHand;
@@ -30,39 +31,42 @@ public class Enemy : MonoBehaviour
 	public Rigidbody2D Rigidbody { get; private set; }
 	public BulletRenderer BulletRenderer { get; set; }
 	public StateMachine StateMachine { get; private set; }
+    public Vector3 InitialPosition { get; private set; }
 
-    public IObservable<Unit> OnExitSafeAreaObservable
+    public IObservable<Unit> OnExitSafeArea
     {
-        get { return onExitSafeArea; }
+        get { return onExitSafeArea_; }
     }
-    public IObservable<Unit> OnExitFightAreaObservable
+    public IObservable<Unit> OnExitFightArea
     {
-        get { return onExitFightArea; }
+        get { return onExitFightArea_; }
     }
-	public IObservable<Unit> OnEnterSafeAreaObservable
+	public IObservable<Unit> OnEnterSafeArea
 	{
-		get { return onEnterSafeArea; }
+		get { return onEnterSafeArea_; }
 	}
-	public IObservable<Collider2D> OnHitPlayerShotObservable
+	public IObservable<Collider2D> OnHitPlayerShot
 	{
-		get { return onHitPlayerShot; }
+		get { return onHitPlayerShot_; }
 	}
-    private Subject<Unit> onExitSafeArea;
-    private Subject<Unit> onEnterSafeArea;
-    private Subject<Unit> onExitFightArea;
-    private Subject<Collider2D> onHitPlayerShot;
+    private Subject<Unit> onExitSafeArea_;
+    private Subject<Unit> onEnterSafeArea_;
+    private Subject<Unit> onExitFightArea_;
+    private Subject<Collider2D> onHitPlayerShot_;
+
 
 	// Use this for initialization
 	void Start ()
     {
-        onExitSafeArea = new Subject<Unit>();
-        onEnterSafeArea = new Subject<Unit>();
-        onExitFightArea = new Subject<Unit>();
-        onHitPlayerShot = new Subject<Collider2D>();
+        onExitSafeArea_ = new Subject<Unit>();
+        onEnterSafeArea_ = new Subject<Unit>();
+        onExitFightArea_ = new Subject<Unit>();
+        onHitPlayerShot_ = new Subject<Collider2D>();
 
         Rigidbody = GetComponent<Rigidbody2D>();
         StateMachine = GetComponent<StateMachine>();
         IsDefeated = false;
+        InitialPosition = transform.position;
 	}
 
     private void OnDestroy()
@@ -73,7 +77,7 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        onHitPlayerShot.OnNext(collision);
+        onHitPlayerShot_.OnNext(collision);
     }
 
 
@@ -89,7 +93,7 @@ public class Enemy : MonoBehaviour
             BulletRenderer = BulletRenderer,
             Behaviors = Strategy.GetBehaviors(api).GetEnumerator(),
             Enemy = this,
-            InitialPos = transform.position,
+            InitialPos = InitialPosition,
         };
         context.ChangeState(NextRoundStateName);
     }
@@ -99,7 +103,7 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public void RaiseExitSafeArea()
     {
-        onExitSafeArea.OnNext(Unit.Default);
+        onExitSafeArea_.OnNext(Unit.Default);
     }
 
     /// <summary>
@@ -107,7 +111,7 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public void RaiseEnterSafeArea()
     {
-        onEnterSafeArea.OnNext(Unit.Default);
+        onEnterSafeArea_.OnNext(Unit.Default);
     }
 
     /// <summary>
@@ -115,7 +119,7 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public void RaiseExitFightArea()
     {
-        onExitFightArea.OnNext(Unit.Default);
+        onExitFightArea_.OnNext(Unit.Default);
     }
 
     public IEnumerator Vanish()

@@ -3,10 +3,9 @@ using System.Collections;
 using UniRx;
 using System;
 
-public class EnemyState_Guts : StateMachine
+public class EnemyState_Guts : EnemyState_Fighting
 {
 	private EnemyStateContext context;
-    private CompositeDisposable disposable;
     private Enemy enemy
     {
         get { return context.Enemy; }
@@ -15,43 +14,18 @@ public class EnemyState_Guts : StateMachine
 	protected void EvStateEnter(EnemyStateContext context)
 	{
 		this.context = context;
-        disposable = new CompositeDisposable();
+        base.EvStateEnter(context);
 
-        enemy.OnEnterSafeAreaObservable
+        enemy.OnEnterSafeArea
              .Subscribe(u =>
         {
-            context.ChangeState(Enemy.FightStateName);
+            context.ChangeState(Enemy.NeutralStateName);
         })
-             .AddTo(disposable);
-        
-		enemy.OnExitFightAreaObservable
-			   .Subscribe(u =>
-		{
-            context.ChangeState(Enemy.NextRoundStateName);
-		})
-               .AddTo(disposable);
-        
-		enemy.OnHitPlayerShotObservable
-			   .Subscribe(collision =>
-		{
-			if (collision.gameObject.tag == Def.PlayerShotTag)
-			{
-				Destroy(collision.gameObject);
-				SoundManager.I.PlaySe(SeKind.Hit, 0.2f);
-				enemy.Rigidbody.AddForce(
-					enemy.PushOnShoot * Def.UnitPerPixel);
-			}
-		})
-               .AddTo(disposable);
+             .AddTo(Disposable);
 	}
 
     private void Update()
     {
         enemy.Rigidbody.AddForce(enemy.RecoverOnGuts * Def.UnitPerPixel);
-    }
-
-    protected override void EvStateExit()
-    {
-        disposable.Dispose();
     }
 }

@@ -18,7 +18,8 @@ public class Player : MonoBehaviour {
     private GameObject shotObject;
 	[SerializeField]
     private GameObject shotSource;
-	[SerializeField]
+
+    [SerializeField]
     private PlayerDamageArea damageArea;
 
     public bool IsEnabled
@@ -26,16 +27,22 @@ public class Player : MonoBehaviour {
         get { return isEnabled; }
 	}
     public bool IsDefeated { get; set; }
+    public IObservable<Unit> OnExitFightingAreaObservable
+    {
+        get { return onExitFightingArea; }
+    }
 
 	public Rigidbody2D Rigidbody { get; private set; }
     private int shotTime = 0;
 	private bool isEnabled;
     private IDisposable mouseSubscription;
+    private Subject<Unit> onExitFightingArea;
 
 	// Use this for initialization
 	void Start ()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
+        onExitFightingArea = new Subject<Unit>();
         isEnabled = false;
         damageArea.Owner = this;
         IsDefeated = false;
@@ -154,5 +161,12 @@ public class Player : MonoBehaviour {
                   .Select(t => -(t - 1) * (t - 1) + 1)
                   .Select(t => initial * (1 - t) + goal * t)
                   .Subscribe(p => transform.position = p);
+    }
+
+    public void RaiseExitFightArea()
+    {
+        SoundManager.I.PlaySe(SeKind.PlayerDamaged);
+        IsDefeated = true;
+        onExitFightingArea.OnNext(Unit.Default);
     }
 }

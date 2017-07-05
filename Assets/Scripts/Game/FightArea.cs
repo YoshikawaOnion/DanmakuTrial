@@ -9,7 +9,6 @@ public class FightArea : MonoBehaviour
         var enemy = collision.gameObject.GetComponent<Enemy>();
         if (enemy != null)
 		{
-            SoundManager.I.PlaySe(SeKind.EnemyDamaged);
 			enemy.RaiseExitFightArea();
             return;
         }
@@ -17,8 +16,7 @@ public class FightArea : MonoBehaviour
         var player = collision.gameObject.GetComponent<Player>();
         if (player != null)
 		{
-            SoundManager.I.PlaySe(SeKind.PlayerDamaged);
-			player.IsDefeated = true;
+            player.RaiseExitFightArea();
         }
     }
 }
