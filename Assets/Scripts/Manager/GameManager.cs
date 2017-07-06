@@ -17,6 +17,7 @@ public class GameManager : Singleton<GameManager>
     public static readonly string PlayStateName = "GameState_Play";
     public static readonly string WinStateName = "GameState_Win";
     public static readonly string GameOverStateName = "GameState_GameOver";
+    public static readonly string PlayerDamageAreaObjectName = "PlayerDamageArea";
 
     private static readonly float WallThickness = 10;
 
@@ -170,6 +171,11 @@ public class GameManager : Singleton<GameManager>
         p.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
         Player = p.GetComponent<Player>();
         objectsToDestroy.Add(Player.gameObject);
+
+        var damageArea = p.transform.GetChildrenByName(PlayerDamageAreaObjectName)
+                          .gameObject
+                          .GetComponent<PlayerDamageArea>();
+        damageArea.EventAccepter = eventFacade;
     }
 
     /// <summary>

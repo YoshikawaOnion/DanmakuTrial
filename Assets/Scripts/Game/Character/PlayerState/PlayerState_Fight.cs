@@ -3,8 +3,14 @@ using System.Collections;
 using UniRx;
 using System;
 
+/// <summary>
+/// プレイヤーが操作を受け付けて戦っているステート。
+/// </summary>
 public class PlayerState_Fight : StateMachine
 {
+    private static readonly string EnemyTag = "Enemy";
+    private static readonly string EnemyShotTag = "EnemyShot";
+
 	private CompositeDisposable disposable { get; set; }
 	private PlayerStateContext context { get; set; }
 
@@ -12,11 +18,12 @@ public class PlayerState_Fight : StateMachine
     {
         this.context = context;
         disposable = new CompositeDisposable();
-        Debug.Log("PlayerState-Fight");
 
+        // 一定時間ごとにショットを撃つ
         Observable.IntervalFrame(context.Player.ShotSpan)
                   .Subscribe(t => Shot())
                   .AddTo(disposable);
+        
         Observable.EveryUpdate()
                   .Subscribe(t => Move())
                   .AddTo(disposable);
@@ -31,7 +38,36 @@ public class PlayerState_Fight : StateMachine
         GameManager.I.GameEvents.OnNextRound
                    .Subscribe(u => context.ChangeState(Player.StateNameOpening))
                    .AddTo(disposable);
+
+        GameManager.I.GameEvents.OnHitEnemyShot
+                   .Subscribe(collider => OnHit(collider))
+                   .AddTo(disposable);
+
+        // MissingReferenceException対策
+        Observable.EveryUpdate()
+                  .SkipWhile(t => context.Player != null)
+                  .Take(1)
+                  .Subscribe(t => disposable.Dispose())
+                  .AddTo(disposable);
     }
+
+    private void OnHit(Collider2D collider)
+	{
+		if (collider.tag == EnemyShotTag)
+		{
+			Destroy(collider.gameObject);
+			context.Player.Rigidbody.AddForce(
+                context.PushOnShoot * Def.UnitPerPixel);
+            context.ChangeState(Player.StateNameDamaged);
+		}
+		if (collider.tag == EnemyTag)
+		{
+			context.Player.Rigidbody.AddForce(
+				context.PushOnCollide * Def.UnitPerPixel);
+			context.ChangeState(Player.StateNameDamaged);
+		}
+    }
+
 
     protected override void EvStateExit()
     {

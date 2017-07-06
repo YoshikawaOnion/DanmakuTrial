@@ -10,6 +10,7 @@ public class Player : MonoBehaviour {
     public static readonly string StateNameFighting = "PlayerState_Fight";
     public static readonly string StateNameWin = "PlayerState_Win";
     public static readonly string StateNameLose = "PlayerState_Lose";
+    public static readonly string StateNameDamaged = "PlayerState_Damaged";
 
     [Tooltip("最高速度[px/frame]")]
     [SerializeField]
@@ -19,18 +20,19 @@ public class Player : MonoBehaviour {
 	private GameObject shotObject;
 	[SerializeField]
 	private GameObject shotSource;
-
+	[SerializeField]
+	private GameObject playerSprite = null;
+	[Tooltip("被弾時の押し出し[px*kg/sec^2]")]
+	[SerializeField]
+	private Vector2 pushOnShoot = new Vector2(0, -7000);
+	[Tooltip("敵と接触時の押し出し[px*kg/sec^2]")]
+	[SerializeField]
+	private Vector2 pushOnCollide = new Vector2(0, -10000);
     [SerializeField]
     private PlayerDamageArea damageArea;
 
-    public bool IsEnabled
-    {
-        get { return isEnabled; }
-	}
-    public bool IsDefeated { get; set; }
-
 	public Rigidbody2D Rigidbody { get; private set; }
-	private bool isEnabled;
+
     private StateMachine stateMachine;
 
 	// Use this for initialization
@@ -38,9 +40,6 @@ public class Player : MonoBehaviour {
     {
         Rigidbody = GetComponent<Rigidbody2D>();
         stateMachine = GetComponent<StateMachine>();
-        isEnabled = false;
-        damageArea.Owner = this;
-        IsDefeated = false;
 
         var context = new PlayerStateContext
         {
@@ -48,6 +47,9 @@ public class Player : MonoBehaviour {
             ShotObject = shotObject,
             ShotSource = shotSource,
             MoveSpeed = speed,
+            PushOnCollide = pushOnCollide,
+            PushOnShoot = pushOnShoot,
+            Sprite = playerSprite,
         };
         context.ChangeState(StateNameOpening);
 	}
