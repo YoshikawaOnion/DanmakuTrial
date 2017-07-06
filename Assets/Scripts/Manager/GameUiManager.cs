@@ -13,6 +13,7 @@ public class GameUiManager : Singleton<GameUiManager>
     public enum GameOverOption
     {
         Retry, Title
+
     }
 
     [SerializeField]
