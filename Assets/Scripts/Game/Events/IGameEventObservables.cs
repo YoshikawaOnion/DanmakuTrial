@@ -39,4 +39,9 @@ public interface IGameEventObservables
     /// 敵の全ての弾幕に勝利した瞬間に値が発行されるストリームを取得します。
     /// </summary>
     IObservable<Unit> OnEnemyDefeated { get; }
+    /// <summary>
+    /// プレイヤーが敵弾に衝突した瞬間に Collider2D の値が発行されるストリームを取得します。
+    /// </summary>
+    /// <value>The on hit enemy shot.</value>
+    IObservable<Collider2D> OnHitEnemyShot { get; }
 }

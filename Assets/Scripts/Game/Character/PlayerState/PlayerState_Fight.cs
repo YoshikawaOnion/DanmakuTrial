@@ -3,39 +3,59 @@ using System.Collections;
 using UniRx;
 using System;
 
+/// <summary>
+/// プレイヤーが操作を受け付けて戦っているステート。
+/// </summary>
 public class PlayerState_Fight : StateMachine
 {
-	private CompositeDisposable disposable { get; set; }
-	private PlayerStateContext context { get; set; }
+    protected static readonly string EnemyTag = "Enemy";
+    protected static readonly string EnemyShotTag = "EnemyShot";
+
+	protected CompositeDisposable Disposable { get; private set; }
+	protected PlayerStateContext Context { get; private set; }
 
     protected void EvStateEnter(PlayerStateContext context)
     {
-        this.context = context;
-        disposable = new CompositeDisposable();
-        Debug.Log("PlayerState-Fight");
+        Context = context;
+        Disposable = new CompositeDisposable();
 
-        Observable.IntervalFrame(context.Player.ShotSpan)
+        // 一定時間ごとにショットを撃つ
+        Observable.IntervalFrame(context.ShotSpan)
                   .Subscribe(t => Shot())
-                  .AddTo(disposable);
+                  .AddTo(Disposable);
+        
         Observable.EveryUpdate()
                   .Subscribe(t => Move())
-                  .AddTo(disposable);
+                  .AddTo(Disposable);
         SetMouseControlUp();
 
-        GameManager.I.GameEvents.OnPlayerExitsFightArea
-                   .Subscribe(u => context.ChangeState(Player.StateNameLose))
-                   .AddTo(disposable);
+
+		GameManager.I.GameEvents.OnPlayerExitsFightArea
+				   .Subscribe(u =>
+		{
+			SoundManager.I.PlaySe(SeKind.PlayerDamaged);
+			context.ChangeState(Player.StateNameLose);
+		})
+				   .AddTo(Disposable);
         GameManager.I.GameEvents.OnEnemyDefeated
                    .Subscribe(u => context.ChangeState(Player.StateNameWin))
-                   .AddTo(disposable);
+                   .AddTo(Disposable);
         GameManager.I.GameEvents.OnNextRound
                    .Subscribe(u => context.ChangeState(Player.StateNameOpening))
-                   .AddTo(disposable);
+                   .AddTo(Disposable);
+
+        // MissingReferenceException対策
+        Observable.EveryUpdate()
+                  .SkipWhile(t => context.Player != null)
+                  .Take(1)
+                  .Subscribe(t => Disposable.Dispose())
+                  .AddTo(Disposable);
     }
+
 
     protected override void EvStateExit()
     {
-        disposable.Dispose();
+        Disposable.Dispose();
     }
 
     private void SetMouseControlUp()
@@ -47,8 +67,8 @@ public class PlayerState_Fight : StateMachine
                         .TakeWhile(t => !Input.GetMouseButtonUp(0));
         drag.Zip(drag.Skip(1), (arg1, arg2) => arg2 - arg1)
             .Repeat()
-            .Subscribe(delta => context.Player.transform.position += delta)
-            .AddTo(disposable);
+            .Subscribe(delta => Context.Player.transform.position += delta)
+            .AddTo(Disposable);
     }
 
     private void Move()
@@ -77,14 +97,14 @@ public class PlayerState_Fight : StateMachine
 		{
 			velocity /= length;
 		}
-        context.Player.transform.position += velocity
-            * context.MoveSpeed * Def.UnitPerPixel;
+        Context.Player.transform.position += velocity
+            * Context.MoveSpeed * Def.UnitPerPixel;
     }
 
     private void Shot()
 	{
-		var obj = Instantiate(context.ShotObject);
-		obj.transform.position = context.ShotSource.transform.position;
+		var obj = Instantiate(Context.ShotObject);
+		obj.transform.position = Context.ShotSource.transform.position;
 		obj.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
 		SoundManager.I.PlaySe(SeKind.PlayerShot, 0.1f);
     }

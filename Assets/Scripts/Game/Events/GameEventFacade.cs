@@ -7,7 +7,8 @@ using UniRx;
 /// </summary>
 public class GameEventFacade : IEnemyStateEventAccepter, IEnemyEventAccepter,
     IFightAreaEventAccepter, ISafeAreaEventAccepter,
-    IGameStateEventAccepter, IGameEventObservables
+    IGameStateEventAccepter, IGameEventObservables,
+    IPlayerDamageAreaEventAccepter
 {
     public Subject<Unit> OnNextRoundSubject { get; private set; }
     public IObservable<Unit> OnNextRound
@@ -57,6 +58,12 @@ public class GameEventFacade : IEnemyStateEventAccepter, IEnemyEventAccepter,
         get { return OnEnemyDefeatedSubject; }
     }
 
+    public IObservable<Collider2D> OnHitEnemyShot
+    {
+        get { return OnHitEnemyShotSubject; }
+    }
+    public Subject<Collider2D> OnHitEnemyShotSubject { get; private set; }
+
     public GameEventFacade()
     {
         OnNextRoundSubject = new Subject<Unit>();
@@ -67,5 +74,6 @@ public class GameEventFacade : IEnemyStateEventAccepter, IEnemyEventAccepter,
         OnEnemyExitsSafeAreaSubject = new Subject<Unit>();
         OnEnemyEntersSafeAreaSubject = new Subject<Unit>();
         OnEnemyDefeatedSubject = new Subject<Unit>();
+        OnHitEnemyShotSubject = new Subject<Collider2D>();
     }
 }
