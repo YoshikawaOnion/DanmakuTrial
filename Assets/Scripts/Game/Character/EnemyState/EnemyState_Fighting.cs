@@ -47,6 +47,7 @@ public class EnemyState_Fighting : StateMachine
             Destroy(collision.gameObject);
             SoundManager.I.PlaySe(SeKind.Hit, 0.2f);
             enemy.Rigidbody.AddForce(enemy.PushOnShoot * Def.UnitPerPixel);
+            enemy.ShowHitEffect();
         }
     }
 

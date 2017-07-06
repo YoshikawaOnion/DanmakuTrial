@@ -25,6 +25,10 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]
     private Script_SpriteStudio_Root spriteStudioRoot;
+	[SerializeField]
+	private GameObject smokeEffectPrefab;
+	[SerializeField]
+	private GameObject hitEffectPrefab;
 
 	public EnemyStrategy Strategy { get; set; }
 	public Rigidbody2D Rigidbody { get; private set; }
@@ -37,6 +41,10 @@ public class Enemy : MonoBehaviour
     {
         Rigidbody = GetComponent<Rigidbody2D>();
         InitialPosition = transform.position;
+
+        var smoke = Instantiate(smokeEffectPrefab);
+        smoke.transform.SetParent(transform);
+        smoke.transform.localPosition = Vector3.zero;
 	}
 
     private void OnDestroy()
@@ -55,5 +63,14 @@ public class Enemy : MonoBehaviour
 
 		yield return new WaitForSeconds(0.5f);
 		Destroy(gameObject);        
+    }
+
+    public void ShowHitEffect()
+    {
+        var effect = Instantiate(hitEffectPrefab);
+        effect.transform.SetParent(transform);
+        effect.transform.localPosition = Vector3.zero;
+        Observable.TimerFrame(40)
+                  .Subscribe(t => Destroy(effect));
     }
 }

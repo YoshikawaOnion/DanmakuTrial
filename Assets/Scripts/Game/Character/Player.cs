@@ -62,14 +62,14 @@ public class Player : MonoBehaviour {
 
         var smoke = Instantiate(smokePrefab);
         smoke.transform.SetParent(transform);
-        smoke.transform.localPosition = new Vector3(0, 1, 0);
+        smoke.transform.localPosition = Vector3.zero;
 
         GameManager.I.GameEvents.OnHitEnemyShot
                    .Subscribe(c =>
         {
             var effect = Instantiate(playerHitPrefab);
             effect.transform.SetParent(transform);
-            effect.transform.localPosition = new Vector3(0, 0, 0);
+            effect.transform.localPosition = Vector3.zero;
             Observable.TimerFrame(60)
                       .Subscribe(t => Destroy(effect));
         });
