@@ -8,70 +8,54 @@ using System;
 /// </summary>
 public class PlayerState_Fight : StateMachine
 {
-    private static readonly string EnemyTag = "Enemy";
-    private static readonly string EnemyShotTag = "EnemyShot";
+    protected static readonly string EnemyTag = "Enemy";
+    protected static readonly string EnemyShotTag = "EnemyShot";
 
-	private CompositeDisposable disposable { get; set; }
-	private PlayerStateContext context { get; set; }
+	protected CompositeDisposable Disposable { get; private set; }
+	protected PlayerStateContext Context { get; private set; }
 
     protected void EvStateEnter(PlayerStateContext context)
     {
-        this.context = context;
-        disposable = new CompositeDisposable();
+        Context = context;
+        Disposable = new CompositeDisposable();
 
         // 一定時間ごとにショットを撃つ
-        Observable.IntervalFrame(context.Player.ShotSpan)
+        Observable.IntervalFrame(context.ShotSpan)
                   .Subscribe(t => Shot())
-                  .AddTo(disposable);
+                  .AddTo(Disposable);
         
         Observable.EveryUpdate()
                   .Subscribe(t => Move())
-                  .AddTo(disposable);
+                  .AddTo(Disposable);
         SetMouseControlUp();
 
-        GameManager.I.GameEvents.OnPlayerExitsFightArea
-                   .Subscribe(u => context.ChangeState(Player.StateNameLose))
-                   .AddTo(disposable);
+
+		GameManager.I.GameEvents.OnPlayerExitsFightArea
+				   .Subscribe(u =>
+		{
+			SoundManager.I.PlaySe(SeKind.PlayerDamaged);
+			context.ChangeState(Player.StateNameLose);
+		})
+				   .AddTo(Disposable);
         GameManager.I.GameEvents.OnEnemyDefeated
                    .Subscribe(u => context.ChangeState(Player.StateNameWin))
-                   .AddTo(disposable);
+                   .AddTo(Disposable);
         GameManager.I.GameEvents.OnNextRound
                    .Subscribe(u => context.ChangeState(Player.StateNameOpening))
-                   .AddTo(disposable);
-
-        GameManager.I.GameEvents.OnHitEnemyShot
-                   .Subscribe(collider => OnHit(collider))
-                   .AddTo(disposable);
+                   .AddTo(Disposable);
 
         // MissingReferenceException対策
         Observable.EveryUpdate()
                   .SkipWhile(t => context.Player != null)
                   .Take(1)
-                  .Subscribe(t => disposable.Dispose())
-                  .AddTo(disposable);
-    }
-
-    private void OnHit(Collider2D collider)
-	{
-		if (collider.tag == EnemyShotTag)
-		{
-			Destroy(collider.gameObject);
-			context.Player.Rigidbody.AddForce(
-                context.PushOnShoot * Def.UnitPerPixel);
-            context.ChangeState(Player.StateNameDamaged);
-		}
-		if (collider.tag == EnemyTag)
-		{
-			context.Player.Rigidbody.AddForce(
-				context.PushOnCollide * Def.UnitPerPixel);
-			context.ChangeState(Player.StateNameDamaged);
-		}
+                  .Subscribe(t => Disposable.Dispose())
+                  .AddTo(Disposable);
     }
 
 
     protected override void EvStateExit()
     {
-        disposable.Dispose();
+        Disposable.Dispose();
     }
 
     private void SetMouseControlUp()
@@ -83,8 +67,8 @@ public class PlayerState_Fight : StateMachine
                         .TakeWhile(t => !Input.GetMouseButtonUp(0));
         drag.Zip(drag.Skip(1), (arg1, arg2) => arg2 - arg1)
             .Repeat()
-            .Subscribe(delta => context.Player.transform.position += delta)
-            .AddTo(disposable);
+            .Subscribe(delta => Context.Player.transform.position += delta)
+            .AddTo(Disposable);
     }
 
     private void Move()
@@ -113,14 +97,14 @@ public class PlayerState_Fight : StateMachine
 		{
 			velocity /= length;
 		}
-        context.Player.transform.position += velocity
-            * context.MoveSpeed * Def.UnitPerPixel;
+        Context.Player.transform.position += velocity
+            * Context.MoveSpeed * Def.UnitPerPixel;
     }
 
     private void Shot()
 	{
-		var obj = Instantiate(context.ShotObject);
-		obj.transform.position = context.ShotSource.transform.position;
+		var obj = Instantiate(Context.ShotObject);
+		obj.transform.position = Context.ShotSource.transform.position;
 		obj.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
 		SoundManager.I.PlaySe(SeKind.PlayerShot, 0.1f);
     }

@@ -34,6 +34,9 @@ state Player{
     PlayerOpening --> PlayerFight : GamePlay/-
     PlayerFight --> PlayerWin : EnemyDefeated/-
     PlayerFight --> PlayerLose : PlayerDefeated/-
+    PlayerFight --> PlayerOpening : EnemyNextRound/-
+    PlayerFight --> PlayerDamaged : PlayerHitEnemyShot/\nアニメーションをDamageに
+    PlayerDamaged --> PlayerFight : 一定時間被弾しない/\nアニメーションをPlayerに
     PlayerWin --> [*]
     PlayerLose --> [*]
     PlayerFight : ショットを撃つ\n移動可能\n敵弾に押される

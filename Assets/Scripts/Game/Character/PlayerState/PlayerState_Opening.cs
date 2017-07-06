@@ -15,7 +15,7 @@ public class PlayerState_Opening : StateMachine
         disposable = GameManager.I.GameEvents.OnRoundStart
                                 .Subscribe(u => 
         {
-            context.ChangeState(Player.StateNameFighting);
+            context.ChangeState(Player.StateNameNeutral);
         });
     }
 

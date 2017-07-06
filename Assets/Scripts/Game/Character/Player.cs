@@ -7,15 +7,17 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
     public static readonly string StateNameOpening = "PlayerState_Opening";
-    public static readonly string StateNameFighting = "PlayerState_Fight";
+    public static readonly string StateNameNeutral = "PlayerState_Neutral";
     public static readonly string StateNameWin = "PlayerState_Win";
     public static readonly string StateNameLose = "PlayerState_Lose";
     public static readonly string StateNameDamaged = "PlayerState_Damaged";
 
     [Tooltip("最高速度[px/frame]")]
     [SerializeField]
-    private float speed = 0.1f;
-    public int ShotSpan = 20;
+    private float speed = 1;
+	[Tooltip("ショットの時間間隔[frame]")]
+	[SerializeField]
+    private int shotSpan = 20;
 	[SerializeField]
 	private GameObject shotObject;
 	[SerializeField]
@@ -50,6 +52,7 @@ public class Player : MonoBehaviour {
             PushOnCollide = pushOnCollide,
             PushOnShoot = pushOnShoot,
             Sprite = playerSprite,
+            ShotSpan = shotSpan,
         };
         context.ChangeState(StateNameOpening);
 	}

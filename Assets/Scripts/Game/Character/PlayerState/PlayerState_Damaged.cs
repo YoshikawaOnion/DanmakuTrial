@@ -9,21 +9,42 @@ using System;
 public class PlayerState_Damaged : PlayerState_Fight
 {
     private PlayerStateContext context;
-    private CompositeDisposable disposable;
     private Script_SpriteStudio_Root sprite;
 
     protected new void EvStateEnter(PlayerStateContext context)
     {
         base.EvStateEnter(context);
-
         this.context = context;
         sprite = context.Sprite.GetComponent<Script_SpriteStudio_Root>();
-
-        disposable = new CompositeDisposable();
         SetAnimation("Damage");
-
         ShakeCamera();
         WaitForTransitToNeutral(context);
+
+		GameManager.I.GameEvents.OnHitEnemyShot
+				   .Subscribe(collider => OnHit(collider))
+				   .AddTo(Disposable);
+	}
+
+	private void OnHit(Collider2D collider)
+	{
+		if (collider.tag == EnemyShotTag)
+		{
+			Destroy(collider.gameObject);
+			Context.Player.Rigidbody.AddForce(
+				Context.PushOnShoot * Def.UnitPerPixel);
+		}
+		if (collider.tag == EnemyTag)
+		{
+			Context.Player.Rigidbody.AddForce(
+				Context.PushOnCollide * Def.UnitPerPixel);
+		}
+	}
+
+    protected override void EvStateExit()
+    {
+        base.EvStateExit();
+        SetAnimation("Player");
+        Disposable.Dispose();
     }
 
     private void WaitForTransitToNeutral(PlayerStateContext context)
@@ -34,9 +55,9 @@ public class PlayerState_Damaged : PlayerState_Fight
                    .Subscribe(u =>
                    {
                        SetAnimation("Player");
-                       context.ChangeState(Player.StateNameFighting);
+                       context.ChangeState(Player.StateNameNeutral);
                    })
-                   .AddTo(disposable);
+                   .AddTo(Disposable);
     }
 
     private void ShakeCamera()
@@ -50,7 +71,7 @@ public class PlayerState_Damaged : PlayerState_Fight
                   })
                   .Subscribe(p => SetCameraPos(new Vector3(p.X, p.Y, 0)),
                              () => SetCameraPos(Vector3.zero))
-                  .AddTo(disposable);
+                  .AddTo(Disposable);
     }
 
     private void SetCameraPos(Vector3 pos)

@@ -10,6 +10,7 @@ public class PlayerStateContext : EventContext
     public GameObject Sprite { get; set; }
     public Vector2 PushOnShoot { get; set; }
     public Vector2 PushOnCollide { get; set; }
+    public int ShotSpan { get; set; }
 
     public void ChangeState(string stateName)
     {
