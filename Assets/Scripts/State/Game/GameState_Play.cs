@@ -16,29 +16,25 @@ public class GameState_Play : StateMachine
     {
         this.context = context;
         disposable = new CompositeDisposable();
+
+		GameManager.I.GameEvents.OnNextRound
+				   .SelectMany(Observable.TimerFrame(40))
+				   .Subscribe(t => context.ChangeState(GameManager.OpeningStateName))
+				   .AddTo(disposable);
+
+		GameManager.I.GameEvents.OnEnemyDefeated
+				   .SelectMany(Observable.TimerFrame(40))
+				   .Subscribe(t => context.ChangeState(GameManager.WinStateName))
+				   .AddTo(disposable);
+
+		GameManager.I.GameEvents.OnPlayerExitsFightArea
+				   .SelectMany(Observable.TimerFrame(40))
+				   .Subscribe(t => context.ChangeState(GameManager.GameOverStateName))
+				   .AddTo(disposable);
     }
 
     protected override void EvStateExit()
     {
-        GameManager.I.Player.StopAction();
         disposable.Dispose();
-    }
-
-    private void Update()
-    {
-        GameManager.I.GameEvents.OnNextRound
-                   .SelectMany(Observable.TimerFrame(40))
-                   .Subscribe(t => context.ChangeState(GameManager.OpeningStateName))
-                   .AddTo(disposable);
-
-        GameManager.I.GameEvents.OnEnemyDefeated
-                   .SelectMany(Observable.TimerFrame(40))
-                   .Subscribe(t => context.ChangeState(GameManager.WinStateName))
-                   .AddTo(disposable);
-
-        GameManager.I.GameEvents.OnPlayerExitsFightArea
-                   .SelectMany(Observable.TimerFrame(40))
-                   .Subscribe(t => context.ChangeState(GameManager.GameOverStateName))
-                   .AddTo(disposable);
     }
 }
