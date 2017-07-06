@@ -1,17 +1,26 @@
 using UnityEngine;
 using System.Collections;
 using UniRx;
+using System;
 
 public class PlayerState_Neutral : PlayerState_Fight
 {
+    private IDisposable disposable;
+
     protected void EvStateEnter(PlayerStateContext context)
     {
 		base.EvStateEnter(context);
 
-		GameManager.I.GameEvents.OnHitEnemyShot
+		disposable = GameManager.I.GameEvents.OnHitEnemyShot
 				   .Subscribe(collider => OnHit(collider))
 				   .AddTo(Disposable);
 	}
+
+    protected override void EvStateExit()
+    {
+        base.EvStateExit();
+        disposable.Dispose();
+    }
 
 	private void OnHit(Collider2D collider)
 	{

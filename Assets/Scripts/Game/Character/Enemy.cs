@@ -27,8 +27,6 @@ public class Enemy : MonoBehaviour
     private Script_SpriteStudio_Root spriteStudioRoot;
 	[SerializeField]
 	private GameObject smokeEffectPrefab;
-	[SerializeField]
-	private GameObject hitEffectPrefab;
 
 	public EnemyStrategy Strategy { get; set; }
 	public Rigidbody2D Rigidbody { get; private set; }

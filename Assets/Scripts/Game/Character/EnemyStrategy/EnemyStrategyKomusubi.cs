@@ -9,7 +9,7 @@ public class EnemyStrategyKomusubi : EnemyStrategy
     {
         yield return new EnemyBehavior8(api);
 		yield return new EnemyBehavior1(api);
-		yield return new EnemyBehavior2(api);
+        yield return new EnemyBehavior9(api);
 		yield return new EnemyBehavior3(api);
     }
 }

@@ -40,6 +40,7 @@ public class Player : MonoBehaviour {
 	public Rigidbody2D Rigidbody { get; private set; }
 
     private StateMachine stateMachine;
+    private IDisposable disposable;
 
 	// Use this for initialization
 	void Start ()
@@ -64,8 +65,8 @@ public class Player : MonoBehaviour {
         smoke.transform.SetParent(transform);
         smoke.transform.localPosition = Vector3.zero;
 
-        GameManager.I.GameEvents.OnHitEnemyShot
-                   .Subscribe(c =>
+        disposable = GameManager.I.GameEvents.OnHitEnemyShot
+                                .Subscribe(c =>
         {
             var effect = Instantiate(playerHitPrefab);
             effect.transform.SetParent(transform);
@@ -74,6 +75,11 @@ public class Player : MonoBehaviour {
                       .Subscribe(t => Destroy(effect));
         });
 	}
+
+    private void OnDestroy()
+    {
+        disposable.Dispose();
+    }
 
     /// <summary>
     /// プレイヤーに移動を強制します。

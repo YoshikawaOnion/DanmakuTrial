@@ -39,6 +39,6 @@ public class LockOnEnemyShotBehavior : EnemyShotBehavior
         
         yield return new WaitForSeconds(0.5f);
 
-        rigidbody.velocity = Owner.Api.GetAngleToPlayer(Owner.transform.position).normalized * 200 * Def.UnitPerPixel;
+        rigidbody.velocity = Owner.Api.GetDistanceToPlayer(Owner.transform.position).normalized * 200 * Def.UnitPerPixel;
     }
 }

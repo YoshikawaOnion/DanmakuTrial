@@ -113,8 +113,19 @@ public class EnemyApi
     /// </summary>
     /// <returns>指定した地点からプレイヤーへのベクトル。</returns>
     /// <param name="source">計算の基準位置。</param>
-    public Vector3 GetAngleToPlayer(Vector3 source)
+    public Vector3 GetDistanceToPlayer(Vector3 source)
     {
         return GameManager.I.Player.transform.position - source;
+    }
+
+	/// <summary>
+	/// 指定した地点からプレイヤーへの角度を取得します。
+	/// </summary>
+	/// <returns>指定した地点からプレイヤーへの角度</returns>
+    /// <param name="source">計算の基準位置。</param>
+	public float GetAngleToPlayer(Vector3 source)
+    {
+        var v = GetDistanceToPlayer(source);
+        return -(Mathf.Atan2(v.y, v.x) * Mathf.Rad2Deg) + 90;
     }
 }
