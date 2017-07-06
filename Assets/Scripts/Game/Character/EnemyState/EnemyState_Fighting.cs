@@ -42,12 +42,13 @@ public class EnemyState_Fighting : StateMachine
     /// <param name="enemy">Enemy.</param>
     private static void OnHitPlayerShot(Collider2D collision, Enemy enemy)
     {
-        if (collision.gameObject.tag == Def.PlayerShotTag)
+        var playerShot = collision.gameObject.GetComponent<PlayerShot>();
+        if (playerShot != null)
         {
             Destroy(collision.gameObject);
             SoundManager.I.PlaySe(SeKind.Hit, 0.2f);
             enemy.Rigidbody.AddForce(enemy.PushOnShoot * Def.UnitPerPixel);
-            enemy.ShowHitEffect();
+            playerShot.ShowHitEffect();
         }
     }
 

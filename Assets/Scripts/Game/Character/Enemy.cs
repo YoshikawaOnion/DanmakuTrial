@@ -65,12 +65,4 @@ public class Enemy : MonoBehaviour
 		Destroy(gameObject);        
     }
 
-    public void ShowHitEffect()
-    {
-        var effect = Instantiate(hitEffectPrefab);
-        effect.transform.SetParent(transform);
-        effect.transform.localPosition = Vector3.zero;
-        Observable.TimerFrame(40)
-                  .Subscribe(t => Destroy(effect));
-    }
 }
