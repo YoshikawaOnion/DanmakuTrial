@@ -43,7 +43,7 @@ public class GameManager : Singleton<GameManager>
         get { return eventFacade; }
     }
 
-    private BulletRenderer bulletRenderer;
+    private BulletManager bulletRenderer;
     private StateMachine stateMachine;
 	private List<GameObject> objectsToDestroy;
     private GameEventFacade eventFacade;
@@ -137,7 +137,7 @@ public class GameManager : Singleton<GameManager>
     private void SetBulletRendererUp()
     {
         var renderer = Instantiate(bulletRendererPrefab);
-        bulletRenderer = renderer.GetComponent<BulletRenderer>();
+        bulletRenderer = renderer.GetComponent<BulletManager>();
         objectsToDestroy.Add(renderer);
     }
 

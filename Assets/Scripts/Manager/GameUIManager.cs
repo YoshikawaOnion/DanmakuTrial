@@ -31,6 +31,8 @@ public class GameUiManager : Singleton<GameUiManager>
     private Button retryButton;
     [SerializeField]
     private Button titleButton;
+    [SerializeField]
+    private Text fpsText;
 
     public GameUiManager()
     {
@@ -47,6 +49,10 @@ public class GameUiManager : Singleton<GameUiManager>
     protected override void Init()
     {
         scrollPaper.fillAmount = 0;
+        var fps = Instantiate(fpsText).GetComponent<Text>();
+        fps.transform.SetParent(transform);
+        Observable.IntervalFrame(10)
+                  .Subscribe(t => fps.text = (1.0f / Time.deltaTime).ToString("##"));
     }
 
     private ObservableYieldInstruction<float> StartScrollPaperAnimation(float start, float goal)

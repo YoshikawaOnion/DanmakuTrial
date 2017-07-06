@@ -8,7 +8,7 @@ using UniRx;
 /// </summary>
 public class EnemyApi
 {
-    internal BulletRenderer BulletRenderer { get; set; }
+    internal BulletManager BulletRenderer { get; set; }
     internal Enemy Enemy { get; private set; }
     internal Transform Transform
     {
@@ -61,8 +61,12 @@ public class EnemyApi
 	{
 		position += new Vector3(0, 0, 10);
 		var shot = BulletRenderer.Shoot(position, angle, speed);
-		shot.Api = this;
-		return shot;
+        if (shot != null)
+		{
+			shot.Api = this;
+			return shot;
+        }
+        return null;
 	}
 
     /// <summary>

@@ -28,7 +28,7 @@ public class Enemy : MonoBehaviour
 
 	public EnemyStrategy Strategy { get; set; }
 	public Rigidbody2D Rigidbody { get; private set; }
-	public BulletRenderer BulletRenderer { get; set; }
+	public BulletManager BulletRenderer { get; set; }
     public Vector3 InitialPosition { get; private set; }
     public IEnemyEventAccepter EventAccpter { get; set; }
 

@@ -37,7 +37,11 @@ public class EnemyBehavior5 : EnemyBehavior
     private void ShotFlower(float angle, float subAngle)
     {
         var shot = Api.Shot(angle, asset.FlowerShotSpeed * Def.UnitPerPixel);
-		var behavior = new FlowerEnemyShotBehavior(shot);
+        if (shot == null)
+        {
+            return;
+        }
+        var behavior = new FlowerEnemyShotBehavior(shot);
         behavior.Way = asset.FlowerShotWay;
         behavior.Speed = asset.FlowerShotSpeed;
         behavior.TimeSpan = asset.FlowerShotTimeSpan;

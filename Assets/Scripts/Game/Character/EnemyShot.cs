@@ -10,7 +10,7 @@ public class EnemyShot : MonoBehaviour {
     public IObservable<Unit> DestroyEvent;
 	public EnemyShotBehavior behavior;
 
-    internal EnemyApi Api;
+    public EnemyApi Api { get; set; }
 
 	private Subject<Unit> destroySubject;
 
@@ -19,6 +19,13 @@ public class EnemyShot : MonoBehaviour {
 		destroySubject = new Subject<Unit>();
 		DestroyEvent = destroySubject;
         behavior = new NullEnemyShotBehavior(this);
+    }
+
+    public void NotifyDespawn()
+	{
+		behavior.Stop();
+		destroySubject.OnNext(Unit.Default);
+		destroySubject.OnCompleted();
     }
 
     private void Start()

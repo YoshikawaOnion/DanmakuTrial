@@ -9,7 +9,7 @@ public class EnemyStateContext : EventContext
     public Enemy Enemy { get; set; }
     public EnemyApi Api { get; set; }
     public Vector3 InitialPos { get; set; }
-    public BulletRenderer BulletRenderer { get; set; }
+    public BulletManager BulletRenderer { get; set; }
     public IEnemyStateEventAccepter EventAccepter { get; set; }
 
     /// <summary>

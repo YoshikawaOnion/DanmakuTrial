@@ -1,7 +1,12 @@
 fileFormatVersion: 2
-guid: 073c47c7e05614d3e9caf74032334e59
-timeCreated: 1498208743
-licenseType: Pro
+guid: 4d6457416cd1f48cc955946993acff4b
+labels:
+- ObjectPool
+- Pool
+- Pooling
+- Script
+timeCreated: 1486115191
+licenseType: Store
 MonoImporter:
   serializedVersion: 2
   defaultReferences: []

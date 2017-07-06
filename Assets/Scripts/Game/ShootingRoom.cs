@@ -8,9 +8,16 @@ using UnityEngine;
 public class ShootingRoom : MonoBehaviour {
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "PlayerShot" || collision.tag == "EnemyShot")
+        if (collision.tag == "PlayerShot")
         {
             Destroy(collision.gameObject);
+        }
+
+        var shot = collision.gameObject.GetComponent<EnemyShot>();
+        if (shot != null)
+        {
+            MF_AutoPool.Despawn(collision.gameObject);
+            shot.NotifyDespawn();
         }
     }
 }

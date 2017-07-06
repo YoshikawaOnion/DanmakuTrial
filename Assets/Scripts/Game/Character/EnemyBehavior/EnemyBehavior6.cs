@@ -63,7 +63,11 @@ public class EnemyBehavior6 : EnemyBehavior
 		for (int i = 0; i < way; i++)
 		{
 			var shot = Api.Shot(0, 0);
-			var behavior = new CircleEnemyShotBehavior(shot, i, anglePivot, asset.Way);
+            if (shot == null)
+            {
+                return;
+            }
+            var behavior = new CircleEnemyShotBehavior(shot, i, anglePivot, asset.Way);
 			shot.behavior = behavior;
 			shots.Add(behavior);
 			shot.DestroyEvent.Subscribe(x => shots.Remove(behavior));
