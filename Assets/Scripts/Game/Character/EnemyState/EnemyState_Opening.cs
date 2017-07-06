@@ -17,6 +17,7 @@ public class EnemyState_Opening : StateMachine
 		this.context = context;
 
         disposable = GameManager.I.GameEvents.OnRoundStart
+                                .Delay(TimeSpan.FromSeconds(0.4))
                                 .Subscribe(u =>
         {
 			context.CurrentBehavior.Start();

@@ -25,11 +25,7 @@ public class GameState_Opening : StateMachine
 
 		api.Move(enemy.InitialPosition, 20);
 		player.ForceToMove(-enemy.InitialPosition, 20);
-		player.StopAction();
 		yield return GameUiManager.I.AnimateGameStart();
-
-		player.StartAction();
-		yield return new WaitForSeconds(0.5f);
 
         context.ChangeState(GameManager.PlayStateName);
         context.EventAccepter.OnRoundStartSubject.OnNext(Unit.Default);
