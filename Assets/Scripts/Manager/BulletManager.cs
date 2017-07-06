@@ -38,7 +38,7 @@ public class BulletManager : MonoBehaviour
         var y = Mathf.Cos(angle * Mathf.Deg2Rad);
         var direction = new Vector2(x, y);
 
-        var shot = MF_AutoPool.Spawn(shotObject);
+        var shot = Instantiate(shotObject);
         if (shot != null)
         {
 			var rigidBody = shot.GetComponent<Rigidbody2D>();

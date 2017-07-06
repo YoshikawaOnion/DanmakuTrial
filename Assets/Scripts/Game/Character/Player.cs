@@ -32,6 +32,10 @@ public class Player : MonoBehaviour {
 	private Vector2 pushOnCollide = new Vector2(0, -10000);
     [SerializeField]
     private PlayerDamageArea damageArea;
+    [SerializeField]
+    private GameObject smokePrefab;
+    [SerializeField]
+    private GameObject playerHitPrefab;
 
 	public Rigidbody2D Rigidbody { get; private set; }
 
@@ -55,6 +59,20 @@ public class Player : MonoBehaviour {
             ShotSpan = shotSpan,
         };
         context.ChangeState(StateNameOpening);
+
+        var smoke = Instantiate(smokePrefab);
+        smoke.transform.SetParent(transform);
+        smoke.transform.localPosition = new Vector3(0, 1, 0);
+
+        GameManager.I.GameEvents.OnHitEnemyShot
+                   .Subscribe(c =>
+        {
+            var effect = Instantiate(playerHitPrefab);
+            effect.transform.SetParent(transform);
+            effect.transform.localPosition = new Vector3(0, 0, 0);
+            Observable.TimerFrame(60)
+                      .Subscribe(t => Destroy(effect));
+        });
 	}
 
     /// <summary>
