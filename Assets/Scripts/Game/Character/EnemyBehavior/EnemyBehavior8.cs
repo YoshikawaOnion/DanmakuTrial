@@ -2,7 +2,9 @@ using UnityEngine;
 using System.Collections;
 using System;
 using UniRx;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class EnemyBehavior8 : EnemyBehavior
 {
@@ -19,8 +21,8 @@ public class EnemyBehavior8 : EnemyBehavior
 
     private IEnumerator ShotCoroutine()
     {
-        asset = AssetDatabase.LoadAssetAtPath<EnemyBehavior8Asset>
-                             ("Assets/Editor/EnemyBehavior8Asset.asset");
+        asset = Resources.Load<EnemyBehavior8Asset>
+                         ("ScriptableAsset/EnemyBehavior8Asset");
         float angle = 0;
         float angleSpan = asset.AngleSpan;
         while (true)

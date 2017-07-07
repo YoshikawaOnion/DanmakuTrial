@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using UnityEditor;
 
 public class PlayerStateContext : EventContext
 {
@@ -10,7 +9,8 @@ public class PlayerStateContext : EventContext
     public float MoveSpeed { get; set; }
     public GameObject Sprite { get; set; }
     public Vector2 PushOnShoot { get; set; }
-    public Vector2 PushOnCollide { get; set; }
+    public Vector2 PushOnCollideEnemy { get; set; }
+    public Vector2 PushOnHitMob { get; set; }
     public int ShotSpan { get; set; }
     public PlayerDamagedCameraAsset DamageAsset { get; set; }
        

@@ -59,10 +59,7 @@ public class EnemyState_Fighting : StateMachine
     private static void OnDamaged(EnemyStateContext context)
     {
         context.Enemy.Rigidbody.velocity = Vector3.zero;
-        foreach (var bullet in context.BulletRenderer.Bullets)
-        {
-            Destroy(bullet.gameObject);
-        }
+        context.BulletRenderer.Clear();
 
         if (context.CurrentBehavior != null)
         {

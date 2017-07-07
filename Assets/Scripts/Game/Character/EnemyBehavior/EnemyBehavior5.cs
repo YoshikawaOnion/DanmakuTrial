@@ -2,7 +2,9 @@ using UnityEngine;
 using System.Collections;
 using System;
 using UniRx;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class EnemyBehavior5 : EnemyBehavior
 {
@@ -14,8 +16,8 @@ public class EnemyBehavior5 : EnemyBehavior
 
     protected override IObservable<Unit> GetAction()
     {
-        asset = AssetDatabase.LoadAssetAtPath<EnemyBehavior5Asset>
-                             ("Assets/Editor/EnemyBehavior5Asset.asset");
+        asset = Resources.Load<EnemyBehavior5Asset>
+                         ("ScriptableAsset/EnemyBehavior5Asset");
         var c1 = ShotCoroutine().ToObservable();
         var c2 = MoveObservable();
         return c1.Merge(c2);

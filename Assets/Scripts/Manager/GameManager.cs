@@ -19,7 +19,7 @@ public class GameManager : Singleton<GameManager>
     public static readonly string GameOverStateName = "GameState_GameOver";
     public static readonly string PlayerDamageAreaObjectName = "PlayerDamageArea";
 
-    private static readonly float WallThickness = 10;
+    private static readonly float WallThickness = 20;
 
     [SerializeField]
     private GameObject gameUiManagerPrefab;
@@ -42,6 +42,8 @@ public class GameManager : Singleton<GameManager>
     {
         get { return eventFacade; }
     }
+    public Vector3 TopRight { get; private set; }
+    public Vector3 BottomLeft { get; private set; }
 
     private BulletManager bulletRenderer;
     private StateMachine stateMachine;
@@ -85,6 +87,8 @@ public class GameManager : Singleton<GameManager>
         var bottomLeft = new Vector3(-45, -80);
         var topRight = new Vector3(45, 80);
         var size = topRight - bottomLeft;
+        BottomLeft = bottomLeft;
+        TopRight = topRight;
 
         SetBulletRendererUp();
         SetWallsUp(topRight, bottomLeft, size);

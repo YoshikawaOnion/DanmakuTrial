@@ -9,6 +9,11 @@ public class PlayerDamageArea : MonoBehaviour {
 	
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-        EventAccepter.OnHitEnemyShotSubject.OnNext(collision);
+        if (collision.tag == Def.EnemyTag
+            || collision.tag == Def.EnemyShotTag
+            || collision.tag == Def.MobTag)
+		{
+			EventAccepter.OnHitEnemyShotSubject.OnNext(collision);
+        }
     }
 }

@@ -3,7 +3,9 @@ using System.Collections;
 using System;
 using UniRx;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class EnemyBehavior2 : EnemyBehavior
 {
@@ -65,8 +67,8 @@ public class EnemyBehavior2 : EnemyBehavior
 
     protected override IObservable<Unit> GetAction()
 	{
-        asset = AssetDatabase.LoadAssetAtPath<EnemyBehavior2Asset>
-                             ("Assets/Editor/EnemyBehavior2Asset.asset");
+		asset = Resources.Load<EnemyBehavior2Asset>
+						 ("ScriptableAsset/EnemyBehavior2Asset");
 		var c1 = FlowerShotCoroutine().ToObservable();
 		var c2 = PointShotCoroutine().ToObservable();
 		return c1.Merge(c2);

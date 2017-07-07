@@ -8,9 +8,6 @@ using System;
 /// </summary>
 public class PlayerState_Fight : StateMachine
 {
-    protected static readonly string EnemyTag = "Enemy";
-    protected static readonly string EnemyShotTag = "EnemyShot";
-
 	protected CompositeDisposable Disposable { get; private set; }
 	protected PlayerStateContext Context { get; private set; }
 
@@ -44,6 +41,10 @@ public class PlayerState_Fight : StateMachine
                    .Subscribe(u => context.ChangeState(Player.StateNameOpening))
                    .AddTo(Disposable);
 
+		GameManager.I.GameEvents.OnHitEnemyShot
+				   .Subscribe(collider => OnHitBody(collider))
+				   .AddTo(Disposable);
+
         // MissingReferenceException対策
         Observable.EveryUpdate()
                   .SkipWhile(t => context.Player != null)
@@ -56,6 +57,31 @@ public class PlayerState_Fight : StateMachine
     protected override void EvStateExit()
     {
         Disposable.Dispose();
+    }
+
+    private void OnHitBody(Collider2D collider)
+    {
+        if (collider.tag == Def.EnemyShotTag)
+        {
+            Destroy(collider.gameObject);
+            Context.Player.Rigidbody.AddForce(
+                Context.PushOnShoot * Def.UnitPerPixel);
+        }
+        else if (collider.tag == Def.EnemyTag)
+        {
+            Context.Player.Rigidbody.AddForce(
+                Context.PushOnCollideEnemy * Def.UnitPerPixel);
+        }
+        else if (collider.tag == Def.MobTag)
+        {
+            Context.Player.Rigidbody.AddForce(
+                Context.PushOnHitMob * Def.UnitPerPixel);
+        }
+        OnHit();
+    }
+
+    protected virtual void OnHit()
+    {
     }
 
     private void SetMouseControlUp()

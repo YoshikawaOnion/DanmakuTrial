@@ -2,7 +2,9 @@ using UnityEngine;
 using System.Collections;
 using System;
 using UniRx;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class EnemyBehavior1 : EnemyBehavior
 {
@@ -14,8 +16,8 @@ public class EnemyBehavior1 : EnemyBehavior
 
     public IEnumerator Act()
 	{
-        asset = AssetDatabase.LoadAssetAtPath<EnemyBehavior1Asset>
-                             ("Assets/Editor/EnemyBehavior1Asset.asset");
+        asset = Resources.Load<EnemyBehavior1Asset>
+                         ("ScriptableAsset/EnemyBehavior1Asset");
         while (true)
         {
             ShotChunk(Api.Enemy.LeftHand.transform.localPosition);

@@ -60,7 +60,7 @@ public class EnemyApi
 	public EnemyShot Shot(Vector3 position, float angle, float speed)
 	{
 		position += new Vector3(0, 0, 10);
-		var shot = BulletRenderer.Shoot(position, angle, speed);
+		var shot = BulletRenderer.Shot(position, angle, speed);
         if (shot != null)
 		{
 			shot.Api = this;
@@ -68,6 +68,18 @@ public class EnemyApi
         }
         return null;
 	}
+
+    public Mob ShotMob(Vector3 position, float angle, float speed)
+    {
+        position += new Vector3(0, 0, 10);
+        var shot = BulletRenderer.ShotMob(position, angle, speed);
+        if (shot != null)
+        {
+            shot.Api = this;
+            return shot;
+        }
+        return null;
+    }
 
     /// <summary>
     /// 敵キャラクターを滑らかに移動させます。

@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using UnityEditor;
 
 public class EnemyBehavior2Asset : ScriptableObject
 {

@@ -20,27 +20,7 @@ public class PlayerState_Damaged : PlayerState_Fight
 
         sprite = context.Sprite.GetComponent<Script_SpriteStudio_Root>();
         SetAnimation("Damage");
-        ShakeCamera();
         WaitForTransitToNeutral(context);
-
-		GameManager.I.GameEvents.OnHitEnemyShot
-				   .Subscribe(collider => OnHit(collider))
-				   .AddTo(itsOwnDisposable);
-	}
-
-	private void OnHit(Collider2D collider)
-	{
-		if (collider.tag == EnemyShotTag)
-		{
-			Destroy(collider.gameObject);
-			Context.Player.Rigidbody.AddForce(
-				Context.PushOnShoot * Def.UnitPerPixel);
-		}
-		if (collider.tag == EnemyTag)
-		{
-			Context.Player.Rigidbody.AddForce(
-				Context.PushOnCollide * Def.UnitPerPixel);
-		}
 	}
 
     protected override void EvStateExit()
@@ -64,27 +44,6 @@ public class PlayerState_Damaged : PlayerState_Fight
                   context.ChangeState(Player.StateNameNeutral);
               })
               .AddTo(itsOwnDisposable);
-    }
-
-    private void ShakeCamera()
-    {
-        var shakeTime = TimeSpan.FromSeconds(context.DamageAsset.ShakeTime);
-        var size = context.DamageAsset.ShakeSize;
-        Observable.EveryUpdate()
-                  .TakeUntil(Observable.Timer(shakeTime))
-                  .Select(t => new
-                  {
-                      X = Mathf.Sin(t * 8) * size * Def.UnitPerPixel,
-                      Y = Mathf.Cos(t * 8) * size * Def.UnitPerPixel,
-                  })
-                  .Subscribe(p => SetCameraPos(new Vector3(p.X, p.Y, 0)),
-                             () => SetCameraPos(Vector3.zero))
-                  .AddTo(itsOwnDisposable);
-    }
-
-    private void SetCameraPos(Vector3 pos)
-    {
-        SpriteStudioManager.I.MainCamera.transform.position = pos;
     }
 
     private void SetAnimation(string name)

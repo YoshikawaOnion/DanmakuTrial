@@ -3,7 +3,9 @@ using System.Collections;
 using System;
 using UniRx;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class EnemyBehavior6 : EnemyBehavior
 {
@@ -18,8 +20,8 @@ public class EnemyBehavior6 : EnemyBehavior
 
     protected override IObservable<Unit> GetAction()
     {
-        asset = AssetDatabase.LoadAssetAtPath<EnemyBehavior6Asset>
-                             ("Assets/Editor/EnemyBehavior6Asset.asset");
+		asset = Resources.Load<EnemyBehavior6Asset>
+						 ("ScriptableAsset/EnemyBehavior6Asset");
         var c0 = PrepareCoroutine().ToObservable();
 
         // 時間に沿って弾を回転させながら広がる
