@@ -33,7 +33,7 @@ public class PlayerState_Fight : StateMachine
 		GameManager.I.GameEvents.OnPlayerExitsFightArea
 				   .Subscribe(u =>
 		{
-			SoundManager.I.PlaySe(SeKind.PlayerDamaged);
+			SoundManager.I.PlaySe(SeKind.PlayerDefeated);
 			context.ChangeState(Player.StateNameLose);
 		})
 				   .AddTo(Disposable);

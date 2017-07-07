@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UniRx;
+using UnityEditor;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
@@ -40,13 +41,14 @@ public class Player : MonoBehaviour {
 	public Rigidbody2D Rigidbody { get; private set; }
 
     private StateMachine stateMachine;
-    private IDisposable disposable;
+    private CompositeDisposable disposable;
 
 	// Use this for initialization
 	void Start ()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
         stateMachine = GetComponent<StateMachine>();
+        disposable = new CompositeDisposable();
 
         var context = new PlayerStateContext
         {
@@ -58,14 +60,16 @@ public class Player : MonoBehaviour {
             PushOnShoot = pushOnShoot,
             Sprite = playerSprite,
             ShotSpan = shotSpan,
-        };
+			DamageAsset = AssetDatabase.LoadAssetAtPath<PlayerDamagedCameraAsset>
+							           ("Assets/Editor/PlayerDamageCameraAsset.asset"),
+		};
         context.ChangeState(StateNameOpening);
 
         var smoke = Instantiate(smokePrefab);
         smoke.transform.SetParent(transform);
         smoke.transform.localPosition = Vector3.zero;
 
-        disposable = GameManager.I.GameEvents.OnHitEnemyShot
+        GameManager.I.GameEvents.OnHitEnemyShot
                                 .Subscribe(c =>
         {
             var effect = Instantiate(playerHitPrefab);
@@ -73,7 +77,12 @@ public class Player : MonoBehaviour {
             effect.transform.localPosition = Vector3.zero;
             Observable.TimerFrame(60)
                       .Subscribe(t => Destroy(effect));
-        });
+        })
+                   .AddTo(disposable);
+
+        GameManager.I.GameEvents.OnHitEnemyShot
+                   .Subscribe(c => SoundManager.I.PlaySe(SeKind.PlayerDamaged))
+                   .AddTo(disposable);
 	}
 
     private void OnDestroy()

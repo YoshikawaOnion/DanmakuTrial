@@ -8,7 +8,8 @@ using System.Collections.Generic;
 public enum SeKind
 {
 	Start, Win, PlayerShot, EnemyShot, Hit,
-    PlayerDamaged, EnemyDamaged, EnemyDefeated
+    PlayerDefeated, EnemyDamaged, EnemyDefeated,
+    PlayerDamaged
 }
 
 public enum BgmKind
@@ -29,11 +30,13 @@ public class SoundManager : Singleton<SoundManager>
     [SerializeField]
     private AudioClip hitSound;
 	[SerializeField]
-    private AudioClip playerDamagedSound;
+    private AudioClip playerDefeatedSound;
 	[SerializeField]
 	private AudioClip enemyDamagedSound;
 	[SerializeField]
 	private AudioClip enemyDefeatedSound;
+    [SerializeField]
+    private AudioClip playerDamagedSound;
 
     [SerializeField]
 	private AudioSource soundEffectSource;
@@ -50,10 +53,11 @@ public class SoundManager : Singleton<SoundManager>
         seAudioClips[SeKind.Win] = winSound;
         seAudioClips[SeKind.PlayerShot] = playerShotSound;
         seAudioClips[SeKind.EnemyShot] = enemyShotSound;
-        seAudioClips[SeKind.PlayerDamaged] = playerDamagedSound;
+        seAudioClips[SeKind.PlayerDefeated] = playerDefeatedSound;
         seAudioClips[SeKind.EnemyDamaged] = enemyDamagedSound;
         seAudioClips[SeKind.EnemyDefeated] = enemyDefeatedSound;
         seAudioClips[SeKind.Hit] = hitSound;
+        seAudioClips[SeKind.PlayerDamaged] = playerDamagedSound;
 
 		bgmAudioSources = new Dictionary<BgmKind, AudioSource>();
 		bgmAudioSources[BgmKind.Game] = Instantiate(gameBgmSource);

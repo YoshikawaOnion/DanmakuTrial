@@ -68,12 +68,14 @@ public class PlayerState_Damaged : PlayerState_Fight
 
     private void ShakeCamera()
     {
+        var shakeTime = TimeSpan.FromSeconds(context.DamageAsset.ShakeTime);
+        var size = context.DamageAsset.ShakeSize;
         Observable.EveryUpdate()
-                  .TakeUntil(Observable.Timer(TimeSpan.FromSeconds(0.3)))
+                  .TakeUntil(Observable.Timer(shakeTime))
                   .Select(t => new
                   {
-                      X = Mathf.Sin(t * 8) * 2 * Def.UnitPerPixel,
-                      Y = Mathf.Cos(t * 8) * 2 * Def.UnitPerPixel,
+                      X = Mathf.Sin(t * 8) * size * Def.UnitPerPixel,
+                      Y = Mathf.Cos(t * 8) * size * Def.UnitPerPixel,
                   })
                   .Subscribe(p => SetCameraPos(new Vector3(p.X, p.Y, 0)),
                              () => SetCameraPos(Vector3.zero))

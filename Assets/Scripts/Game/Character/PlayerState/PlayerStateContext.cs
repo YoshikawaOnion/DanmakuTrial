@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEditor;
 
 public class PlayerStateContext : EventContext
 {
@@ -11,7 +12,8 @@ public class PlayerStateContext : EventContext
     public Vector2 PushOnShoot { get; set; }
     public Vector2 PushOnCollide { get; set; }
     public int ShotSpan { get; set; }
-
+    public PlayerDamagedCameraAsset DamageAsset { get; set; }
+       
     public void ChangeState(string stateName)
     {
         if (Player != null)
