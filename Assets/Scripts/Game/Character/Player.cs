@@ -99,6 +99,10 @@ public class Player : MonoBehaviour {
     private void OnDestroy()
     {
         disposable.Dispose();
+        disposable = null;
+        Rigidbody = null;
+        stateMachine = null;
+        context = null;
     }
 
     /// <summary>

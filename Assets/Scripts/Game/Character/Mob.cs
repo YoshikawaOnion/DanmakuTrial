@@ -24,4 +24,9 @@ public class Mob : EnemyShot
 			Destroy(collision.gameObject);
 		}        
     }
+
+    private void OnDestroy()
+    {
+        rigidbody = null;
+    }
 }

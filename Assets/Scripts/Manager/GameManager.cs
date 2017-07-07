@@ -61,6 +61,18 @@ public class GameManager : Singleton<GameManager>
         uiManager.SetActive(false);
     }
 
+    private void OnDestroy()
+    {
+        stateMachine = null;
+        objectsToDestroy = null;
+        eventFacade = null;
+        bulletRenderer = null;
+        Enemy = null;
+        Player = null;
+        EnemyStrategy = null;
+        Dohyou = null;
+    }
+
     public void InitializeState()
     {
         var context = new GameStateContext

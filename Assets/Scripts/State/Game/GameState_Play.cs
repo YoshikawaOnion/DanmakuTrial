@@ -36,5 +36,6 @@ public class GameState_Play : StateMachine
     protected override void EvStateExit()
     {
         disposable.Dispose();
+        disposable = null;
     }
 }

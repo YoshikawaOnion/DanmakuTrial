@@ -30,4 +30,9 @@ public class TitleUiManager : Singleton<TitleUiManager>
         LevelSelectedObservable = komusubi.Merge(sekiwaki)
                                           .Merge(oozeki);
     }
+
+    private void OnDestroy()
+    {
+        LevelSelectedObservable = null;
+    }
 }

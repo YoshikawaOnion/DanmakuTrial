@@ -48,6 +48,7 @@ public class Enemy : MonoBehaviour
     private void OnDestroy()
     {
         Rigidbody = null;
+        Strategy = null;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

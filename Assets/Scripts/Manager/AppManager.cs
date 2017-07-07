@@ -35,6 +35,11 @@ public class AppManager : Singleton<AppManager> {
         GameManager.I.Dohyou = bg;
     }
 
+    private void OnDestroy()
+    {
+        stateMachine = null;
+    }
+
     public void ChangeState(string stateName)
     {
         stateMachine.ChangeSubState(stateName);

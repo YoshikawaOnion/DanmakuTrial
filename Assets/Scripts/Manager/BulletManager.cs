@@ -27,6 +27,13 @@ public class BulletManager : MonoBehaviour
         batchRenderer = GetComponent<BatchRenderer>();
     }
 
+    private void OnDestroy()
+    {
+        Bullets = null;
+        Mobs = null;
+        batchRenderer = null;
+    }
+
     /// <summary>
     /// 敵弾を発射し、BatchRendererで描画するよう登録します。
     /// </summary>

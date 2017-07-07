@@ -28,5 +28,6 @@ public class EnemyState_Opening : StateMachine
     protected override void EvStateExit()
     {
         disposable.Dispose();
+        disposable = null;
     }
 }

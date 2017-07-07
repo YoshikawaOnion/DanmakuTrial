@@ -57,6 +57,7 @@ public class PlayerState_Fight : StateMachine
     protected override void EvStateExit()
     {
         Disposable.Dispose();
+        Disposable = null;
     }
 
     private void OnHitBody(Collider2D collider)

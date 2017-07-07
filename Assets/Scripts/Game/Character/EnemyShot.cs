@@ -38,6 +38,8 @@ public class EnemyShot : MonoBehaviour {
         Behavior.Stop();
         destroySubject.OnNext(Unit.Default);
         destroySubject.OnCompleted();
+        destroySubject = null;
+        Behavior = null;
     }
 
     public void ShotFromIt(float angle, float speed)

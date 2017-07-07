@@ -63,6 +63,12 @@ public class SoundManager : Singleton<SoundManager>
 		bgmAudioSources[BgmKind.Game] = Instantiate(gameBgmSource);
     }
 
+    private void OnDestroy()
+    {
+        seAudioClips = null;
+        bgmAudioSources = null;
+    }
+
     /// <summary>
     /// 指定した効果音やBGMを再生します。
     /// </summary>

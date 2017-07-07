@@ -22,5 +22,6 @@ public class PlayerState_Opening : StateMachine
     protected override void EvStateExit()
     {
         disposable.Dispose();
+        disposable = null;
     }
 }
