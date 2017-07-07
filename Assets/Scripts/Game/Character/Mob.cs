@@ -7,11 +7,12 @@ public class Mob : EnemyShot
     [SerializeField]
     private Vector3 pushOnShoot;
 
-    private Rigidbody2D rigidbody;
+    private new Rigidbody2D rigidbody;
 
 	// Use this for initialization
 	void Start () {
         rigidbody = GetComponent<Rigidbody2D>();
+        Behavior.Start();
 	}
 
     private void OnCollisionEnter2D(Collision2D collision)

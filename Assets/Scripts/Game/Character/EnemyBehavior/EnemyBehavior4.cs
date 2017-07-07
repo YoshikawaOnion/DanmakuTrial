@@ -7,6 +7,9 @@ using System.Linq;
 using UnityEditor;
 #endif
 
+/// <summary>
+/// 攻撃力の高いビームを発射する弾幕パターン。
+/// </summary>
 public class EnemyBehavior4 : EnemyBehavior
 {
     private EnemyBehavior4Asset asset;

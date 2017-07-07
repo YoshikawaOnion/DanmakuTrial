@@ -6,6 +6,9 @@ using UniRx;
 using UnityEditor;
 #endif
 
+/// <summary>
+/// 花状の弾幕パターン。
+/// </summary>
 public class EnemyBehavior10 : EnemyBehavior
 {
     private EnemyBehavior10Asset asset;
@@ -35,22 +38,29 @@ public class EnemyBehavior10 : EnemyBehavior
         float angleBase = 0;
         while (true)
         {
-            for (int i = 0; i < 36; i++)
+            for (int i = 0; i < asset.Way; i++)
             {
                 float angle = angleBase + i * 10;
+
+                //花状弾幕を形成する計算式
                 float theta = Mathf.Sin(i * 10 * Mathf.Deg2Rad * 2);
-                float speed = theta * 280;
+
+                float speed = theta * asset.MaxSpeed;
+
+                //弾が残らないように一定以下の速さのものは撃たない
                 if (Math.Abs(speed) < 20)
                 {
                     continue;
                 }
+
                 Api.Shot(angle, speed * Def.UnitPerPixel);
             }
-            angleBase += 137;
+            angleBase += asset.AngleAdvance;
             if (angleBase > 360)
             {
                 angleBase -= 360;
             }
+            SoundManager.I.PlaySe(SeKind.EnemyShot);
             yield return new WaitForSeconds(1);
         }
     }

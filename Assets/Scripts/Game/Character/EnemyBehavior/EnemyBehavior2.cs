@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using UnityEditor;
 #endif
 
+/// <summary>
+/// 花火攻撃と自機狙い攻撃を同時に行う弾幕パターン。
+/// </summary>
 public class EnemyBehavior2 : EnemyBehavior
 {
     private EnemyBehavior2Asset asset;

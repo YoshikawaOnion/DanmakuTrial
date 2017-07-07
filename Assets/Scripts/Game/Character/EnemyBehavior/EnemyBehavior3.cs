@@ -6,6 +6,9 @@ using UniRx;
 using UnityEditor;
 #endif
 
+/// <summary>
+/// 大量の弾幕に空けられた道を進んでいく弾幕パターン。
+/// </summary>
 public class EnemyBehavior3 : EnemyBehavior
 {
     private EnemyBehavior3Asset asset;

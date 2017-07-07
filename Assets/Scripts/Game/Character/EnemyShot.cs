@@ -8,7 +8,7 @@ using UniRx;
 /// </summary>
 public class EnemyShot : MonoBehaviour {
     public IObservable<Unit> DestroyEvent;
-	public EnemyShotBehavior behavior;
+	public EnemyShotBehavior Behavior;
 
     public EnemyApi Api { get; set; }
 
@@ -18,25 +18,30 @@ public class EnemyShot : MonoBehaviour {
 	{
 		destroySubject = new Subject<Unit>();
 		DestroyEvent = destroySubject;
-        behavior = new NullEnemyShotBehavior(this);
+        Behavior = new NullEnemyShotBehavior(this);
     }
 
     public void NotifyDespawn()
 	{
-		behavior.Stop();
+		Behavior.Stop();
 		destroySubject.OnNext(Unit.Default);
 		destroySubject.OnCompleted();
     }
 
     private void Start()
     {
-        behavior.Start();
+        Behavior.Start();
     }
 
     private void OnDestroy()
     {
-        behavior.Stop();
+        Behavior.Stop();
         destroySubject.OnNext(Unit.Default);
         destroySubject.OnCompleted();
+    }
+
+    public void ShotFromIt(float angle, float speed)
+    {
+        Api.Shot(transform.position, angle, speed);
     }
 }

@@ -6,6 +6,9 @@ using UniRx;
 using UnityEditor;
 #endif
 
+/// <summary>
+/// 特定の角度で時間に沿って射撃角を変えながら撃つ弾幕パターン。
+/// </summary>
 public class EnemyBehavior8 : EnemyBehavior
 {
     private EnemyBehavior8Asset asset;

@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using UnityEditor;
 #endif
 
+/// <summary>
+/// 敵を中心に台風のように弾が回転する弾幕パターン。
+/// </summary>
 public class EnemyBehavior6 : EnemyBehavior
 {
     private List<CircleEnemyShotBehavior> shots;
@@ -44,7 +47,7 @@ public class EnemyBehavior6 : EnemyBehavior
     private IEnumerator PrepareCoroutine()
     {
         var goal = asset.InitialPosition.transform.position;
-        Api.Move(goal, 30);
+        Api.MoveIt(goal, 30);
         yield return new WaitForSeconds(0.5f);
     }
 
@@ -70,7 +73,7 @@ public class EnemyBehavior6 : EnemyBehavior
                 return;
             }
             var behavior = new CircleEnemyShotBehavior(shot, i, anglePivot, asset.Way);
-			shot.behavior = behavior;
+			shot.Behavior = behavior;
 			shots.Add(behavior);
 			shot.DestroyEvent.Subscribe(x => shots.Remove(behavior));
 		}

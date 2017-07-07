@@ -37,8 +37,6 @@ public class Player : MonoBehaviour {
 	[SerializeField]
 	private Vector2 pushOnHitMob = new Vector2(0, -8000);
     [SerializeField]
-    private PlayerDamageArea damageArea;
-    [SerializeField]
     private GameObject smokePrefab;
     [SerializeField]
     private GameObject playerHitPrefab;

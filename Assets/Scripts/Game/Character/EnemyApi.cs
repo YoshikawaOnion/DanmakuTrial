@@ -86,21 +86,14 @@ public class EnemyApi
     /// </summary>
     /// <param name="goal">移動の目的地点。</param>
     /// <param name="durationFrame">移動にかける時間(フレーム)。</param>
-	public void Move(Vector3 goal, int durationFrame)
+	public void MoveIt(Vector3 goal, int durationFrame)
 	{
 		if (moveSubscription != null)
 		{
 			moveSubscription.Dispose();
 		}
 
-		var prevPos = Enemy.transform.position;
-		moveSubscription = Observable.EveryUpdate()
-				  .Take(durationFrame)
-				  .Subscribe(t =>
-		{
-			var pos = (prevPos * (durationFrame - t) + goal * t) / durationFrame;
-			Enemy.transform.position = pos;
-		}, () => moveSubscription = null);
+		moveSubscription = Enemy.Move(goal, durationFrame);
 	}
 
     /// <summary>

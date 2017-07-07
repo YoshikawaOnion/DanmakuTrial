@@ -23,7 +23,7 @@ public class GameState_Opening : StateMachine
 		var enemy = GameManager.I.Enemy;
 		var api = new EnemyApi(GameManager.I.Enemy);
 
-		api.Move(enemy.InitialPosition, 20);
+		api.MoveIt(enemy.InitialPosition, 20);
 		player.ForceToMove(-enemy.InitialPosition, 20);
 		yield return GameUiManager.I.AnimateGameStart();
 

@@ -15,7 +15,9 @@ public class TitleUiManager : Singleton<TitleUiManager>
     [SerializeField]
     private Button buttonKomusubi;
     [SerializeField]
-    private Button buttonSekiwaki;
+	private Button buttonSekiwaki;
+	[SerializeField]
+	private Button buttonOozeki;
 
     protected override void Init()
     {
@@ -23,6 +25,9 @@ public class TitleUiManager : Singleton<TitleUiManager>
                                      .Select(x => (EnemyStrategy)new EnemyStrategyKomusubi());
         var sekiwaki = buttonSekiwaki.OnClickAsObservable()
                                      .Select(x => (EnemyStrategy)new EnemyStrategySekiwaki());
-        LevelSelectedObservable = komusubi.Merge(sekiwaki);
+        var oozeki = buttonOozeki.OnClickAsObservable()
+                                 .Select(x => (EnemyStrategy)new EnemyStrategyOozeki());
+        LevelSelectedObservable = komusubi.Merge(sekiwaki)
+                                          .Merge(oozeki);
     }
 }

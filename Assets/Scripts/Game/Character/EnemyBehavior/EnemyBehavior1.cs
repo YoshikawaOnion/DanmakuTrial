@@ -6,6 +6,9 @@ using UniRx;
 using UnityEditor;
 #endif
 
+/// <summary>
+/// 左右の手から交互に塊を発射する弾幕パターン。
+/// </summary>
 public class EnemyBehavior1 : EnemyBehavior
 {
     private EnemyBehavior1Asset asset;

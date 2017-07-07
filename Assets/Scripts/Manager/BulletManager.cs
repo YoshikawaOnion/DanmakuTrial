@@ -15,8 +15,6 @@ public class BulletManager : MonoBehaviour
 	private GameObject shotObject = null;
 	[SerializeField]
 	private GameObject mobObject = null;
-    [SerializeField]
-    private int MaxBulletCount = 300;
 
     internal List<EnemyShot> Bullets;
     internal List<Mob> Mobs;

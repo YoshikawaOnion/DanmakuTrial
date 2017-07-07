@@ -6,6 +6,9 @@ using UniRx;
 using UnityEditor;
 #endif
 
+/// <summary>
+/// やたらと背後に弾が出る弾幕パターン。
+/// </summary>
 public class EnemyBehavior9 : EnemyBehavior
 {
     private EnemyBehavior9Asset asset;

@@ -6,6 +6,9 @@ using UniRx;
 using UnityEditor;
 #endif
 
+/// <summary>
+/// 弾自身が弾を発射する弾で攻撃する弾幕パターン。
+/// </summary>
 public class EnemyBehavior5 : EnemyBehavior
 {
     private EnemyBehavior5Asset asset;
@@ -48,7 +51,7 @@ public class EnemyBehavior5 : EnemyBehavior
         behavior.Speed = asset.FlowerShotSpeed;
         behavior.TimeSpan = asset.FlowerShotTimeSpan;
         behavior.Angle = subAngle;
-        shot.behavior = behavior;
+        shot.Behavior = behavior;
     }
 
     private IObservable<Unit> MoveObservable()

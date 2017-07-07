@@ -3,6 +3,9 @@ using System.Collections;
 using System;
 using UniRx;
 
+/// <summary>
+/// 一定時間後に自機へ向きを変える弾を発射する弾幕パターン。
+/// </summary>
 public class EnemyBehavior7 : EnemyBehavior
 {
     public EnemyBehavior7(EnemyApi api) : base(api)
@@ -35,6 +38,6 @@ public class EnemyBehavior7 : EnemyBehavior
             return;
         }
         var behavior = new LockOnEnemyShotBehavior(shot, angle);
-        shot.behavior = behavior;
+        shot.Behavior = behavior;
     }
 }

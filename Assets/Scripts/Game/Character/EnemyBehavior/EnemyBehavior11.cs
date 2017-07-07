@@ -6,6 +6,9 @@ using UniRx;
 using UnityEditor;
 #endif
 
+/// <summary>
+/// 押しのけることのできるモブを含んだ壁を出す弾幕パターン。
+/// </summary>
 public class EnemyBehavior11 : EnemyBehavior
 {
     private EnemyBehavior11Asset asset;
@@ -53,6 +56,7 @@ public class EnemyBehavior11 : EnemyBehavior
             var position = GetShotPos(width, i);
             Api.Shot(position, 180, asset.ShotSpeed * Def.UnitPerPixel);
         }
+        SoundManager.I.PlaySe(SeKind.EnemyShot);
     }
 
     private Vector3 GetShotPos(float width, int index)
