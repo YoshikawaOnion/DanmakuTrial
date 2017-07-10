@@ -61,10 +61,12 @@ public class PlayerState_Fight : StateMachine
     }
 
     private void OnHitBody(Collider2D collider)
-    {
-        if (collider.tag == Def.EnemyShotTag)
-        {
-            Destroy(collider.gameObject);
+	{
+		// MobはEnemyShotの派生クラスなので念のためタグでもチェック
+		if (collider.tag == Def.EnemyShotTag)
+		{
+			var shot = collider.gameObject.GetComponent<EnemyShot>();
+            shot.ResetBullet();
             Context.Player.Rigidbody.AddForce(
                 Context.PushOnShoot * Def.UnitPerPixel);
         }

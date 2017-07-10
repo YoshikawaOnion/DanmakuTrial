@@ -3,6 +3,9 @@ using System.Collections;
 using System;
 using UniRx;
 
+/// <summary>
+/// 自身も弾を撃つ弾の振る舞いを提供します。
+/// </summary>
 public class ShootingEnemyShotBehavior : EnemyShotBehavior
 {
     public int Way = 2;
@@ -44,13 +47,13 @@ public class ShootingEnemyShotBehavior : EnemyShotBehavior
 
     private IEnumerator ShotCoroutine()
     {
-        while (true)
+        while (Owner != null)
         {
             for (int i = 0; i < Way; i++)
             {
                 float angleVariable = (i - (Way - 1.0f) / 2);
                 float angle = 180 + angleVariable * AngleSpan;
-				Owner.ShotFromIt(angle, ShotSpeed * Def.UnitPerPixel);
+                Owner.ShotFromIt(angle, ShotSpeed * Def.UnitPerPixel);
             }
             yield return new WaitForSeconds(ShotTimeSpan);
         }

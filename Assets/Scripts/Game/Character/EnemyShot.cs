@@ -13,6 +13,7 @@ public class EnemyShot : MonoBehaviour {
     public EnemyApi Api { get; set; }
 
 	private Subject<Unit> destroySubject;
+    private BulletPoolManager poolManager;
 
     public EnemyShot()
 	{
@@ -26,6 +27,18 @@ public class EnemyShot : MonoBehaviour {
 		Behavior.Stop();
 		destroySubject.OnNext(Unit.Default);
 		destroySubject.OnCompleted();
+	}
+
+	public void InitializeBullet(BulletPoolManager poolManager)
+	{
+		this.poolManager = poolManager;
+	}
+
+    public void ResetBullet()
+    {
+        Behavior.Stop();
+		poolManager.SleepInstance(gameObject);
+		destroySubject.OnNext(Unit.Default);
     }
 
     private void Start()

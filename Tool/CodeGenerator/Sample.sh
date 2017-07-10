@@ -1,0 +1,1 @@
+sed -e "s/\$name\$/$1/g" EnemyBehaviorX.cs

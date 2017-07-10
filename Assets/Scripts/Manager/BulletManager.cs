@@ -12,19 +12,19 @@ using System.Linq;
 public class BulletManager : MonoBehaviour
 {
     [SerializeField]
-	private GameObject shotObject = null;
-	[SerializeField]
-	private GameObject mobObject = null;
+    private BulletPoolManager poolManagerPrefab = null;
 
     internal List<EnemyShot> Bullets;
     internal List<Mob> Mobs;
     private BatchRenderer batchRenderer;
+    private BulletPoolManager poolManager;
 
     void Start()
     {
         Bullets = new List<EnemyShot>();
         Mobs = new List<Mob>();
         batchRenderer = GetComponent<BatchRenderer>();
+        poolManager = Instantiate(poolManagerPrefab);
     }
 
     private void OnDestroy()
@@ -32,6 +32,7 @@ public class BulletManager : MonoBehaviour
         Bullets = null;
         Mobs = null;
         batchRenderer = null;
+        poolManager = null;
     }
 
     /// <summary>
@@ -43,22 +44,10 @@ public class BulletManager : MonoBehaviour
     /// <param name="speed">発射する速度。</param>
     public EnemyShot Shot(Vector3 source, float angle, float speed)
     {
-        var x = Mathf.Sin(angle * Mathf.Deg2Rad);
-        var y = Mathf.Cos(angle * Mathf.Deg2Rad);
-        var direction = new Vector2(x, y);
-
-        var shot = Instantiate(shotObject);
+        var shot = poolManagerPrefab.GetInstance(BulletPoolManager.Kind.Normal);
         if (shot != null)
-        {
-			var rigidBody = shot.GetComponent<Rigidbody2D>();
-			shot.transform.position = source;
-			shot.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
-			rigidBody.velocity = direction * speed;
-
-			var script = shot.GetComponent<EnemyShot>();
-			Bullets.Add(script);
-			script.DestroyEvent.Subscribe(u => Bullets.Remove(script));
-			return script;
+		{
+			return InitializeShot(shot, Bullets, source, angle, speed);
 		}
         return null;
     }
@@ -72,29 +61,35 @@ public class BulletManager : MonoBehaviour
     /// <param name="speed">発射する速度。</param>
     public Mob ShotMob(Vector3 source, float angle, float speed)
     {
-        var x = Mathf.Sin(angle * Mathf.Deg2Rad);
-        var y = Mathf.Cos(angle * Mathf.Deg2Rad);
-        var direction = new Vector2(x, y);
-
-        var shot = Instantiate(mobObject);
+        var shot = poolManagerPrefab.GetInstance(BulletPoolManager.Kind.Mob);
         if (shot != null)
         {
-            var rigidBody = shot.GetComponent<Rigidbody2D>();
-            shot.transform.position = source;
-            shot.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
-            rigidBody.velocity = direction * speed;
-
-            var script = shot.GetComponent<Mob>();
-            Mobs.Add(script);
-            script.DestroyEvent.Subscribe(u => Mobs.Remove(script));
-            return script;
+            return InitializeShot(shot, Mobs, source, angle, speed);
         }
         return null;
+    }
+
+    private TShot InitializeShot<TShot>(GameObject shot, List<TShot> list, Vector3 source, float angle, float speed)
+        where TShot : EnemyShot
+    {
+        shot.transform.position = source;
+        shot.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
+
+        var velocity = Vector2Extensions.FromAngleLength(angle, speed);
+        var rigidbody = shot.GetComponent<Rigidbody2D>();
+        rigidbody.velocity = velocity;
+
+        var script = shot.GetComponent<TShot>();
+        script.InitializeBullet(poolManager);
+        list.Add(script);
+        script.DestroyEvent.Subscribe(u => list.Remove(script));
+        return script;
     }
 
     private void Update()
     {
         Bullets.RemoveAll(x => x == null);
+        Mobs.RemoveAll(x => x == null);
         foreach (var b in Bullets)
         {
             batchRenderer.AddInstanceTS(b.transform.position, b.transform.lossyScale);
@@ -103,13 +98,13 @@ public class BulletManager : MonoBehaviour
 
     public void Clear()
     {
-        foreach (var item in Bullets)
+        foreach (var item in Bullets.ToArray())
         {
-            Destroy(item.gameObject);
+            item.ResetBullet();
         }
-        foreach (var item in Mobs)
+        foreach (var item in Mobs.ToArray())
         {
-            Destroy(item.gameObject);
+            item.ResetBullet();
         }
     }
 }

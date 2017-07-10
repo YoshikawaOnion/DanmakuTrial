@@ -16,9 +16,7 @@ public class ShootingRoom : MonoBehaviour {
         var shot = collision.gameObject.GetComponent<EnemyShot>();
         if (shot != null)
         {
-            //MF_AutoPool.Despawn(collision.gameObject);
-            //shot.NotifyDespawn();
-            Destroy(shot.gameObject);
+            shot.ResetBullet();
         }
     }
 }
