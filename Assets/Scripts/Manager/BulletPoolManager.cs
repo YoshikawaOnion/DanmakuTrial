@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 public class BulletPoolManager : MonoBehaviour
 {
@@ -42,8 +43,10 @@ public class BulletPoolManager : MonoBehaviour
     }
 
     public void SleepInstance(GameObject obj)
-    {
-        obj.SetActive(false);
+	{
+		obj.SetActive(false);
+		obj.transform.position = Vector2.zero;
+        obj.GetComponent<Collider2D>().enabled = false;
     }
 
     private GameObject GetNewInstance(Kind kind)
@@ -57,5 +60,13 @@ public class BulletPoolManager : MonoBehaviour
         default:
             throw new Exception("弾の生成処理で不明なKindが指定されました。");
         }
+    }
+
+    public int GetActiveCount(Kind kind)
+    {
+        return objectPool.Where(x => x.Key == kind)
+                         .SelectMany(x => x.Value)
+                         .Where(x => x.activeInHierarchy)
+                         .Count();
     }
 }

@@ -33,11 +33,13 @@ public class EnemyBehavior6 : EnemyBehavior
                   .Do(t =>
         {
             anglePivot -= asset.AngleSpeed;
+            //*
             foreach (var s in shots)
             {
                 s.AnglePivot = anglePivot;
                 s.Distance += asset.ShotSpeed;
             }
+            //*/
         });
         var c2 = ShotCoroutine().ToObservable();
 
@@ -74,7 +76,10 @@ public class EnemyBehavior6 : EnemyBehavior
                 return;
             }
 			shots.Add(behavior);
-			shot.DestroyEvent.Subscribe(x => shots.Remove(behavior));
+			shot.DestroyEvent.Subscribe(x => 
+            {
+                shots.Remove(behavior);
+            });
 		}
     }
 }

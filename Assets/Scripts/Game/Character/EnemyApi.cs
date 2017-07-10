@@ -8,13 +8,13 @@ using UniRx;
 /// </summary>
 public class EnemyApi
 {
-    internal BulletManager BulletRenderer { get; set; }
-    internal Enemy Enemy { get; private set; }
-    internal Transform Transform
+    public BulletManager BulletRenderer { get; set; }
+    public Enemy Enemy { get; private set; }
+    public Transform Transform
     {
         get { return Enemy.transform; }
     }
-    internal Rigidbody2D Rigidbody
+    public Rigidbody2D Rigidbody
     {
         get { return Enemy.Rigidbody; }
     }

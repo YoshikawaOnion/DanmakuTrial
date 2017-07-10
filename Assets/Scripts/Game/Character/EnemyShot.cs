@@ -10,7 +10,7 @@ public class EnemyShot : MonoBehaviour {
     public IObservable<Unit> DestroyEvent;
 	private EnemyShotBehavior Behavior;
 
-    public EnemyApi Api { get; set; }
+    public EnemyApi Api { get; private set; }
 
 	private Subject<Unit> destroySubject;
     private BulletPoolManager poolManager;
@@ -22,10 +22,12 @@ public class EnemyShot : MonoBehaviour {
         Behavior = new NullEnemyShotBehavior();
     }
 
-	public void InitializeBullet(BulletPoolManager poolManager, EnemyShotBehavior behavior)
+	public void InitializeBullet(BulletPoolManager poolManager, EnemyShotBehavior behavior, EnemyApi api)
 	{
 		this.poolManager = poolManager;
         this.Behavior = behavior;
+        this.Api = api;
+        Behavior.Initialize(this);
         Behavior.Start();
 	}
 
@@ -34,11 +36,6 @@ public class EnemyShot : MonoBehaviour {
         Behavior.Stop();
 		poolManager.SleepInstance(gameObject);
 		destroySubject.OnNext(Unit.Default);
-    }
-
-    protected void Start()
-    {
-        Behavior.Start();
     }
 
     private void OnDestroy()

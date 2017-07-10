@@ -14,8 +14,8 @@ public class BulletManager : MonoBehaviour
     [SerializeField]
     private BulletPoolManager poolManagerPrefab = null;
 
-    internal List<EnemyShot> Bullets;
-    internal List<Mob> Mobs;
+    private List<EnemyShot> Bullets;
+    private List<Mob> Mobs;
     private BatchRenderer batchRenderer;
     private BulletPoolManager poolManager;
 
@@ -81,18 +81,16 @@ public class BulletManager : MonoBehaviour
         rigidbody.velocity = velocity;
 
         var script = shot.GetComponent<TShot>();
-        script.Api = api;
-        behavior.Initialize(script);
-        script.InitializeBullet(poolManager, behavior);
-        list.Add(script);
-        script.DestroyEvent.Subscribe(u => list.Remove(script));
+        script.InitializeBullet(poolManager, behavior, api);
+		script.DestroyEvent.Subscribe(u => list.Remove(script));
+		list.Add(script);
+
+		shot.GetComponent<Collider2D>().enabled = true;
         return script;
     }
 
     private void Update()
     {
-        Bullets.RemoveAll(x => x == null);
-        Mobs.RemoveAll(x => x == null);
         foreach (var b in Bullets)
         {
             batchRenderer.AddInstanceTS(b.transform.position, b.transform.lossyScale);

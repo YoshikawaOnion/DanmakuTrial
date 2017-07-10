@@ -9,8 +9,8 @@ using System.Collections.Generic;
 /// </summary>
 public class CircleEnemyShotBehavior : EnemyShotBehavior
 {
-    internal float AnglePivot { get; set; }
-    internal float Distance { get; set; }
+    public float AnglePivot { get; set; }
+    public float Distance { get; set; }
 
     private int index;
     private int way;

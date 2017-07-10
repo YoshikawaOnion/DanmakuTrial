@@ -61,8 +61,9 @@ public class GameManager : Singleton<GameManager>
         uiManager.SetActive(false);
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         stateMachine = null;
         objectsToDestroy = null;
         eventFacade = null;
