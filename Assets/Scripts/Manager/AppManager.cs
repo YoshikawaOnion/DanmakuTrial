@@ -35,7 +35,7 @@ public class AppManager : Singleton<AppManager> {
         GameManager.I.Dohyou = bg;
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
         stateMachine = null;
     }

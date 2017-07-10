@@ -28,7 +28,7 @@ public class EnemyState_NextRound : StateMachine
         }
         else
 		{
-			SoundManager.I.PlaySe(SeKind.EnemyDefeated);
+			SoundManager.I.PlaySe(SeKind.EnemyDamaged);
             context.ChangeState(Enemy.DefeatedStateName);
             context.EventAccepter.OnEnemyDefeatedSubject.OnNext(Unit.Default);
         }

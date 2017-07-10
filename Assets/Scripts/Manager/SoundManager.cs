@@ -8,65 +8,31 @@ using System.Collections.Generic;
 public enum SeKind
 {
 	Start, Win, PlayerShot, EnemyShot, Hit,
-    PlayerDefeated, EnemyDamaged, EnemyDefeated,
+    PlayerDefeated, EnemyDamaged,
     PlayerDamaged
 }
 
 public enum BgmKind
 {
-	Game,
+	Game, Title
 }
 
 public class SoundManager : Singleton<SoundManager>
 {
-    [SerializeField]
-	private AudioClip startSound;
-	[SerializeField]
-	private AudioClip winSound;
-	[SerializeField]
-	private AudioClip playerShotSound;
-	[SerializeField]
-	private AudioClip enemyShotSound;
-    [SerializeField]
-    private AudioClip hitSound;
-	[SerializeField]
-    private AudioClip playerDefeatedSound;
-	[SerializeField]
-	private AudioClip enemyDamagedSound;
-	[SerializeField]
-	private AudioClip enemyDefeatedSound;
-    [SerializeField]
-    private AudioClip playerDamagedSound;
-
-    [SerializeField]
-	private AudioSource soundEffectSource;
-	[SerializeField]
-    private AudioSource gameBgmSource;
-
-	private Dictionary<SeKind, AudioClip> seAudioClips { get; set; }
-	private Dictionary<BgmKind, AudioSource> bgmAudioSources { get; set; }
+    private AudioSource seAudioSource { get; set; }
+    private AudioSource bgmAudioSource { get; set; }
 
     protected override void Init()
     {
-        seAudioClips = new Dictionary<SeKind, AudioClip>();
-        seAudioClips[SeKind.Start] = startSound;
-        seAudioClips[SeKind.Win] = winSound;
-        seAudioClips[SeKind.PlayerShot] = playerShotSound;
-        seAudioClips[SeKind.EnemyShot] = enemyShotSound;
-        seAudioClips[SeKind.PlayerDefeated] = playerDefeatedSound;
-        seAudioClips[SeKind.EnemyDamaged] = enemyDamagedSound;
-        seAudioClips[SeKind.EnemyDefeated] = enemyDefeatedSound;
-        seAudioClips[SeKind.Hit] = hitSound;
-        seAudioClips[SeKind.PlayerDamaged] = playerDamagedSound;
-
-		bgmAudioSources = new Dictionary<BgmKind, AudioSource>();
-		bgmAudioSources[BgmKind.Game] = Instantiate(gameBgmSource);
+        var audioSources = GetComponents<AudioSource>();
+        seAudioSource = audioSources[0];
+        bgmAudioSource = audioSources[1];
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
-        seAudioClips = null;
-        bgmAudioSources = null;
+        seAudioSource = null;
+        bgmAudioSource = null;
     }
 
     /// <summary>
@@ -76,16 +42,24 @@ public class SoundManager : Singleton<SoundManager>
     /// <param name="kind">Kind.</param>
     public void PlaySe(SeKind kind, float volumeScale = 1)
     {
-        soundEffectSource.PlayOneShot(seAudioClips[kind], volumeScale);
+        var clip = Resources.Load<AudioClip>("Sounds/" + kind.ToString());
+        seAudioSource.PlayOneShot(clip, volumeScale);
     }
 
     public void PlayBgm(BgmKind kind)
     {
-        bgmAudioSources[kind].Play();
+        if (bgmAudioSource.isPlaying)
+        {
+            bgmAudioSource.Stop();
+        }
+
+        var clip = Resources.Load<AudioClip>("Sounds/Bgm" + kind.ToString());
+        bgmAudioSource.clip = clip;
+        bgmAudioSource.Play();
     }
 
     public void StopBgm(BgmKind kind)
     {
-        bgmAudioSources[kind].Stop();
+        bgmAudioSource.Stop();
     }
 }

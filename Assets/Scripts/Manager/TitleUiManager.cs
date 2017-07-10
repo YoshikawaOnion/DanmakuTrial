@@ -31,7 +31,7 @@ public class TitleUiManager : Singleton<TitleUiManager>
                                           .Merge(oozeki);
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
         LevelSelectedObservable = null;
     }
