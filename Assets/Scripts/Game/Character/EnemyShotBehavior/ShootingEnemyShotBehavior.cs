@@ -16,9 +16,6 @@ public class ShootingEnemyShotBehavior : EnemyShotBehavior
     private IDisposable moveSubscription;
     private Rigidbody2D rigidBody;
 
-    public ShootingEnemyShotBehavior(EnemyShot owner) : base(owner)
-    {
-    }
 
     public void InitializeComponent()
 	{

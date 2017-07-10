@@ -13,10 +13,6 @@ public class FlowerEnemyShotBehavior : EnemyShotBehavior
     public float TimeSpan { get; set; }
     public float Angle { get; set; }
 
-    public FlowerEnemyShotBehavior(EnemyShot owner) : base(owner)
-    {
-    }
-
     protected override IObservable<Unit> GetAction()
     {
         return Coroutine().ToObservable();

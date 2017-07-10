@@ -40,18 +40,18 @@ public class EnemyBehavior5 : EnemyBehavior
     }
 
     private void ShotFlower(float angle, float subAngle)
-    {
-        var shot = Api.Shot(angle, asset.FlowerShotSpeed * Def.UnitPerPixel);
+	{
+		var behavior = new FlowerEnemyShotBehavior();
+		behavior.Way = asset.FlowerShotWay;
+		behavior.Speed = asset.FlowerShotSpeed;
+		behavior.TimeSpan = asset.FlowerShotTimeSpan;
+		behavior.Angle = subAngle;
+
+        var shot = Api.Shot(angle, asset.FlowerShotSpeed * Def.UnitPerPixel, behavior);
         if (shot == null)
         {
             return;
         }
-        var behavior = new FlowerEnemyShotBehavior(shot);
-        behavior.Way = asset.FlowerShotWay;
-        behavior.Speed = asset.FlowerShotSpeed;
-        behavior.TimeSpan = asset.FlowerShotTimeSpan;
-        behavior.Angle = subAngle;
-        shot.Behavior = behavior;
     }
 
     private IObservable<Unit> MoveObservable()

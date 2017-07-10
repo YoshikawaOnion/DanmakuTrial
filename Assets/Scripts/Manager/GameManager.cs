@@ -249,10 +249,10 @@ public class GameManager : Singleton<GameManager>
         {
             Api = api,
             BulletRenderer = bulletRenderer,
-            Behaviors = EnemyStrategy.GetBehaviors(api).GetEnumerator(),
             Enemy = Enemy,
             InitialPos = Enemy.InitialPosition,
-            EventAccepter = eventFacade
+			EventAccepter = eventFacade,
+			Behaviors = EnemyStrategy.GetBehaviors(api).GetEnumerator()
         };
         context.ChangeState(Enemy.NextRoundStateName);
     }

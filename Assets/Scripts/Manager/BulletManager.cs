@@ -42,12 +42,12 @@ public class BulletManager : MonoBehaviour
     /// <param name="source">発射地点。</param>
     /// <param name="angle">発射する角度。</param>
     /// <param name="speed">発射する速度。</param>
-    public EnemyShot Shot(Vector3 source, float angle, float speed)
+    public EnemyShot Shot(Vector3 source, float angle, float speed, EnemyShotBehavior behavior, EnemyApi api)
     {
         var shot = poolManagerPrefab.GetInstance(BulletPoolManager.Kind.Normal);
         if (shot != null)
 		{
-			return InitializeShot(shot, Bullets, source, angle, speed);
+			return InitializeShot(shot, behavior, Bullets, source, angle, speed, api);
 		}
         return null;
     }
@@ -59,20 +59,21 @@ public class BulletManager : MonoBehaviour
     /// <param name="source">発射地点。</param>
     /// <param name="angle">発射する角度。</param>
     /// <param name="speed">発射する速度。</param>
-    public Mob ShotMob(Vector3 source, float angle, float speed)
+    public Mob ShotMob(Vector3 source, float angle, float speed, EnemyShotBehavior behavior, EnemyApi api)
     {
         var shot = poolManagerPrefab.GetInstance(BulletPoolManager.Kind.Mob);
         if (shot != null)
         {
-            return InitializeShot(shot, Mobs, source, angle, speed);
+            return InitializeShot(shot, behavior, Mobs, source, angle, speed, api);
         }
         return null;
     }
 
-    private TShot InitializeShot<TShot>(GameObject shot, List<TShot> list, Vector3 source, float angle, float speed)
+    private TShot InitializeShot<TShot>(GameObject shot, EnemyShotBehavior behavior, List<TShot> list, Vector3 source, float angle, float speed, EnemyApi api)
         where TShot : EnemyShot
     {
         shot.transform.position = source;
+        shot.transform.SetEulerAnglesZ(0);
         shot.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;
 
         var velocity = Vector2Extensions.FromAngleLength(angle, speed);
@@ -80,7 +81,9 @@ public class BulletManager : MonoBehaviour
         rigidbody.velocity = velocity;
 
         var script = shot.GetComponent<TShot>();
-        script.InitializeBullet(poolManager);
+        script.Api = api;
+        behavior.Initialize(script);
+        script.InitializeBullet(poolManager, behavior);
         list.Add(script);
         script.DestroyEvent.Subscribe(u => list.Remove(script));
         return script;

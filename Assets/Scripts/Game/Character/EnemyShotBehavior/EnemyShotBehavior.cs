@@ -12,9 +12,9 @@ public abstract class EnemyShotBehavior
 
     private IDisposable actionSubscription;
 
-    public EnemyShotBehavior(EnemyShot owner)
+    public void Initialize(EnemyShot shot)
     {
-        Owner = owner;
+        Owner = shot;
     }
 
     /// <summary>

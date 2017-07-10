@@ -8,7 +8,7 @@ using UniRx;
 /// </summary>
 public class EnemyShot : MonoBehaviour {
     public IObservable<Unit> DestroyEvent;
-	public EnemyShotBehavior Behavior;
+	private EnemyShotBehavior Behavior;
 
     public EnemyApi Api { get; set; }
 
@@ -19,19 +19,14 @@ public class EnemyShot : MonoBehaviour {
 	{
 		destroySubject = new Subject<Unit>();
 		DestroyEvent = destroySubject;
-        Behavior = new NullEnemyShotBehavior(this);
+        Behavior = new NullEnemyShotBehavior();
     }
 
-    public void NotifyDespawn()
-	{
-		Behavior.Stop();
-		destroySubject.OnNext(Unit.Default);
-		destroySubject.OnCompleted();
-	}
-
-	public void InitializeBullet(BulletPoolManager poolManager)
+	public void InitializeBullet(BulletPoolManager poolManager, EnemyShotBehavior behavior)
 	{
 		this.poolManager = poolManager;
+        this.Behavior = behavior;
+        Behavior.Start();
 	}
 
     public void ResetBullet()
@@ -41,7 +36,7 @@ public class EnemyShot : MonoBehaviour {
 		destroySubject.OnNext(Unit.Default);
     }
 
-    private void Start()
+    protected void Start()
     {
         Behavior.Start();
     }

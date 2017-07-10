@@ -15,7 +15,7 @@ public class CircleEnemyShotBehavior : EnemyShotBehavior
     private int index;
     private int way;
 
-    public CircleEnemyShotBehavior(EnemyShot owner, int index, float angle, int way) : base(owner)
+    public CircleEnemyShotBehavior(int index, float angle, int way)
     {
         AnglePivot = angle;
         Distance = 0;
@@ -25,7 +25,7 @@ public class CircleEnemyShotBehavior : EnemyShotBehavior
 
     protected override IObservable<Unit> GetAction()
 	{
-		var center = Owner.Api.Enemy.transform.position;
+        var center = Owner.Api.Enemy.transform.position;
 
         return Observable.EveryUpdate()
                          .Select(t => Unit.Default)

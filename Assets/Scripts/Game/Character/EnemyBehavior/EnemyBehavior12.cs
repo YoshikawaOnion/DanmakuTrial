@@ -47,15 +47,14 @@ public class EnemyBehavior12 : EnemyBehavior
         {
             if (i != locationIndex)
             {
-                var mob = Api.ShotMob(Api.Enemy.transform.position, 180, 0);
-				var behavior = new ShootingEnemyShotBehavior(mob)
+				var behavior = new ShootingEnemyShotBehavior()
                 {
                     Way = asset.CopiesShotWay,
                     AngleSpan = asset.CopiesShotAngleSpan,
                     ShotSpeed = asset.CopiesShotSpeed,
                     ShotTimeSpan = asset.CopiesShotTimeSpan
-                };
-				mob.Behavior = behavior;
+				};
+				var mob = Api.ShotMob(Api.Enemy.transform.position, 180, 0, behavior);
 				behavior.InitializeComponent();
                 behavior.Move(locations[i], 20);
 			}

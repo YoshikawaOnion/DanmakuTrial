@@ -8,10 +8,6 @@ using UniRx;
 /// </summary>
 public class NullEnemyShotBehavior : EnemyShotBehavior
 {
-    public NullEnemyShotBehavior(EnemyShot owner) : base(owner)
-    {
-    }
-
     protected override IObservable<Unit> GetAction()
     {
         return Observable.Return(Unit.Default);

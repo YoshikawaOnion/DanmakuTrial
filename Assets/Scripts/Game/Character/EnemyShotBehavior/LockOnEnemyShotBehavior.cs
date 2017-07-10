@@ -10,7 +10,7 @@ public class LockOnEnemyShotBehavior : EnemyShotBehavior
 {
     private float angle;
 
-    public LockOnEnemyShotBehavior(EnemyShot owner, float angle) : base(owner)
+    public LockOnEnemyShotBehavior(float angle)
     {
         this.angle = angle;
     }

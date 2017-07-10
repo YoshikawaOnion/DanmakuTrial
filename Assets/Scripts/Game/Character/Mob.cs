@@ -10,10 +10,10 @@ public class Mob : EnemyShot
     private new Rigidbody2D rigidbody;
 
 	// Use this for initialization
-	void Start () {
+	protected new void Start () {
         rigidbody = GetComponent<Rigidbody2D>();
-        Behavior.Start();
-	}
+        base.Start();
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
 	{

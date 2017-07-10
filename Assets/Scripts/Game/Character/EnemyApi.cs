@@ -32,9 +32,9 @@ public class EnemyApi
     /// <returns>発射した弾を表す EnemyShot オブジェクト。</returns>
     /// <param name="angle">発射する方向。</param>
     /// <param name="speed">発射するスピード。</param>
-	public EnemyShot Shot(float angle, float speed)
+	public EnemyShot Shot(float angle, float speed, EnemyShotBehavior behavior = null)
 	{
-		return ShotByOffset(Vector3.zero, angle, speed);
+		return ShotByOffset(Vector3.zero, angle, speed, behavior);
 	}
 
 	/// <summary>
@@ -44,10 +44,10 @@ public class EnemyApi
 	/// <param name="offset">敵キャラクターから見た相対的な発射位置。</param>
 	/// <param name="angle">発射する方向。</param>
 	/// <param name="speed">発射するスピード。</param>
-	public EnemyShot ShotByOffset(Vector3 offset, float angle, float speed)
+	public EnemyShot ShotByOffset(Vector3 offset, float angle, float speed, EnemyShotBehavior behavior = null)
 	{
 		var pos = Enemy.transform.position + offset.ZReplacedBy(10);
-		return Shot(pos, angle, speed);
+		return Shot(pos, angle, speed, behavior);
 	}
 
 	/// <summary>
@@ -57,28 +57,20 @@ public class EnemyApi
 	/// <param name="position">発射する位置のワールド座標。</param>
 	/// <param name="angle">発射する方向。</param>
 	/// <param name="speed">発射するスピード。</param>
-	public EnemyShot Shot(Vector3 position, float angle, float speed)
+	public EnemyShot Shot(Vector3 position, float angle, float speed, EnemyShotBehavior behavior = null)
 	{
+        behavior = behavior ?? new NullEnemyShotBehavior();
 		position += new Vector3(0, 0, 10);
-		var shot = BulletRenderer.Shot(position, angle, speed);
-        if (shot != null)
-		{
-			shot.Api = this;
-			return shot;
-        }
-        return null;
+		var shot = BulletRenderer.Shot(position, angle, speed, behavior, this);
+        return shot;
 	}
 
-    public Mob ShotMob(Vector3 position, float angle, float speed)
-    {
+    public Mob ShotMob(Vector3 position, float angle, float speed, EnemyShotBehavior behavior = null)
+	{
+		behavior = behavior ?? new NullEnemyShotBehavior();
         position += new Vector3(0, 0, 10);
-        var shot = BulletRenderer.ShotMob(position, angle, speed);
-        if (shot != null)
-        {
-            shot.Api = this;
-            return shot;
-        }
-        return null;
+        var shot = BulletRenderer.ShotMob(position, angle, speed, behavior, this);
+        return shot;
     }
 
     /// <summary>
@@ -102,15 +94,6 @@ public class EnemyApi
     public void PlayShootSound()
     {
         SoundManager.I.PlaySe(SeKind.EnemyShot);
-    }
-
-    /// <summary>
-    /// 敵が撃破された際の音を再生します。
-    /// </summary>
-    public void PlayDefeatedSound()
-    {
-        Debug.Log("EnemyDefeated");
-        SoundManager.I.PlaySe(SeKind.EnemyDefeated);
     }
 
     /// <summary>
