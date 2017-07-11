@@ -9,6 +9,7 @@ using UniRx;
 public class EnemyApi
 {
     public BulletManager BulletRenderer { get; set; }
+    public ObjectPoolManager PoolManager { get; set; }
     public Enemy Enemy { get; private set; }
     public Transform Transform
     {

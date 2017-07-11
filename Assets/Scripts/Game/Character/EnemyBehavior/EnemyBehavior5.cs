@@ -41,7 +41,7 @@ public class EnemyBehavior5 : EnemyBehavior
 
     private void ShotFlower(float angle, float subAngle)
 	{
-		var behavior = new FlowerEnemyShotBehavior();
+        var behavior = GameManager.I.PoolManager.GetInstance<FlowerEnemyShotBehavior>(EnemyShotKind.Flower);
 		behavior.Way = asset.FlowerShotWay;
 		behavior.Speed = asset.FlowerShotSpeed;
 		behavior.TimeSpan = asset.FlowerShotTimeSpan;

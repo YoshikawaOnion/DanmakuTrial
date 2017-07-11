@@ -8,11 +8,12 @@ using UniRx;
 /// </summary>
 public class LockOnEnemyShotBehavior : EnemyShotBehavior
 {
-    private float angle;
+    public float Angle { get; set; }
 
-    public LockOnEnemyShotBehavior(float angle)
+    public override void Initialize(EnemyShot shot)
     {
-        this.angle = angle;
+        base.Initialize(shot);
+        Angle = 0;
     }
 
     protected override IObservable<Unit> GetAction()
@@ -25,7 +26,7 @@ public class LockOnEnemyShotBehavior : EnemyShotBehavior
 		var rigidbody = Owner.GetComponent<Rigidbody2D>();
 		var initialPos = Owner.transform.position;
 		var radius = (50 + UnityEngine.Random.value * 100) * Def.UnitPerPixel;
-		var offset = Vector2Extensions.FromAngleLength(angle, radius);
+		var offset = Vector2Extensions.FromAngleLength(Angle, radius);
         rigidbody.velocity = Vector3.zero;
 
 		yield return Observable.EveryUpdate()

@@ -11,20 +11,15 @@ using System.Linq;
 /// </summary>
 public class BulletManager : MonoBehaviour
 {
-    [SerializeField]
-    private BulletPoolManager poolManagerPrefab = null;
-
     private List<EnemyShot> Bullets;
     private List<Mob> Mobs;
     private BatchRenderer batchRenderer;
-    private BulletPoolManager poolManager;
 
     void Start()
     {
         Bullets = new List<EnemyShot>();
         Mobs = new List<Mob>();
         batchRenderer = GetComponent<BatchRenderer>();
-        poolManager = Instantiate(poolManagerPrefab);
     }
 
     private void OnDestroy()
@@ -32,7 +27,6 @@ public class BulletManager : MonoBehaviour
         Bullets = null;
         Mobs = null;
         batchRenderer = null;
-        poolManager = null;
     }
 
     /// <summary>
@@ -44,7 +38,7 @@ public class BulletManager : MonoBehaviour
     /// <param name="speed">発射する速度。</param>
     public EnemyShot Shot(Vector3 source, float angle, float speed, EnemyShotBehavior behavior, EnemyApi api)
     {
-        var shot = poolManagerPrefab.GetInstance(BulletPoolManager.Kind.Normal);
+        var shot = GameManager.I.PoolManager.GetInstance(ObjectPoolManager.Kind.Normal);
         if (shot != null)
 		{
 			return InitializeShot(shot, behavior, Bullets, source, angle, speed, api);
@@ -61,7 +55,7 @@ public class BulletManager : MonoBehaviour
     /// <param name="speed">発射する速度。</param>
     public Mob ShotMob(Vector3 source, float angle, float speed, EnemyShotBehavior behavior, EnemyApi api)
     {
-        var shot = poolManagerPrefab.GetInstance(BulletPoolManager.Kind.Mob);
+        var shot = GameManager.I.PoolManager.GetInstance(ObjectPoolManager.Kind.Mob);
         if (shot != null)
         {
             return InitializeShot(shot, behavior, Mobs, source, angle, speed, api);
@@ -81,7 +75,7 @@ public class BulletManager : MonoBehaviour
         rigidbody.velocity = velocity;
 
         var script = shot.GetComponent<TShot>();
-        script.InitializeBullet(poolManager, behavior, api);
+        script.InitializeBullet(behavior, api);
 		script.DestroyEvent.Subscribe(u => list.Remove(script));
 		list.Add(script);
 

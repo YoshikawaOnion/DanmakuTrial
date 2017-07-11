@@ -8,13 +8,19 @@ using System;
 /// </summary>
 public abstract class EnemyShotBehavior
 {
-    protected EnemyShot Owner;
+    protected EnemyShot Owner { get; set; }
+    public bool IsActive { get; set; }
 
     private IDisposable actionSubscription;
 
-    public void Initialize(EnemyShot shot)
+    public virtual void Initialize(EnemyShot shot)
     {
         Owner = shot;
+    }
+
+    public virtual void Reset()
+    {
+        GameManager.I.PoolManager.SleepInstance(this);
     }
 
     /// <summary>

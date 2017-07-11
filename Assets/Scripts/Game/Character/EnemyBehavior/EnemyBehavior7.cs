@@ -32,7 +32,10 @@ public class EnemyBehavior7 : EnemyBehavior
     private void Shot()
     {
 		var angle = UnityEngine.Random.value * 360;
-		var behavior = new LockOnEnemyShotBehavior(angle);
+		var behavior = new LockOnEnemyShotBehavior
+        {
+            Angle = angle
+        };
         var shot = Api.Shot(angle, 1, behavior);
         if (shot == null)
         {

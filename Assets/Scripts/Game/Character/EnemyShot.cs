@@ -13,7 +13,6 @@ public class EnemyShot : MonoBehaviour {
     public EnemyApi Api { get; private set; }
 
 	private Subject<Unit> destroySubject;
-    private BulletPoolManager poolManager;
 
     public EnemyShot()
 	{
@@ -22,9 +21,8 @@ public class EnemyShot : MonoBehaviour {
         Behavior = new NullEnemyShotBehavior();
     }
 
-	public void InitializeBullet(BulletPoolManager poolManager, EnemyShotBehavior behavior, EnemyApi api)
+	public void InitializeBullet(EnemyShotBehavior behavior, EnemyApi api)
 	{
-		this.poolManager = poolManager;
         this.Behavior = behavior;
         this.Api = api;
         Behavior.Initialize(this);
@@ -33,8 +31,9 @@ public class EnemyShot : MonoBehaviour {
 
     public void ResetBullet()
     {
-        Behavior.Stop();
-		poolManager.SleepInstance(gameObject);
+		Behavior.Stop();
+		Behavior.Reset();
+		GameManager.I.PoolManager.SleepInstance(gameObject);
 		destroySubject.OnNext(Unit.Default);
     }
 

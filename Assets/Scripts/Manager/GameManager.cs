@@ -33,6 +33,8 @@ public class GameManager : Singleton<GameManager>
     private GameObject shootingRoomPrefab;
     [SerializeField]
     private GameObject bulletRendererPrefab;
+    [SerializeField]
+    private ObjectPoolManager poolManagerPrefab;
 
     public Enemy Enemy { get; private set; }
     public Player Player { get; private set; }
@@ -44,6 +46,7 @@ public class GameManager : Singleton<GameManager>
     }
     public Vector3 TopRight { get; private set; }
     public Vector3 BottomLeft { get; private set; }
+    public ObjectPoolManager PoolManager { get; private set; }
 
     private BulletManager bulletRenderer;
     private StateMachine stateMachine;
@@ -59,6 +62,8 @@ public class GameManager : Singleton<GameManager>
         var uiManager = Instantiate(gameUiManagerPrefab);
         uiManager.transform.parent = AppManager.I.Canvas.transform;
         uiManager.SetActive(false);
+
+        PoolManager = Instantiate(poolManagerPrefab);
     }
 
     protected override void OnDestroy()

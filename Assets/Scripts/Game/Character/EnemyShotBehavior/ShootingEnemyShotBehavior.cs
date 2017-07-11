@@ -8,10 +8,10 @@ using UniRx;
 /// </summary>
 public class ShootingEnemyShotBehavior : EnemyShotBehavior
 {
-    public int Way = 2;
-    public float AngleSpan = 30;
-    public float ShotSpeed = 200;
-    public float ShotTimeSpan = 0.5f;
+    public int Way { get; set; }
+    public float AngleSpan { get; set; }
+    public float ShotSpeed { get; set; }
+    public float ShotTimeSpan { get; set; }
 
     private IDisposable moveSubscription;
     private Rigidbody2D rigidBody;
@@ -20,6 +20,25 @@ public class ShootingEnemyShotBehavior : EnemyShotBehavior
     public void InitializeComponent()
 	{
 		rigidBody = Owner.GetComponent<Rigidbody2D>();
+    }
+
+    public override void Initialize(EnemyShot shot)
+    {
+		base.Initialize(shot);
+		rigidBody = Owner.GetComponent<Rigidbody2D>();
+        Way = 2;
+        AngleSpan = 30;
+        ShotSpeed = 200;
+        ShotTimeSpan = 0.5f;
+        moveSubscription = null;
+    }
+
+    public override void Reset()
+    {
+        if (moveSubscription != null)
+        {
+            moveSubscription.Dispose();
+        }
     }
 
     protected override IObservable<Unit> GetAction()

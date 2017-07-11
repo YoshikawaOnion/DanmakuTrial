@@ -33,13 +33,10 @@ public class EnemyBehavior6 : EnemyBehavior
                   .Do(t =>
         {
             anglePivot -= asset.AngleSpeed;
-            //*
             foreach (var s in shots)
             {
-                s.AnglePivot = anglePivot;
-                s.Distance += asset.ShotSpeed;
+                s.SetLocation(anglePivot, asset.ShotSpeed);
             }
-            //*/
         });
         var c2 = ShotCoroutine().ToObservable();
 
@@ -69,7 +66,10 @@ public class EnemyBehavior6 : EnemyBehavior
         int way = asset.Way * asset.ChunkWay;
 		for (int i = 0; i < way; i++)
 		{
-			var behavior = new CircleEnemyShotBehavior(i, anglePivot, asset.Way);
+            var behavior = GameManager.I.PoolManager.GetInstance
+                                  <CircleEnemyShotBehavior>(EnemyShotKind.Circle);
+            behavior.Index = i;
+            behavior.Way = asset.Way;
 			var shot = Api.Shot(0, 0, behavior);
             if (shot == null)
             {
