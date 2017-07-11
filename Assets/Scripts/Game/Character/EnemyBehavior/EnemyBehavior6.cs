@@ -16,15 +16,9 @@ public class EnemyBehavior6 : EnemyBehavior
     private float anglePivot;
     private EnemyBehavior6Asset asset;
 
-    public EnemyBehavior6(EnemyApi api) : base(api)
-    {
-        shots = new List<CircleEnemyShotBehavior>();
-    }
-
     protected override IObservable<Unit> GetAction()
-    {
-		asset = Resources.Load<EnemyBehavior6Asset>
-						 ("ScriptableAsset/EnemyBehavior6Asset");
+	{
+		shots = new List<CircleEnemyShotBehavior>();
         var c0 = PrepareCoroutine().ToObservable();
 
         // 時間に沿って弾を回転させながら広がる
@@ -81,5 +75,12 @@ public class EnemyBehavior6 : EnemyBehavior
                 shots.Remove(behavior);
             });
 		}
+    }
+
+    public override IObservable<Unit> LoadAsset()
+    {
+        const string Name = "EnemyBehavior6";
+        asset = AssetHelper.LoadBehaviorAsset<EnemyBehavior6Asset>(Name);
+        return DebugManager.I.LoadAssetFromServer<EnemyBehavior6AssetForJson, EnemyBehavior6Asset>(asset, Name);
     }
 }

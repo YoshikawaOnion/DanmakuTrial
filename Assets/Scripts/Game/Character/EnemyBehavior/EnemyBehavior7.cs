@@ -8,10 +8,8 @@ using UniRx;
 /// </summary>
 public class EnemyBehavior7 : EnemyBehavior
 {
-    public EnemyBehavior7(EnemyApi api) : base(api)
-    {
-    }
-
+    private EnemyBehavior7Asset asset;
+    
     protected override IObservable<Unit> GetAction()
     {
         return ShotCoroutine().ToObservable();
@@ -25,7 +23,7 @@ public class EnemyBehavior7 : EnemyBehavior
             Shot();
 			yield return new WaitForSeconds(0.1f);
 			Shot();
-			yield return new WaitForSeconds(0.8f);
+			yield return new WaitForSeconds(asset.ShotTimeSpan);
         }
     }
 
@@ -41,5 +39,12 @@ public class EnemyBehavior7 : EnemyBehavior
         {
             return;
         }
+    }
+
+    public override IObservable<Unit> LoadAsset()
+	{
+		const string Name = "EnemyBehavior7";
+		asset = AssetHelper.LoadBehaviorAsset<EnemyBehavior7Asset>(Name);
+		return DebugManager.I.LoadAssetFromServer<EnemyBehavior7AssetForJson, EnemyBehavior7Asset>(asset, Name);
     }
 }

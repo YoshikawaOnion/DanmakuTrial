@@ -13,23 +13,15 @@ public class EnemyBehavior10 : EnemyBehavior
 {
     private EnemyBehavior10Asset asset;
 
-    public EnemyBehavior10(EnemyApi api) : base(api)
-    {
+    public override IObservable<Unit> LoadAsset()
+	{
+		const string Name = "EnemyBehavior10";
+		asset = AssetHelper.LoadBehaviorAsset<EnemyBehavior10Asset>(Name);
+		return DebugManager.I.LoadAssetFromServer<EnemyBehavior10AssetForJson, EnemyBehavior10Asset>(asset, Name);
     }
 
     protected override IObservable<Unit> GetAction()
     {
-        asset = Resources.Load<EnemyBehavior10Asset>
-                         ("ScriptableAsset/EnemyBehavior10Asset");
-        if (asset == null)
-        {
-            asset = new EnemyBehavior10Asset()
-            {
-                Way = 36,
-                MaxSpeed = 280,
-                AngleAdvance = 137.5f,
-            };
-        }
         return ShotCoroutine().ToObservable();
     }
 

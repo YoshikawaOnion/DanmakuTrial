@@ -2,15 +2,17 @@ using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using UniRx;
 
 public class EnemyStrategyOozeki : EnemyStrategy
 {
-    public override IEnumerable<EnemyBehavior> GetBehaviors(EnemyApi api)
+    protected override IEnumerable<EnemyBehavior> CreateBehaviors()
 	{
-		yield return new EnemyBehavior6(api);
-		yield return new EnemyBehavior8(api);
-        yield return new EnemyBehavior12(api);
-        yield return new EnemyBehavior2(api);
-        yield return new EnemyBehavior10(api);
+        yield return new EnemyBehavior6();
+        yield return new EnemyBehavior8();
+        yield return new EnemyBehavior12();
+        yield return new EnemyBehavior2();
+        yield return new EnemyBehavior10();
     }
 }

@@ -14,14 +14,9 @@ public class EnemyBehavior4 : EnemyBehavior
 {
     private EnemyBehavior4Asset asset;
 
-    public EnemyBehavior4(EnemyApi api) : base(api)
-    {
-    }
 
     protected override IObservable<Unit> GetAction()
     {
-		asset = Resources.Load<EnemyBehavior4Asset>
-						 ("ScriptableAsset/EnemyBehavior4Asset");
         var c1 = Coroutine().ToObservable();
         var c2 = SubShotCoroutine().ToObservable();
         return c1.Merge(c2);
@@ -72,5 +67,12 @@ public class EnemyBehavior4 : EnemyBehavior
 			}
             yield return new WaitForSeconds(0.5f);
         }
+    }
+
+    public override IObservable<Unit> LoadAsset()
+    {
+        const string Name = "EnemyBehavior4";
+        asset = AssetHelper.LoadBehaviorAsset<EnemyBehavior4Asset>(Name);
+        return DebugManager.I.LoadAssetFromServer<EnemyBehavior4AssetForJson, EnemyBehavior4Asset>(asset, Name);
     }
 }

@@ -13,14 +13,9 @@ public class EnemyBehavior11 : EnemyBehavior
 {
     private EnemyBehavior11Asset asset;
 
-    public EnemyBehavior11(EnemyApi api) : base(api)
-    {
-    }
 
     protected override IObservable<Unit> GetAction()
     {
-        asset = Resources.Load<EnemyBehavior11Asset>
-                         ("ScriptableAsset/EnemyBehavior11Asset");
         return ShotCoroutine().ToObservable();
     }
 
@@ -63,5 +58,12 @@ public class EnemyBehavior11 : EnemyBehavior
     {
 		var x = index - width;
 		return new Vector3(x * asset.ShotSpan, GameManager.I.TopRight.y);
+    }
+
+    public override IObservable<Unit> LoadAsset()
+	{
+		const string Name = "EnemyBehavior11";
+		asset = AssetHelper.LoadBehaviorAsset<EnemyBehavior11Asset>(Name);
+		return DebugManager.I.LoadAssetFromServer<EnemyBehavior11AssetForJson, EnemyBehavior11Asset>(asset, Name);
     }
 }

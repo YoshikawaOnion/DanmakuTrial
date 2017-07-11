@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 public class EnemyStrategySekiwaki : EnemyStrategy
 {
-    public override IEnumerable<EnemyBehavior> GetBehaviors(EnemyApi api)
+    protected override IEnumerable<EnemyBehavior> CreateBehaviors()
 	{
-		yield return new EnemyBehavior5(api);
-		yield return new EnemyBehavior4(api);
-		yield return new EnemyBehavior7(api);
-		yield return new EnemyBehavior11(api);
+        yield return new EnemyBehavior5();
+        yield return new EnemyBehavior4();
+        yield return new EnemyBehavior7();
+        yield return new EnemyBehavior11();
     }
 }

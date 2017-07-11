@@ -11,16 +11,23 @@ using UnityEditor;
 /// </summary>
 public class EnemyBehavior5 : EnemyBehavior
 {
-    private EnemyBehavior5Asset asset;
-
-    public EnemyBehavior5(EnemyApi api) : base(api)
+    private EnemyBehavior5Asset asset_;
+    private EnemyBehavior5Asset asset
     {
+        get
+		{
+			Debug.Log("Asset get with " + (asset_ != null ? asset_.ToString() : "Null"));
+            return asset_;
+        }
+        set
+        {
+            asset_ = value;
+            Debug.Log("Asset set with " + (asset_ != null ? asset_.ToString() : "Null"));
+        }
     }
 
     protected override IObservable<Unit> GetAction()
     {
-        asset = Resources.Load<EnemyBehavior5Asset>
-                         ("ScriptableAsset/EnemyBehavior5Asset");
         var c1 = ShotCoroutine().ToObservable();
         var c2 = MoveObservable();
         return c1.Merge(c2);
@@ -40,12 +47,12 @@ public class EnemyBehavior5 : EnemyBehavior
     }
 
     private void ShotFlower(float angle, float subAngle)
-	{
+    {
         var behavior = GameManager.I.PoolManager.GetInstance<FlowerEnemyShotBehavior>(EnemyShotKind.Flower);
-		behavior.Way = asset.FlowerShotWay;
-		behavior.Speed = asset.FlowerShotSpeed;
-		behavior.TimeSpan = asset.FlowerShotTimeSpan;
-		behavior.Angle = subAngle;
+        behavior.Way = asset.FlowerShotWay;
+        behavior.Speed = asset.FlowerShotSpeed;
+        behavior.TimeSpan = asset.FlowerShotTimeSpan;
+        behavior.Angle = subAngle;
 
         var shot = Api.Shot(angle, asset.FlowerShotSpeed * Def.UnitPerPixel, behavior);
         if (shot == null)
@@ -64,5 +71,12 @@ public class EnemyBehavior5 : EnemyBehavior
             Api.Enemy.Rigidbody.AddForce(new Vector2(0, asset.GutsForce * Def.UnitPerPixel));
         })
                          .Select(t => Unit.Default);
+    }
+
+    public override IObservable<Unit> LoadAsset()
+    {
+        const string Name = "EnemyBehavior5";
+        asset = AssetHelper.LoadBehaviorAsset<EnemyBehavior5Asset>(Name);
+        return DebugManager.I.LoadAssetFromServer<EnemyBehavior5AssetForJson, EnemyBehavior5Asset>(asset, Name);
     }
 }

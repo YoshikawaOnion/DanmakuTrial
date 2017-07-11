@@ -13,10 +13,13 @@ public abstract class EnemyBehavior
 
 	private IDisposable actionSubscription;
 
-    public EnemyBehavior(EnemyApi api)
+
+    public void InitializeAsync(EnemyApi api)
     {
         Api = api;
     }
+
+    public abstract IObservable<Unit> LoadAsset();
 
     protected abstract IObservable<Unit> GetAction();
 

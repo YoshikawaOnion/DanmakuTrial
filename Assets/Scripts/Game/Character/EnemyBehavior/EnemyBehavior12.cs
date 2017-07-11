@@ -14,14 +14,15 @@ public class EnemyBehavior12 : EnemyBehavior
 {
     private EnemyBehavior12Asset asset;
 
-    public EnemyBehavior12(EnemyApi api) : base(api)
-    {
+    public override IObservable<Unit> LoadAsset()
+	{
+		const string Name = "EnemyBehavior12";
+		asset = AssetHelper.LoadBehaviorAsset<EnemyBehavior12Asset>(Name);
+		return DebugManager.I.LoadAssetFromServer<EnemyBehavior12AssetForJson, EnemyBehavior12Asset>(asset, Name);
     }
 
     protected override IObservable<Unit> GetAction()
     {
-        asset = Resources.Load<EnemyBehavior12Asset>
-                         ("ScriptableAsset/EnemyBehavior12Asset");
         return PrepareCoroutine().ToObservable()
                                  .SelectMany(t => ShotCoroutine().ToObservable());
     }

@@ -13,8 +13,11 @@ public class EnemyBehavior8 : EnemyBehavior
 {
     private EnemyBehavior8Asset asset;
 
-    public EnemyBehavior8(EnemyApi api) : base(api)
+    public override IObservable<Unit> LoadAsset()
     {
+        const string Name = "EnemyBehavior8";
+        asset = AssetHelper.LoadBehaviorAsset<EnemyBehavior8Asset>(Name);
+        return DebugManager.I.LoadAssetFromServer<EnemyBehavior8AssetForJson, EnemyBehavior8Asset>(asset, Name);
     }
 
     protected override IObservable<Unit> GetAction()
@@ -24,8 +27,6 @@ public class EnemyBehavior8 : EnemyBehavior
 
     private IEnumerator ShotCoroutine()
     {
-        asset = Resources.Load<EnemyBehavior8Asset>
-                         ("ScriptableAsset/EnemyBehavior8Asset");
         float angle = 0;
         float angleSpan = asset.AngleSpan;
         while (true)

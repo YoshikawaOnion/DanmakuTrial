@@ -14,10 +14,6 @@ public class EnemyBehavior2 : EnemyBehavior
 {
     private EnemyBehavior2Asset asset;
 
-    public EnemyBehavior2(EnemyApi api) : base(api)
-    {
-    }
-
     private IEnumerator PointShotCoroutine()
     {
         while (true)
@@ -70,10 +66,14 @@ public class EnemyBehavior2 : EnemyBehavior
 
     protected override IObservable<Unit> GetAction()
 	{
-		asset = Resources.Load<EnemyBehavior2Asset>
-						 ("ScriptableAsset/EnemyBehavior2Asset");
 		var c1 = FlowerShotCoroutine().ToObservable();
 		var c2 = PointShotCoroutine().ToObservable();
 		return c1.Merge(c2);
+    }
+
+    public override IObservable<Unit> LoadAsset()
+    {
+        asset = AssetHelper.LoadBehaviorAsset<EnemyBehavior2Asset>("EnemyBehavior2");
+        return DebugManager.I.LoadAssetFromServer<EnemyBehavior2AssetForJson, EnemyBehavior2Asset>(asset, "EnemyBehavior2");
     }
 }

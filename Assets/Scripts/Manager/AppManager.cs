@@ -20,14 +20,18 @@ public class AppManager : Singleton<AppManager> {
     private SoundManager soundManagerPrefab;
     [SerializeField]
     private GameObject dohyoBackgroundPrefab;
+    [SerializeField]
+    private DebugManager debugManagerPrefab;
     private StateMachine stateMachine;
 
     protected override void Init()
     {
-        stateMachine = GetComponent<StateMachine>();
         Instantiate(gameManagerPrefab);
-        ChangeState(InitStateName);
         Instantiate(soundManagerPrefab);
+		Instantiate(debugManagerPrefab);
+
+		stateMachine = GetComponent<StateMachine>();
+		ChangeState(InitStateName);
 
         var bg = Instantiate(dohyoBackgroundPrefab);
         bg.transform.parent = SpriteStudioManager.I.ManagerDraw.transform;

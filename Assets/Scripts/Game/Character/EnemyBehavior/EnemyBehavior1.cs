@@ -13,14 +13,8 @@ public class EnemyBehavior1 : EnemyBehavior
 {
     private EnemyBehavior1Asset asset;
 
-    public EnemyBehavior1(EnemyApi api) : base(api)
-    {
-    }
-
     public IEnumerator Act()
 	{
-        asset = Resources.Load<EnemyBehavior1Asset>
-                         ("ScriptableAsset/EnemyBehavior1Asset");
         while (true)
         {
             ShotChunk(Api.Enemy.LeftHand.transform.localPosition);
@@ -62,5 +56,11 @@ public class EnemyBehavior1 : EnemyBehavior
             }
         }
         Api.PlayShootSound();
+    }
+
+    public override IObservable<Unit> LoadAsset()
+    {
+        asset = AssetHelper.LoadBehaviorAsset<EnemyBehavior1Asset>("EnemyBehavior1");
+        return DebugManager.I.LoadAssetFromServer<EnemyBehavior1AssetForJson, EnemyBehavior1Asset>(asset, "EnemyBehavior1");
     }
 }

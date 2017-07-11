@@ -13,14 +13,8 @@ public class EnemyBehavior9 : EnemyBehavior
 {
     private EnemyBehavior9Asset asset;
 
-    public EnemyBehavior9(EnemyApi api) : base(api)
-    {
-    }
-
     protected override IObservable<Unit> GetAction()
     {
-		asset = Resources.Load<EnemyBehavior9Asset>
-						 ("ScriptableAsset/EnemyBehavior9Asset");
         var c0 = JetShotCoroutine().ToObservable();
         var c1 = AimShotCoroutine().ToObservable();
         return c0.Merge(c1);
@@ -47,5 +41,12 @@ public class EnemyBehavior9 : EnemyBehavior
             Api.Shot(angle, asset.AimShotSpeed * Def.UnitPerPixel);
             yield return new WaitForSeconds(asset.AimShotTimeSpan);
         }
+    }
+
+    public override IObservable<Unit> LoadAsset()
+    {
+        const string Name = "EnemyBehavior9";
+        asset = AssetHelper.LoadBehaviorAsset<EnemyBehavior9Asset>(Name);
+        return DebugManager.I.LoadAssetFromServer<EnemyBehavior9AssetForJson, EnemyBehavior9Asset>(asset, Name);
     }
 }

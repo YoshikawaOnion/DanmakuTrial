@@ -23,6 +23,7 @@ public class EnemyState_NextRound : StateMachine
 			{
 				SoundManager.I.PlaySe(SeKind.EnemyDamaged);
             }
+            context.CurrentBehavior.InitializeAsync(context.Api);
             context.ChangeState(Enemy.OpeningStateName);
             context.EventAccepter.OnNextRoundSubject.OnNext(Unit.Default);
         }
