@@ -14,7 +14,7 @@ public class BatchBuild
 
     private static bool IosBuild(bool isDebug)
 	{
-		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.iOS);
+        EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.iOS, BuildTarget.iOS);
 		BuildOptions opt = BuildOptions.SymlinkLibraries;
         if (isDebug)
         {
