@@ -11,7 +11,7 @@ public abstract class EnemyStrategy
 
     public IObservable<Unit> LoadAssets()
     {
-        behaviors = CreateBehaviors();
+        behaviors = CreateBehaviors().ToArray();
         var loads = behaviors.Select(x => x.LoadAsset());
         return Observable.WhenAll(loads);
     }

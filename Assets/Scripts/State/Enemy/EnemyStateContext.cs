@@ -19,7 +19,10 @@ public class EnemyStateContext : EventContext
     public bool MoveNextBehavior()
     {
         var result = Behaviors.MoveNext();
-        CurrentBehavior = Behaviors.Current;
+        if (result)
+		{
+			CurrentBehavior = Behaviors.Current;
+        }
         return result;
     }
 

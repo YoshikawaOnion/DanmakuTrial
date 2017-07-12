@@ -26,7 +26,7 @@ public class EnemyBehavior1 : EnemyBehavior
     }
 
     protected override IObservable<Unit> GetAction()
-    {
+	{
         return Act().ToObservable();
     }
 
@@ -60,7 +60,9 @@ public class EnemyBehavior1 : EnemyBehavior
 
     public override IObservable<Unit> LoadAsset()
     {
-        asset = AssetHelper.LoadBehaviorAsset<EnemyBehavior1Asset>("EnemyBehavior1");
-        return DebugManager.I.LoadAssetFromServer<EnemyBehavior1AssetForJson, EnemyBehavior1Asset>(asset, "EnemyBehavior1");
+        const string Name = "EnemyBehavior1";
+        asset = AssetHelper.LoadBehaviorAsset<EnemyBehavior1Asset>(Name);
+		var stream = DebugManager.I.LoadAssetFromServer<EnemyBehavior1AssetForJson, EnemyBehavior1Asset>(asset, Name);
+        return stream;
     }
 }

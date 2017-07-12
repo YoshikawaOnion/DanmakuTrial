@@ -28,7 +28,6 @@ public class Enemy : MonoBehaviour
 	[SerializeField]
 	private GameObject smokeEffectPrefab;
 
-	public EnemyStrategy Strategy { get; set; }
 	public Rigidbody2D Rigidbody { get; private set; }
 	public BulletManager BulletRenderer { get; set; }
     public Vector3 InitialPosition { get; private set; }
@@ -48,7 +47,6 @@ public class Enemy : MonoBehaviour
     private void OnDestroy()
     {
         Rigidbody = null;
-        Strategy = null;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

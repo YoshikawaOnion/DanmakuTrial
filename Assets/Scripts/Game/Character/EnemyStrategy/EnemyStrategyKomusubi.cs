@@ -10,7 +10,7 @@ public class EnemyStrategyKomusubi : EnemyStrategy
     protected override IEnumerable<EnemyBehavior> CreateBehaviors()
     {
         yield return new EnemyBehavior1();
-        yield return new EnemyBehavior9();
-        yield return new EnemyBehavior3();
+        //yield return new EnemyBehavior9();
+        //yield return new EnemyBehavior3();
     }
 }

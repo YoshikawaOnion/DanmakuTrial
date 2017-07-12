@@ -176,7 +176,6 @@ public class GameManager : Singleton<GameManager>
 
         Enemy = e.GetComponent<Enemy>();
         Enemy.BulletRenderer = bulletRenderer;
-        Enemy.Strategy = EnemyStrategy;
         Enemy.EventAccpter = eventFacade;
         objectsToDestroy.Add(Enemy.gameObject);
     }
