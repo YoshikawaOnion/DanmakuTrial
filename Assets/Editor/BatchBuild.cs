@@ -12,6 +12,12 @@ public class BatchBuild
         IosBuild(true);
     }
 
+    [MenuItem("Tools/Build Project All Scene for Android")]
+    public static void AndroidDevelopmentBuild()
+    {
+        AndroidBuild(true);
+    }
+
     private static bool IosBuild(bool isDebug)
 	{
         EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.iOS, BuildTarget.iOS);
@@ -26,7 +32,7 @@ public class BatchBuild
         var scenes = GetScenes();
         string errorMessage = BuildPipeline.BuildPlayer(
             scenes,
-            "bin/ios",
+            "bin/ios/",
             BuildTarget.iOS,
             opt);
 
@@ -41,6 +47,37 @@ public class BatchBuild
             Debug.LogError(errorMessage);
             return false;
         }
+    }
+
+    private static bool AndroidBuild(bool isDebug)
+    {
+		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
+		BuildOptions opt = BuildOptions.SymlinkLibraries;
+		if (isDebug)
+		{
+			opt |= BuildOptions.Development
+							   | BuildOptions.ConnectWithProfiler
+							   | BuildOptions.AllowDebugging;
+		}
+
+		var scenes = GetScenes();
+		string errorMessage = BuildPipeline.BuildPlayer(
+			scenes,
+			"bin/android/DanmakuTrial.apk",
+			BuildTarget.Android,
+			opt);
+
+		if (string.IsNullOrEmpty(errorMessage))
+		{
+			Debug.Log("Build for iOS succeeded.");
+			return true;
+		}
+		else
+		{
+			Debug.Log("Build iOS ERROR!");
+			Debug.LogError(errorMessage);
+			return false;
+		}
     }
 
     private static string[] GetScenes()
