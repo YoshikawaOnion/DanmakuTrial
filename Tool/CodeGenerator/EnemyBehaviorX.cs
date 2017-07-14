@@ -8,10 +8,6 @@ public class EnemyBehavior$name$ : EnemyBehavior
 {
     private EnemyBehavior$name$Asset asset;
 
-    public EnemyBehavior$name$(EnemyApi api) : base(api)
-    {
-    }
-
     protected override IObservable<Unit> GetAction()
     {
         throw new NotImplementedException();

@@ -75,11 +75,11 @@ public class Player : MonoBehaviour {
         smoke.transform.localPosition = Vector3.zero;
 
         GameManager.I.GameEvents.OnHitEnemyShot
-                                .Subscribe(c =>
-                                {
-                                    ShowHitEffect();
-                                    ShakeCamera();
-                                })
+                    .Subscribe(c =>
+                    {
+                        ShowHitEffect();
+                        ShakeCamera();
+                    })
                    .AddTo(disposable);
 
         GameManager.I.GameEvents.OnHitEnemyShot

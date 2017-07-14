@@ -11,20 +11,7 @@ using UnityEditor;
 /// </summary>
 public class EnemyBehavior5 : EnemyBehavior
 {
-    private EnemyBehavior5Asset asset_;
-    private EnemyBehavior5Asset asset
-    {
-        get
-		{
-			Debug.Log("Asset get with " + (asset_ != null ? asset_.ToString() : "Null"));
-            return asset_;
-        }
-        set
-        {
-            asset_ = value;
-            Debug.Log("Asset set with " + (asset_ != null ? asset_.ToString() : "Null"));
-        }
-    }
+    private EnemyBehavior5Asset asset { get; set; }
 
     protected override IObservable<Unit> GetAction()
     {
@@ -54,11 +41,7 @@ public class EnemyBehavior5 : EnemyBehavior
         behavior.TimeSpan = asset.FlowerShotTimeSpan;
         behavior.Angle = subAngle;
 
-        var shot = Api.Shot(angle, asset.FlowerShotSpeed * Def.UnitPerPixel, behavior);
-        if (shot == null)
-        {
-            return;
-        }
+        Api.Shot(angle, asset.FlowerShotSpeed * Def.UnitPerPixel, behavior);
     }
 
     private IObservable<Unit> MoveObservable()

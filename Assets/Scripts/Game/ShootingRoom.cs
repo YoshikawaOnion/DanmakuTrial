@@ -14,7 +14,7 @@ public class ShootingRoom : MonoBehaviour {
         }
 
         var shot = collision.gameObject.GetComponent<EnemyShot>();
-        if (shot != null)
+        if (shot != null && collision.enabled)
         {
             shot.ResetBullet();
         }

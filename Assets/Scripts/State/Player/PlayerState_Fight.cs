@@ -66,21 +66,26 @@ public class PlayerState_Fight : StateMachine
 		if (collider.tag == Def.EnemyShotTag)
 		{
 			var shot = collider.gameObject.GetComponent<EnemyShot>();
-            shot.ResetBullet();
-            Context.Player.Rigidbody.AddForce(
-                Context.PushOnShoot * Def.UnitPerPixel);
+            if (shot.IsVisible)
+			{
+				shot.ResetBullet();
+				Context.Player.Rigidbody.AddForce(
+					Context.PushOnShoot * Def.UnitPerPixel);
+				OnHit();
+            }
         }
         else if (collider.tag == Def.EnemyTag)
         {
             Context.Player.Rigidbody.AddForce(
-                Context.PushOnCollideEnemy * Def.UnitPerPixel);
+				Context.PushOnCollideEnemy * Def.UnitPerPixel);
+			OnHit();
         }
         else if (collider.tag == Def.MobTag)
         {
             Context.Player.Rigidbody.AddForce(
-                Context.PushOnHitMob * Def.UnitPerPixel);
+				Context.PushOnHitMob * Def.UnitPerPixel);
+			OnHit();
         }
-        OnHit();
     }
 
     protected virtual void OnHit()

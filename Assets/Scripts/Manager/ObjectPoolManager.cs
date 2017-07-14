@@ -6,7 +6,8 @@ using System.Linq;
 
 public enum EnemyShotKind
 {
-	Null, Flower, Circle, Lockon, Shooting
+	Null, Flower, Circle, Lockon, Shooting,
+    Ring
 }
 
 public class ObjectPoolManager : MonoBehaviour
@@ -66,7 +67,8 @@ public class ObjectPoolManager : MonoBehaviour
             objectPool.Add(kind, list);
         }
 
-        foreach (var item in list)
+		//*
+		foreach (var item in list)
         {
             if (!item.activeInHierarchy)
             {
@@ -74,6 +76,7 @@ public class ObjectPoolManager : MonoBehaviour
                 return item;
             }
         }
+        //*/
 
         var obj = GetNewInstance(kind);
         list.Add(obj);
@@ -82,9 +85,9 @@ public class ObjectPoolManager : MonoBehaviour
 
     public void SleepInstance(GameObject obj)
 	{
+		obj.GetComponent<Collider2D>().enabled = false;
 		obj.SetActive(false);
 		obj.transform.position = Vector2.zero;
-        obj.GetComponent<Collider2D>().enabled = false;
 	}
 
 	private GameObject GetNewInstance(Kind kind)
@@ -140,6 +143,7 @@ public class ObjectPoolManager : MonoBehaviour
             case EnemyShotKind.Circle: return new CircleEnemyShotBehavior();
             case EnemyShotKind.Lockon: return new LockOnEnemyShotBehavior();
             case EnemyShotKind.Shooting: return new ShootingEnemyShotBehavior();
+            case EnemyShotKind.Ring: return new RingEnemyShotBehavior();
             default: throw new Exception("EnemyShotBehaviorの生成処理で不明なKindが指定されました。");
         }
     }

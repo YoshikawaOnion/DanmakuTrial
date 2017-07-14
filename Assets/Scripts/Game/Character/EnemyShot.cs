@@ -8,11 +8,12 @@ using UniRx;
 /// </summary>
 public class EnemyShot : MonoBehaviour {
     public IObservable<Unit> DestroyEvent;
-	private EnemyShotBehavior Behavior;
 
     public EnemyApi Api { get; private set; }
+    public bool IsVisible { get; set; }
 
 	private Subject<Unit> destroySubject;
+	private EnemyShotBehavior Behavior;
 
     public EnemyShot()
 	{
@@ -24,7 +25,8 @@ public class EnemyShot : MonoBehaviour {
 	public void InitializeBullet(EnemyShotBehavior behavior, EnemyApi api)
 	{
         this.Behavior = behavior;
-        this.Api = api;
+		this.Api = api;
+		IsVisible = true;
         Behavior.Initialize(this);
         Behavior.Start();
 	}

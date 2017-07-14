@@ -6,6 +6,18 @@ using System.Collections.Generic;
 
 public class BatchBuild
 {
+	[MenuItem("Tools/Build Project All Scene for iOS")]
+	public static void IosBuild()
+	{
+		IosBuild(false);
+	}
+
+	[MenuItem("Tools/Build Project All Scene for Android")]
+	public static void AndroidBuild()
+	{
+		AndroidBuild(false);
+	}
+
     [MenuItem("Tools/Build Project All Scene for iOS")]
     public static void IosDevelopmentBuild()
     {

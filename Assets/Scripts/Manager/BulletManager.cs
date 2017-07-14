@@ -87,7 +87,10 @@ public class BulletManager : MonoBehaviour
     {
         foreach (var b in Bullets)
         {
-            batchRenderer.AddInstanceTS(b.transform.position, b.transform.lossyScale);
+            if (b.IsVisible)
+			{
+				batchRenderer.AddInstanceTS(b.transform.position, b.transform.lossyScale);
+            }
         }
     }
 
